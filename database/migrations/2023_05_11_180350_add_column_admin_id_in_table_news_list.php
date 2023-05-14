@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('news_list', function (Blueprint $table) {
-            $table->dropForeign('news_list_user_id_foreign');
-            $table->dropColumn('user_id');
+            $table->foreignId('admin_id')->constrained('admins');
         });
     }
 

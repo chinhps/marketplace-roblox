@@ -5,8 +5,12 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\EventHistory;
 use App\Models\EventList;
+use App\Models\GameCurrency;
+use App\Models\GameList;
+use App\Models\NewsList;
 use App\Models\RechargeHistory;
 use App\Models\RechargeList;
+use App\Models\Service;
 use App\Models\ShopDetail;
 use App\Models\ShopList;
 use App\Models\TopRecharge;
@@ -30,7 +34,6 @@ class DatabaseSeeder extends Seeder
 
         $rechargeList = RechargeList::factory(1)->create();
 
-
         ShopList::factory(50)->create()->each(function ($shop) use ($eventList, $rechargeList) {
 
             # mỗi shop tạo 1 KOC
@@ -46,7 +49,7 @@ class DatabaseSeeder extends Seeder
             # tạo người dùng
             $users = User::factory(50)->create([
                 "shop_id" => $shop->id
-            ])->each(function ($user) use ($shop, $eventList,$rechargeList) {
+            ])->each(function ($user) use ($shop, $eventList, $rechargeList) {
 
                 # tạo các transaction price
                 TransactionPrice::factory(10)->create([
@@ -94,5 +97,16 @@ class DatabaseSeeder extends Seeder
                 ]);
             });
         });
+
+        # Tạo ngẫu nhiên 3 ADMIN
+        $admins = Admin::factory(5)->create([
+            "admin_type" => "ADMIN",
+            "shop_id" => rand(1, 10)
+        ]);
+
+        # Tạo 15 tin tức
+        NewsList::factory(15)->create([
+            "admin_id" => $admins->random()->id
+        ]);
     }
 }

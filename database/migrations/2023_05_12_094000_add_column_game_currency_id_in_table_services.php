@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news_list', function (Blueprint $table) {
-            $table->id();
-            $table->string('thumb')->nullable();
-            $table->string('news_title');
-            $table->text('content');
-            $table->string('keyword')->nullable();
-            $table->timestamps();
+        Schema::table('services', function (Blueprint $table) {
+            $table->foreignId('game_currency_id')->nullable()->constrained('game_currencies');
         });
     }
 
@@ -26,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news_list');
+        Schema::table('services', function (Blueprint $table) {
+            $table->dropForeign("services_game_currency_id_foreign");
+            $table->dropColumn("game_currency_id");
+        });
     }
 };

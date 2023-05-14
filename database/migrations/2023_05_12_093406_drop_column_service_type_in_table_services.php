@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('news_list', function (Blueprint $table) {
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
+        Schema::table('services', function (Blueprint $table) {
+            $table->dropColumn('service_type');
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('news_list', function (Blueprint $table) {
-            //
+        Schema::table('services', function (Blueprint $table) {
+            $table->enum('service_type', ['WHEEL', 'LUCKY_BOX', 'LUCKY_CARD', 'RANDOM', 'ROBUX_BOX']);
         });
     }
 };
