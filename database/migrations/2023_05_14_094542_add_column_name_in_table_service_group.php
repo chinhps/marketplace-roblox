@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('service_groups', function (Blueprint $table) {
-            $table->id();
-            $table->integer('prioritize');
-            $table->string('name');
-            $table->boolean('active')->default(true);
-            $table->timestamps();
+        Schema::table('service_images', function (Blueprint $table) {
+            $table->string("name",11);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services_group');
+        Schema::table('service_images', function (Blueprint $table) {
+            $table->dropColumn("name");
+        });
     }
 };
