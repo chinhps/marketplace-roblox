@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ServiceGroup>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ServiceDetail>
  */
-class ServiceGroupFactory extends Factory
+class ServiceDetailFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,7 @@ class ServiceGroupFactory extends Factory
     {
         return [
             "prioritize" => $this->faker->numberBetween(1,999),
-            "name" => $this->faker->name(),
-            "active" => "ON"//$this->faker->randomElement(['ON','OFF'])
+            "excluding" => $this->faker->randomElement(['ON','OFF'])
         ];
     }
 }
