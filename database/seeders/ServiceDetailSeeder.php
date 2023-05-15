@@ -7,7 +7,7 @@ use App\Models\ServiceImage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ServiceDetail extends Seeder
+class ServiceDetailSeeder extends Seeder
 {
     /**
      * Run the database seeds.

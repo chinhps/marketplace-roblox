@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceGroup extends Model
 {
     use HasFactory;
-    protected $table = "services_groups";
+    protected $table = "service_groups";
 }

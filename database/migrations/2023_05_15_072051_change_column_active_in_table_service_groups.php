@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('service_images', function (Blueprint $table) {
-            $table->string("name",100);
+        Schema::table('service_groups', function (Blueprint $table) {
+            $table->enum('active',['ON','OFF'])->default('OFF')->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('service_images', function (Blueprint $table) {
-            $table->dropColumn("name");
+        Schema::table('service_groups', function (Blueprint $table) {
+            //
         });
     }
 };

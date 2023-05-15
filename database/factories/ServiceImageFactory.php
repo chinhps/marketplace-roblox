@@ -16,16 +16,14 @@ class ServiceImageFactory extends Factory
      */
     public function definition(): array
     {
+        $images = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $images["image_$i"] = $this->faker->imageUrl(640, 480, null, true, "Thumb game $i");
+        }
         return [
             "name" => $this->faker->name(),
-            "thumb" => $this->faker->imageUrl(640,480,null,true,"Thumb game"),
-            "images" => json_encode(function () {
-                $images = [];
-                for ($i=1; $i <= 10; $i++) { 
-                    $images["image_$i"] = $this->faker->imageUrl(640,480,null,true,"Thumb game $i");
-                }
-                return $images;
-            }) 
+            "thumb" => $this->faker->imageUrl(640, 480, null, true, "Thumb game"),
+            "images" => json_encode($images)
         ];
     }
 }
