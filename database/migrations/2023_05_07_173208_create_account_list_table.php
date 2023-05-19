@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('detail_public')->nullable();
             $table->json('detail_private')->nullable();
             $table->float('price');
-            $table->string('thumb');
+            $table->string('thumb')->nullable();
             $table->json('images')->nullable();
             $table->boolean('active')->default(true);
             $table->boolean('status')->default(true);

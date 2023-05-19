@@ -16,4 +16,9 @@ class Service extends Model
         return $this->hasOne(GameList::class,'id','game_id');
     }
 
+    public function currency(): HasOne
+    {
+        return $this->hasOne(GameCurrency::class,'id','game_currency_id');
+    }
+
 }

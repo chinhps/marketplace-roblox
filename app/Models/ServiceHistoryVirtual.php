@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServiceHistoryVirtrual extends Model
+class ServiceHistoryVirtual extends Model
 {
     use HasFactory;
-    protected $table = "service_histories_virtrual";
+    protected $table = "service_histories_virtual";
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Service;
+use App\Models\ServiceDetail;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +20,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('test',function () {
-//     $data = Service::find(2)->game_list->game_key;
-//     dd($data);
+// Route::get('test', function () {
+//     $data = User::find(5)->services()->attach(5, ['turn' => 5]);
 // });

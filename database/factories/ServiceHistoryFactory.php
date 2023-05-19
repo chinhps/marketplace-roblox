@@ -19,32 +19,33 @@ class ServiceHistoryFactory extends Factory
         $quantity = $this->faker->randomElement([1, 3, 5, 7, 10]);
         return [
             "quantity" => $quantity,
-            "detail" => match ($quantity) {
-            }
+            "detail" => json_encode($this->gifts($quantity))
         ];
     }
 
     public function gifts(float $number = 1)
     {
-        function gift(float $value)
-        {
-            return "Chúc mừng bạn đã trúng: $value";
-        }
-        function allGifts(float $quantity, float $value)
-        {
-            return "Tổng lượt quay: x$quantity | Tổng phần thưởng nhận được: $value";
-        }
-
         $allGifts = [
-            "default" => allGifts($number, 100),
+            "default" => $this->allGifts($number, $this->faker->numberBetween(50, 100)),
             "details" => []
         ];
 
         for ($i = 0; $i < $number; $i++) {
             $allGifts['details'][] = [
-                "name" => gift(10),
+                "name" => $this->gift($this->faker->numberBetween(5, 10)),
                 "service_gift_id" => 1
             ];
         }
+
+        return $allGifts;
+    }
+
+    public function gift(float $value)
+    {
+        return "Chúc mừng bạn đã trúng: $value";
+    }
+    public function allGifts(float $quantity, float $value)
+    {
+        return "Tổng lượt quay: x$quantity | Tổng phần thưởng nhận được: $value";
     }
 }

@@ -2,12 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\GameCurrency;
 use App\Models\Service;
 use App\Models\ServiceDetail;
+use App\Models\ServiceGift;
 use App\Models\ServiceGroup;
 use App\Models\ServiceImage;
 use App\Models\ServiceOdds;
 use App\Models\ShopDetail;
+use App\Models\ShopList;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,10 +23,21 @@ class ServiceDetailSeeder extends Seeder
     {
         $serviceGroups = ServiceGroup::factory(5)->create();
         $serviceImage = ServiceImage::factory(20)->create();
-        $serviceOdds = ServiceOdds::factory(20)->create();
-        $services = Service::all();
 
-        ServiceDetail::factory(15)->create(function () use ($serviceGroups, $serviceImage, $serviceOdds, $services) {
+        $gameCurrency = GameCurrency::all();
+        # tạo tỷ lệ và các quà trong tỷ lệ
+        $serviceOdds = ServiceOdds::factory(20)->create()->each(function ($odds) use ($gameCurrency) {
+            $currentCurrency = $gameCurrency->random();
+            ServiceGift::factory(10)->create([
+                "odds_id" => $odds->id,
+                "game_currency_id" => $currentCurrency->id
+            ]);
+        });
+
+        $services = Service::all();
+        $shopList = ShopList::all();
+
+        $serviceDetail = ServiceDetail::factory(15)->create(function () use ($serviceGroups, $serviceImage, $serviceOdds, $services) {
 
             $currentServices = $services->random();
 
@@ -41,5 +55,10 @@ class ServiceDetailSeeder extends Seeder
                 "service_image_id" => $serviceImage->random()->id
             ];
         });
+
+        # tạo liên kết ngẫu nhiên
+        for ($i = 0; $i < rand(10, 20); $i++) {
+            $serviceDetail->random()->shop_list()->attach($shopList->random());
+        }
     }
 }

@@ -23,10 +23,8 @@ class ServicesSeeder extends Seeder
         # Tạo 4 đơn vị
         $gameCurrencies = GameCurrency::factory(3)->create()->pluck('id','currency_key');
 
-        print_r($gameCurrencies);
-
         # Tạo 15 game
-        $services = Service::factory(15)->create(function () use ($gameList, $gameCurrencies) {
+        $services = Service::factory(100)->create(function () use ($gameList, $gameCurrencies) {
 
             # random loại trò chơi
             $game_id = $gameList->random();
