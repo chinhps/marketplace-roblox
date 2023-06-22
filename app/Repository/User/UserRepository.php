@@ -25,6 +25,8 @@ class UserRepository implements UserInterface
      *
      * @param  array $params
      * Params is:
+     * - shop_id 
+     * - login_type
      * - provider_id
      * - name
      * - username

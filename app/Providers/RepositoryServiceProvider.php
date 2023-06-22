@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repository\Shop\ShopInterface;
+use App\Repository\Shop\ShopRepository;
 use App\Repository\Transaction\TransactionInterface;
 use App\Repository\Transaction\TransactionRepository;
 use App\Repository\User\UserInterface;
@@ -17,6 +19,8 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(TransactionInterface::class, TransactionRepository::class);
+        $this->app->bind(ShopInterface::class, ShopRepository::class);
+
     }
 
     /**

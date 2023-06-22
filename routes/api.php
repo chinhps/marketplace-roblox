@@ -20,6 +20,64 @@ Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+# information website
+Route::prefix('information')->group(function () {
+    Route::get('/', []);
+    Route::get('top-recharge', []);
+});
+
+# News
+Route::prefix('news')->group(function () {
+    Route::get('/', []);
+    Route::get('/view/{slug}', []);
+});
+
+# View Service home
+Route::prefix('services')->group(function () {
+    Route::get('/', []);
+    Route::get('/view/{slug}', []);
+    Route::get('/recomends/{slug}', []);
+    Route::get('/histories/{slug}', []);
+
+    # play game
+    Route::post('/is_play_try', []);
+    Route::post('/is_play', [])->middleware('decryptToken:sanctum');
+
+    # Buy account
+    Route::post('/buy_account', [])->middleware('decryptToken:sanctum');
+});
+
+# Plugin
+Route::prefix('plugins')->group(function () {
+    Route::get('/current', []);
+    Route::post('/claim', [])->middleware('decryptToken:sanctum');
+});
+
+Route::middleware(['decryptToken:sanctum'])->group(function () {
+    # Get infor current user
+    Route::get('/user',  [AuthController::class, 'getCurrentInfo']);
+    # Logout current device
+    Route::post('/logout',  [AuthController::class, '']);
+    # Logout all device
+    Route::post('/logout/all',  [AuthController::class, '']);
+    # Profile user
+    Route::prefix('profile')->group(function () {
+
+        # history profile
+        Route::prefix('history')->group(function () {
+            Route::get('purchases', [HistoryBuyController::class, 'list']);
+            Route::get('recharge', [HistoryRechargeController::class, 'list']);
+            Route::get('services', [ServiceController::class, 'list']);
+            
+            Route::get('withdraw', [PaydiamondController::class, 'list']);
+            Route::get('rent', [RentController::class, 'list']);
+        });
+
+        # create any services
+        Route::prefix('services')->group(function () {
+            Route::post('withdraw-robox', [PaydiamondController::class, 'withdraw_robux']);
+            Route::post('buy-robux', [PaydiamondController::class, 'buy_robux']);
+            Route::post('rent', [RentController::class, 'buy']);
+        });
+    });
 });

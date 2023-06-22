@@ -12,9 +12,10 @@ class GlobalVariableServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('domain', function () {
-            return Request::server("HTTP_HOST");
-        });
+        // $this->app->singleton('domain', function () {
+        //     return Request::server("HTTP_HOST");
+        // });
+        
     }
 
     /**

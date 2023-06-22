@@ -15,8 +15,15 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'email',
+        'username',
         'password',
+        'shop_id',
+        'provider_id',
+        'price_temporary',
+        'diamond_temporary',
+        'block',
+        'active',
+        'login_type'
     ];
 
     protected $hidden = [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Rules\Domain;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,6 +25,7 @@ class UserRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            "domain" => ["required", "string", "exists:shop_list,domain", new Domain],
             "username" => "required|alpha_num|min:5|max:255|unique:users",
             "password" => "required|string|min:8|confirmed",
         ];
@@ -32,6 +34,10 @@ class UserRegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
+            // 'domain.required' => 'Trường Shop phải có',
+            // 'domain.string' => 'Tên miền phải là chữ',
+            // 'domain.exists' => 'Tên miền không tồn tại trong hệ thống',
+            'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin',
             'username.required' => 'Bạn cần nhập Tài khoản',
             'username.min' => 'Tài khoản quá ngắn 5 ký tự',
             'username.max' => 'Tài khoản quá dài 255 ký tự',

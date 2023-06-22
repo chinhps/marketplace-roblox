@@ -14,4 +14,9 @@ class BaseResponse
     {
         return response()->json(['token' => $token, "msg" => $msg], $status);
     }
+
+    public static function data(array $data, $status = 200)
+    {
+        return response()->json(["status" => $status, "data" => $data], $status);
+    }
 }
