@@ -1,0 +1,85 @@
+body {
+  background-color: #fff !important;
+}
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.changeColor {
+  animation: changeColor 0.3s linear infinite;
+}
+
+.showText {
+  animation-duration: 2000ms;
+  animation-delay: 0ms;
+  animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  clip-path: polygon(0% 0%, 200% 0%, 0% 200%);
+  animation-name: showText;
+  animation-iteration-count: 1;
+}
+
+.input-animation {
+  animation-duration: 500ms;
+  animation-delay: 50ms;
+  animation-name: input-animation;
+  animation-iteration-count: 1;
+}
+
+.frame-service {
+  position: absolute;
+  top: 0;
+  inset: 1px;
+  pointer-events: none;
+}
+
+
+.image-with-blur-border {
+  position: relative;
+  display: inline-block;
+  background-size: cover; /* Điều chỉnh kích thước ảnh nền */
+  background-position: center center; /* Điều chỉnh vị trí ảnh nền */
+  overflow: hidden;
+}
+
+.image-with-blur-border::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px; /* Điều chỉnh độ dày của viền dưới ở đây */
+  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.5); /* Điều chỉnh màu sắc và độ mờ ở đây */
+  pointer-events: none;
+}
+
+
+@keyframes input-animation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes changeColor {
+  0% {
+    background: var(--chakra-colors-black-100);
+  }
+  50% {
+    background: var(--chakra-colors-black-200);
+  }
+  100% {
+    background: var(--chakra-colors-black-100);
+  }
+}
+
+@keyframes showText {
+  0% {
+    clip-path: polygon(0% 0%, 0% 0%, 0% 0%);
+  }
+  100% {
+    clip-path: polygon(0% 0%, 200% 0%, 0% 200%);
+  }
+}
