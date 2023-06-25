@@ -19,6 +19,10 @@ class AuthController extends Controller
     ) {
     }
 
+    public function logout(Request $request) {
+
+    }
+
     public function getCurrentInfo(Request $request)
     {
         $user = $request->user();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\User\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,7 @@ Route::prefix('news')->group(function () {
 
 # View Service home
 Route::prefix('services')->group(function () {
-    Route::get('/', []);
+    Route::get('/', [ServiceController::class, 'serviceList']);
     Route::get('/view/{slug}', []);
     Route::get('/recomends/{slug}', []);
     Route::get('/histories/{slug}', []);
@@ -56,10 +57,14 @@ Route::prefix('plugins')->group(function () {
 Route::middleware(['decryptToken:sanctum'])->group(function () {
     # Get infor current user
     Route::get('/user',  [AuthController::class, 'getCurrentInfo']);
-    # Logout current device
-    Route::post('/logout',  [AuthController::class, '']);
-    # Logout all device
-    Route::post('/logout/all',  [AuthController::class, '']);
+    # Logout
+    Route::prefix('auth')->group(function () {
+        # Logout current device
+        Route::post('/',  [AuthController::class, '']);
+        # Logout all device
+        Route::post('/all',  [AuthController::class, '']);
+    });
+
     # Profile user
     Route::prefix('profile')->group(function () {
 
@@ -68,7 +73,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('purchases', [HistoryBuyController::class, 'list']);
             Route::get('recharge', [HistoryRechargeController::class, 'list']);
             Route::get('services', [ServiceController::class, 'list']);
-            
+
             Route::get('withdraw', [PaydiamondController::class, 'list']);
             Route::get('rent', [RentController::class, 'list']);
         });

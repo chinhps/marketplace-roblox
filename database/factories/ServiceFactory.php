@@ -23,7 +23,6 @@ class ServiceFactory extends Factory
             "sale" => $this->faker->numberBetween(0, 50),
             "notification" => $this->faker->text(100),
             "note" => $this->faker->name(),
-            "slug" => $this->faker->slug(),
             "active" => $this->faker->randomElement(['ON', 'OFF']),
             "information" => json_encode([
                 "hastag" => $this->faker->randomElement([

@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-05-23T05:33:49.646Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50" etag="y3JjtqOWXrffI_Xm3Uy-" version="21.3.2" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-06-23T10:52:43.776Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51" etag="fY_Nu-f8fzLNq6-EguhD" version="21.5.0" type="device" pages="3">
   <diagram name="Page-1" id="KmQgnTv5vvOI3r4hxGTt">
-    <mxGraphModel dx="1766" dy="720" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1834" dy="804" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -13,7 +13,7 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-10" value="" style="group" parent="98oBXOV-pdoTwL55DlCH-38" vertex="1" connectable="0">
           <mxGeometry x="76.003125" y="30" width="201.5625" height="500" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-1" value="Auth" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-1" value="Auth" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">
           <mxGeometry x="40.3125" y="60" width="120.9375" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-2" value="Lấy danh sách game" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">

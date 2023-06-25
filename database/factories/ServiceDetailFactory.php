@@ -17,6 +17,7 @@ class ServiceDetailFactory extends Factory
     public function definition(): array
     {
         return [
+            "slug" => $this->faker->slug(),
             "prioritize" => $this->faker->numberBetween(1,999),
             "excluding" => $this->faker->randomElement(['ON','OFF'])
         ];

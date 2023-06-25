@@ -14,4 +14,19 @@ class ServiceDetail extends Model
     {
         return $this->belongsToMany(ShopList::class, 'service_details_except_shop', 'service_detail_id', 'shop_id');
     }
+
+    public function serviceGroup()
+    {
+        return $this->hasOne(ServiceGroup::class, 'id', 'service_group_id');
+    }
+
+    public function service()
+    {
+        return $this->hasOne(Service::class, 'id', 'service_id');
+    }
+
+    public function serviceImage()
+    {
+        return $this->hasOne(ServiceImage::class, 'id', 'service_image_id');
+    }
 }

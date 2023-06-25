@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
+use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
+use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
+use App\Repository\Service\ServiceGroup\ServiceGroupRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
 use App\Repository\Transaction\TransactionInterface;
@@ -20,7 +24,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(TransactionInterface::class, TransactionRepository::class);
         $this->app->bind(ShopInterface::class, ShopRepository::class);
-
+        $this->app->bind(ServiceGroupInterface::class, ServiceGroupRepository::class);
+        $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
     }
 
     /**
