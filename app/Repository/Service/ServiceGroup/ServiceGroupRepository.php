@@ -47,6 +47,6 @@ class ServiceGroupRepository implements ServiceGroupInterface
                         }
                     ]);
                 }
-            ])->select('id', 'name')->orderBy('prioritize', 'desc')->get();
+            ])->select('id', 'name','image')->orderBy('prioritize', 'desc')->get();
     }
 }

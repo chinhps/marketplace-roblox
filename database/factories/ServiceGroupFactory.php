@@ -17,9 +17,10 @@ class ServiceGroupFactory extends Factory
     public function definition(): array
     {
         return [
-            "prioritize" => $this->faker->numberBetween(1,999),
+            "prioritize" => $this->faker->numberBetween(1, 999),
             "name" => $this->faker->name(),
-            "active" => "ON"//$this->faker->randomElement(['ON','OFF'])
+            "active" => "ON", //$this->faker->randomElement(['ON','OFF']),
+            "image" => $this->faker->imageUrl(450, 55, null, true, "Thumb game")
         ];
     }
 }

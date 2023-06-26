@@ -21,7 +21,7 @@ class ServiceImageFactory extends Factory
             $images["image_$i"] = $this->faker->imageUrl(640, 480, null, true, "Thumb game $i");
         }
         return [
-            "name" => $this->faker->name(),
+            "name" => $this->faker->text(60),
             "thumb" => $this->faker->imageUrl(640, 480, null, true, "Thumb game"),
             "images" => json_encode($images)
         ];
