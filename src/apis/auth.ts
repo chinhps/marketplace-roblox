@@ -6,8 +6,6 @@ import {
     IRegisterResponse
 } from "@/types/response/auth.type";
 import axiosClient from "@/utils/axiosClient"
-import { myDomain } from "@/utils/version";
-import { bearerToken } from "./bearer";
 
 export const AuthApi = {
     login: ({ username, password }: ILoginInput) => {
@@ -15,7 +13,6 @@ export const AuthApi = {
         return axiosClient.post<ILoginResponse>(url, {
             username,
             password,
-            domain: myDomain()
         });
     },
     register: ({ username, password, password_confirmation }: IRegisterInput) => {
@@ -24,11 +21,10 @@ export const AuthApi = {
             username,
             password,
             password_confirmation,
-            domain: myDomain()
         });
     },
-    infoUser: (token: string) => {
+    infoUser: () => {
         const url = "/api/user";
-        return axiosClient.get<IInfoUserResponse>(url, bearerToken(token));
+        return axiosClient.get<IInfoUserResponse>(url);
     }
 }

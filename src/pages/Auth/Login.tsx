@@ -15,16 +15,13 @@ import { FaFacebook, FaTiktok } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { ILoginResponse } from "@/types/response/auth.type";
+import { customToast } from "@/utils/const";
 
 export default function Login() {
   const { handleSubmit, register, watch } = useForm();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const toast = useToast({
-    position: "top",
-    variant: "left-accent",
-    duration: 3000,
-  });
+  const toast = useToast(customToast);
 
   const {
     isFetching,

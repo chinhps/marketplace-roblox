@@ -1,5 +1,9 @@
 import axios from 'axios';
 import queryString from 'query-string';
+import { myDomain } from './version';
+import { customToast, token } from './const';
+import { createStandaloneToast } from '@chakra-ui/react';
+import { logout } from './price';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API,
@@ -10,6 +14,19 @@ const axiosClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
+axiosClient.interceptors.request.use(config => {
+  config.data = {
+    ...config.data,
+    domain: myDomain()
+  };
+  if (token) {
+    config.headers.Authorization = 'Bearer ' + token;
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});
+
 axiosClient.interceptors.response.use(
   (res) => {
     if (res && res.data) {
@@ -18,6 +35,17 @@ axiosClient.interceptors.response.use(
     return res;
   },
   (err) => {
+    const { toast } = createStandaloneToast();
+    const status = err.response.status;
+    if (status === 401) {
+      toast({
+        status: "error",
+        description: "Xác thực thất bại! Vui lòng đăng nhập lại!",
+        ...customToast
+      });
+      logout();
+    }
+
     if (typeof err.response !== "undefined")
       throw err.response.data;
     throw err;

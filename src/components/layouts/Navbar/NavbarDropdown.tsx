@@ -1,4 +1,4 @@
-import { listOption, token } from "@/utils/const";
+import { customToast, listOption, token } from "@/utils/const";
 import {
   Button,
   Flex,
@@ -28,7 +28,7 @@ export default function NavbarDropdown() {
 
   return (
     <>
-      {!token ? (
+      {!token || queryState?.status === "error" ? (
         <>
           <Link as={ReactLink} to="/auth/sign-in">
             <Button
@@ -45,17 +45,14 @@ export default function NavbarDropdown() {
       ) : queryState?.status === "loading" ? (
         <Button variant="user" isLoading w="150px"></Button>
       ) : queryState?.data ? (
-        <Menual data={queryState?.data} />
+        <MenuCustom data={queryState?.data} />
       ) : null}
     </>
   );
 }
 
-function Menual({ data }: { data: IInfoUserResponse }) {
-  const toast = useToast({
-    position: "top",
-    variant: "left-accent",
-  });
+function MenuCustom({ data }: { data: IInfoUserResponse }) {
+  const toast = useToast(customToast);
 
   const handleCopy = async () => {
     try {

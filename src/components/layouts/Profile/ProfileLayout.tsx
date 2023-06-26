@@ -18,15 +18,13 @@ import {
   Stack,
   Divider,
   SimpleGrid,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { numberFormat } from "@/utils/price";
 import { listOption } from "@/utils/const";
 import IsAuthentication from "@/guards/IsAuthentication";
-import { useQueryClient } from "@tanstack/react-query";
-import { IInfoUserResponse } from "@/types/response/auth.type";
+import { useUserData } from "@/hooks/UserDataProvider";
 
 export default function ProfileLayout() {
   return (
@@ -44,9 +42,8 @@ export default function ProfileLayout() {
 }
 
 function SideBar() {
-  const [isDesktop] = useMediaQuery("(min-width: 768px)");
-  const queryClient = useQueryClient();
-  const queryState = queryClient.getQueryState<IInfoUserResponse>(["user"]);
+  // const [isDesktop] = useMediaQuery("(min-width: 768px)");
+  const userData = useUserData();
 
   return (
     <>
@@ -68,20 +65,20 @@ function SideBar() {
                 <Text as="b" pr={1}>
                   ID:
                 </Text>
-                {queryState?.data?.data.providerId}
+                {userData?.data?.data.providerId}
               </Text>
               <Text fontSize="15px">
                 <Text as="b" pr={1}>
                   Tên:
                 </Text>
-                {queryState?.data?.data.name}
+                {userData?.data?.data.name}
               </Text>
               <Text fontSize="15px">
                 <Text as="b" pr={1}>
                   Số dư:
                 </Text>
                 <Text color="ocean.200" as="b" pr={1}>
-                  {numberFormat(queryState?.data?.data.price ?? 0)}
+                  {numberFormat(userData?.data?.data.price ?? 0)}
                 </Text>
               </Text>
             </Stack>

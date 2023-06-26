@@ -1,3 +1,5 @@
+import { UseToastOptions } from "@chakra-ui/react";
+
 export const listOption = [
     {
         lable: 'Tài khoản',
@@ -60,3 +62,8 @@ export const listOption = [
 export const ATM_DISCOUNT = 0.9;
 
 export const token: string | null = localStorage.getItem("auth._token.local");
+
+export const customToast: UseToastOptions = {
+    position: "top",
+    variant: "left-accent",
+}

@@ -1,25 +1,34 @@
 export const link_service = (game_key: string) => {
-    let link = null;
+    let link = '/';
+    let textBtn = "MUA NGAY";
     switch (game_key) {
         // GAME LIST
         case "LUCKY_CARD":
-            link = "";
+            link = "/game-list/lucky-card/";
+            textBtn = "CHƠI NGAY"
             break;
         case "WHEEL":
-            link = "";
-            break; 
+            link = "/game-list/lucky-wheel/";
+            textBtn = "CHƠI NGAY"
+            break;
         case "LUCKY_BOX":
-            link = "";
-            break; 
-
+            link = "/game-list/lucky-box/";
+            textBtn = "CHƠI NGAY"
+            break;
         case "BOX":
-            link = "";
-            break; 
+            link = "/accounts/";
+            break;
+        case "ACCOUNT":
+            link = "/accounts/";
+            break;
         case "RANDOM":
-            link = "";
+            link = "/accounts/";
+            break;
+        case "CATEGORY":
+            // thiếu case
             break;
 
     }
 
-    return link;
+    return { link, textBtn };
 }

@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import { AuthApi } from "@/apis/auth";
 import { useQuery } from "@tanstack/react-query";
 import { token } from "@/utils/const";
+import UserDataProvider from "@/hooks/UserDataProvider";
 
 interface IHomeLayout {
   banner?: boolean;
@@ -13,10 +14,10 @@ interface IHomeLayout {
 }
 
 export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
-  useQuery({
+  const data = useQuery({
     queryKey: ["user"],
-    queryFn: () => AuthApi.infoUser(token ?? ""),
-    retry: 3,
+    queryFn: () => AuthApi.infoUser(),
+    retry: false,
     cacheTime: 120000,
     enabled: !!token, // Fetch dữ liệu chỉ khi token tồn tại,
     refetchOnWindowFocus: false,
@@ -37,7 +38,9 @@ export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
         p={0}
         zIndex={5}
       >
-        <Outlet />
+        <UserDataProvider userData={data}>
+          <Outlet />
+        </UserDataProvider>
       </Container>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-import { IInfoUserResponse } from "@/types/response/auth.type";
+import { useUserData } from "@/hooks/UserDataProvider";
 import { numberFormat } from "@/utils/price";
 import {
   Button,
@@ -12,13 +12,11 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment/moment";
 
 export default function Profile() {
-  const queryClient = useQueryClient();
-  const queryState = queryClient.getQueryState<IInfoUserResponse>(["user"]);
-
+  const userData = useUserData();
+  
   return (
     <>
       <Heading as="h1" fontSize="25px">
@@ -36,18 +34,18 @@ export default function Profile() {
           <Tbody>
             <Tr>
               <Td>Tên Hiển Thị</Td>
-              <Td color="ocean.200">{queryState?.data?.data.name}</Td>
+              <Td color="ocean.200">{userData?.data?.data.name}</Td>
             </Tr>
             <Tr>
               <Td>Số dư</Td>
               <Td color="ocean.200">
-                {numberFormat(queryState?.data?.data.price ?? 0)}
+                {numberFormat(userData?.data?.data.price ?? 0)}
               </Td>
             </Tr>
             <Tr>
               <Td>Ngày Tham Gia</Td>
               <Td>
-                {moment(queryState?.data?.data.created_at).format("MM/DD/YYYY")}
+                {moment(userData?.data?.data.created_at).format("MM/DD/YYYY")}
               </Td>
             </Tr>
             <Tr>
