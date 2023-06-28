@@ -1,4 +1,5 @@
-import { SubmitHandler } from "react-hook-form"
+import { ButtonProps } from "@chakra-ui/react";
+import { FieldValues, SubmitHandler, UseFormWatch } from "react-hook-form"
 
 export type InputsBuyRobux = {
     type_withdraw: string;
@@ -26,3 +27,8 @@ export interface IFormInput {
         value: string
     }>
 }
+
+export interface IButtonNextUser extends ButtonProps {
+    nameCheck: string;
+    watch: UseFormWatch<FieldValues>;
+  }

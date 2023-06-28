@@ -68,7 +68,7 @@ export default function TopRecharge() {
       </Flex>
       <VStack spacing={3}>
         <Divider w="70%" mx="auto" />
-        <Alert status="warning">
+        <Alert status="info" color="black.100">
           <AlertIcon />
           Đang có sự kiện: Phần thưởng người mới (Nhận ngay)
         </Alert>
@@ -132,7 +132,7 @@ function TopRechargeItem({ stt, name, price }: ITopRechargeItem) {
         </Text>
       </Flex>
       <Box
-        bg="ocean.50"
+        bg="main.item2"
         rounded="4px"
         w="130px"
         py=".5rem"

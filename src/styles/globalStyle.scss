@@ -1,5 +1,17 @@
+::-ms-reveal {
+  display: none;
+}
+
+:root {
+  --bg-main-color: #131930;
+  --bg-item-main-color: #1b2448;
+  --bg-item2-main-color: #2542dd;
+  --bg-item3-main-color: #2139c0;
+  --bg-item4-main-color: #33427b;
+}
+
 body {
-  background-color: #fff !important;
+  background-color: var(--bg-main-color) !important;
 }
 #root {
   min-height: 100vh;
@@ -63,13 +75,13 @@ body {
 
 @keyframes changeColor {
   0% {
-    background: var(--chakra-colors-black-100);
+    background: var(--bg-item3-main-color);
   }
   50% {
-    background: var(--chakra-colors-black-200);
+    background: var(--bg-item2-main-color);
   }
   100% {
-    background: var(--chakra-colors-black-100);
+    background: var(--bg-item3-main-color);
   }
 }
 
@@ -112,5 +124,21 @@ body {
   }
   100% {
     left: 100%;
+  }
+}
+
+.transaction-new-item {
+  position: absolute;
+  animation: transaction-new-item-loading 0.7s normal;
+}
+
+@keyframes transaction-new-item-loading {
+  0% {
+    opacity: 0;
+    left: 100%;
+  }
+  100% {
+    opacity: 1;
+    left: 0%;
   }
 }

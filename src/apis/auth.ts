@@ -2,6 +2,8 @@ import {
     IInfoUserResponse,
     ILoginInput,
     ILoginResponse,
+    ILogoutInput,
+    ILogoutResponse,
     IRegisterInput,
     IRegisterResponse
 } from "@/types/response/auth.type";
@@ -26,5 +28,10 @@ export const AuthApi = {
     infoUser: () => {
         const url = "/api/user";
         return axiosClient.get<IInfoUserResponse>(url);
+    },
+    logout: ({ typeLogout }: ILogoutInput) => {
+        let url = "/api/auth/logout";
+        if (typeLogout === "ALL") url += "/all";
+        return axiosClient.post<ILogoutResponse>(url);
     }
 }

@@ -11,15 +11,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import Criteria from "./Criteria";
 
 export default function Footer() {
   return (
     <>
+      <Criteria />
       <Box
         as="footer"
-        bg={useColorModeValue("#1b1a1a", "gray.900")}
         color={useColorModeValue("white", "gray.200")}
-        mt={10}
         zIndex={5}
       >
         <Container maxW="container.2xl" py={10}>

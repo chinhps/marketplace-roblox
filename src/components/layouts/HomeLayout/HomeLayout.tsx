@@ -19,30 +19,30 @@ export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
     queryFn: () => AuthApi.infoUser(),
     retry: false,
     cacheTime: 120000,
-    enabled: !!token, // Fetch dữ liệu chỉ khi token tồn tại,
+    enabled: !!token(), // Fetch dữ liệu chỉ khi token tồn tại,
     refetchOnWindowFocus: false,
   });
 
   return (
     <>
-      <Navbar />
-      {banner ? <Banner /> : null}
-      {miniBackground ? (
-        <MiniBackground miniBackground={miniBackground} />
-      ) : null}
-      <Container
-        maxW="container.2xl"
-        height="100%"
-        flex={1}
-        mt={banner ? "2rem" : "8rem"}
-        p={0}
-        zIndex={5}
-      >
-        <UserDataProvider userData={data}>
+      <UserDataProvider userData={{ status: data?.status, ...data.data }}>
+        <Navbar />
+        {banner ? <Banner /> : null}
+        {miniBackground ? (
+          <MiniBackground miniBackground={miniBackground} />
+        ) : null}
+        <Container
+          maxW="container.2xl"
+          height="100%"
+          flex={1}
+          mt={banner ? "2rem" : "8rem"}
+          p={0}
+          zIndex={5}
+        >
           <Outlet />
-        </UserDataProvider>
-      </Container>
-      <Footer />
+        </Container>
+        <Footer />
+      </UserDataProvider>
     </>
   );
 }

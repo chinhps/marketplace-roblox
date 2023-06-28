@@ -58,7 +58,7 @@ export const buttonStyles = {
                     },
                 }),
                 rechargeNow: (props: any) => ({
-                    bg: mode("black.200", "white")(props),
+                    bg: mode("main.item2", "white")(props),
                     color: 'white.100',
                     textTransform: "uppercase",
                     fontSize: "18px",

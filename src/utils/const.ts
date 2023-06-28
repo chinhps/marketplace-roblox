@@ -61,7 +61,9 @@ export const listOption = [
 
 export const ATM_DISCOUNT = 0.9;
 
-export const token: string | null = localStorage.getItem("auth._token.local");
+export const token = () => {
+    return localStorage.getItem("auth._token.local");
+}
 
 export const customToast: UseToastOptions = {
     position: "top",

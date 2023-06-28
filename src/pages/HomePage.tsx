@@ -1,29 +1,22 @@
 import serviceApi from "@/apis/service";
 import Service from "@/components/global/Service/Service";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
-import { IBaseResponse } from "@/types/response/base.type";
 import { IServiceGroupResponse } from "@/types/response/service.type";
 import { Center, Img, SimpleGrid } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 
 export default function HomePage() {
-  const {
-    data,
-    isLoading,
-  }: {
-    data: IBaseResponse<IServiceGroupResponse> | null | undefined;
-    isLoading: Boolean;
-  } = useQuery({
+  const serviceListQuery = useQuery({
     queryKey: ["serviceList"],
     queryFn: () => serviceApi.servieList(),
   });
 
   return (
     <>
-      {isLoading ? (
+      {serviceListQuery.isLoading ? (
         <SkeletonServiceGroupHomePage />
       ) : (
-        data?.data.map((item) => (
+        serviceListQuery.data?.data.data.map((item) => (
           <ServiceGroupHomePage key={item.id} data={item} />
         ))
       )}

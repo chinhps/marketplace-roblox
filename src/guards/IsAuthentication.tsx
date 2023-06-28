@@ -10,7 +10,7 @@ export default function IsAuthentication({
 }) {
   const toast = useToast(customToast);
 
-  if (!token) {
+  if (!token()) {
     toast({
       description: "Bạn cần đăng nhập trước khi sử dụng!",
     });

@@ -1,3 +1,5 @@
+import { AuthApi } from "@/apis/auth";
+import { ILogoutInput } from "@/types/response/auth.type";
 import { customToast } from "@/utils/const";
 import { logout } from "@/utils/price";
 import {
@@ -12,7 +14,9 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function ModelLogout({
   isOpen,
@@ -23,21 +27,39 @@ export default function ModelLogout({
 }) {
   const toast = useToast(customToast);
   const navigate = useNavigate();
+  const [isLogout, setIsLogout] = useState(false);
+  const [isLogoutAll, setIsLogoutAll] = useState(false);
+
+  const logoutQuery = useMutation({
+    mutationFn: (data: ILogoutInput) => {
+      return AuthApi.logout(data);
+    },
+    onSuccess: ({ data }) => {
+      toast({
+        description: data?.data.msg,
+      });
+      clearToken();
+    },
+  });
 
   const clearToken = () => {
-    toast({
-      description: "Thoát thành công!",
-    });
-    navigate("/");
     onClose();
     logout();
+    navigate("/auth/sign-in");
   };
 
+  // Handle
   const handleLogoutAllDevice = () => {
-    clearToken();
+    setIsLogoutAll(true);
+    logoutQuery.mutate({
+      typeLogout: "ALL",
+    });
   };
   const handleLogoutCurrentDevice = () => {
-    clearToken();
+    setIsLogout(true);
+    logoutQuery.mutate({
+      typeLogout: "CURRENT",
+    });
   };
 
   return (
@@ -58,10 +80,18 @@ export default function ModelLogout({
           </ModalBody>
 
           <ModalFooter gap={2}>
-            <Button colorScheme="red" onClick={handleLogoutCurrentDevice}>
+            <Button
+              isLoading={isLogout}
+              colorScheme="red"
+              onClick={handleLogoutCurrentDevice}
+            >
               Thoát ngay
             </Button>
-            <Button colorScheme="green" onClick={handleLogoutAllDevice}>
+            <Button
+              isLoading={isLogoutAll}
+              colorScheme="green"
+              onClick={handleLogoutAllDevice}
+            >
               Thoát tất cả thiết bị
             </Button>
           </ModalFooter>

@@ -1,6 +1,12 @@
 
 export const globalStyles = {
     colors: {
+        main: {
+            item: "var(--bg-item-main-color)",
+            item2: "var(--bg-item2-main-color)",
+            item3: "var(--bg-item3-main-color)",
+            item4: "var(--bg-item4-main-color)"
+        },
         chakra: {
             "body-bg": "black",
         },
@@ -29,6 +35,7 @@ export const globalStyles = {
             200: "#2C8CC2"
         },
         red: {
+            99: "#DB0E0E",
             100: '#FEEFEE',
             250: '#fee2e2',
             500: '#EE5D50',

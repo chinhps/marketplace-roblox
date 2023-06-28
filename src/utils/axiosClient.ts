@@ -15,12 +15,21 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(config => {
-  config.data = {
-    ...config.data,
-    domain: myDomain()
-  };
-  if (token) {
-    config.headers.Authorization = 'Bearer ' + token;
+  if (config.method === 'post') {
+    config.data = {
+      ...config.data,
+      domain: myDomain()
+    };
+  }
+  if (config.method === 'get') {
+    config.params = {
+      ...config.data,
+      domain: myDomain()
+    }
+  }
+
+  if (token()) {
+    config.headers.Authorization = 'Bearer ' + token();
   }
   return config;
 }, error => {
@@ -29,9 +38,9 @@ axiosClient.interceptors.request.use(config => {
 
 axiosClient.interceptors.response.use(
   (res) => {
-    if (res && res.data) {
-      return res.data;
-    }
+    // if (res && res.data) {
+    //   return res.data;
+    // }
     return res;
   },
   (err) => {
@@ -41,6 +50,14 @@ axiosClient.interceptors.response.use(
       toast({
         status: "error",
         description: "Xác thực thất bại! Vui lòng đăng nhập lại!",
+        ...customToast
+      });
+      logout();
+    }
+    if (status === 422) {
+      toast({
+        status: "warning",
+        description: err?.response.data.msg,
         ...customToast
       });
       logout();

@@ -1,3 +1,4 @@
+import ModelLogout from "@/components/global/Model/ModelLogout";
 import { useUserData } from "@/hooks/UserDataProvider";
 import { numberFormat } from "@/utils/price";
 import {
@@ -11,14 +12,17 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import moment from "moment/moment";
 
 export default function Profile() {
   const userData = useUserData();
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
+      <ModelLogout isOpen={isOpen} onClose={onClose} />
       <Heading as="h1" fontSize="25px">
         Thông tin tài khoản
       </Heading>
@@ -51,7 +55,7 @@ export default function Profile() {
             <Tr>
               <Td>Thoát</Td>
               <Td>
-                <Button variant="black" rounded="md">
+                <Button variant="black" rounded="md" onClick={onOpen}>
                   Đăng xuất
                 </Button>
               </Td>

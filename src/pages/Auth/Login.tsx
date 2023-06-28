@@ -9,56 +9,40 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaFacebook, FaTiktok } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import { ILoginResponse } from "@/types/response/auth.type";
 import { customToast } from "@/utils/const";
+import { ILoginInput } from "@/types/response/auth.type";
 
 export default function Login() {
   const { handleSubmit, register, watch } = useForm();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const toast = useToast(customToast);
 
-  const {
-    isFetching,
-  }: {
-    isFetching: boolean;
-    data: ILoginResponse | null | undefined;
-    error: ILoginResponse | null | undefined;
-  } = useQuery({
-    queryKey: ["login_fetch"],
-    enabled: false,
-    onError: (error) => {
-      toast({
-        description: error?.msg,
-        status: "warning",
-      });
+  const mutation = useMutation({
+    mutationFn: (data: ILoginInput) => {
+      return AuthApi.login(data);
     },
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       toast({
         description: data?.msg,
         status: "success",
       });
       if (data?.token) {
         localStorage.setItem("auth._token.local", data?.token);
-        navigate("/");
+        navigate("/", { state: { token: data?.token } });
       }
     },
   });
 
   // Handle
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    queryClient.prefetchQuery({
-      queryKey: ["login_fetch"],
-      queryFn: () =>
-        AuthApi.login({
-          username: data.username,
-          password: data.password,
-        }),
+    mutation.mutate({
+      username: data.username,
+      password: data.password,
     });
   };
 
@@ -95,7 +79,7 @@ export default function Login() {
           <OtherLogin />
           <Checkbox {...register("remember")}>Ghi nhớ đăng nhập</Checkbox>
           <Button
-            isLoading={isFetching}
+            isLoading={mutation.isLoading}
             isDisabled={
               !changeColorButton(watch("username"), watch("password"))
             }
@@ -125,7 +109,7 @@ function changeColorButton(vl1: string | undefined, vl2: string | undefined) {
   return vl1 !== "" && vl2 !== "" && typeof vl1 !== "undefined";
 }
 
-function OtherLogin() {
+export function OtherLogin() {
   return (
     <Flex gap={2} my={3}>
       <Button bg="messenger.500" flex={1} py={7}>
