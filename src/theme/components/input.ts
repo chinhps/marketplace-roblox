@@ -7,7 +7,10 @@ export const inputStyles = {
                 field: {
                     fontWeight: 400,
                     borderRadius: '8px',
-                    color: mode('secondaryGray.900', 'white')(props),
+                    bg: mode('main.item', 'navy.800')(props),
+                    border: '1px solid',
+                    color: 'secondaryGray.600',
+                    borderColor: mode('main.item4', 'whiteAlpha.100')(props),
                 },
             }),
 
@@ -37,10 +40,10 @@ export const inputStyles = {
             variants: {
                 main: (props: any) => ({
                     field: {
-                        bg: mode('white.100', 'navy.800')(props),
+                        bg: mode('main.item', 'navy.800')(props),
                         border: '1px solid',
                         color: 'secondaryGray.600',
-                        borderColor: mode('gray.300', 'whiteAlpha.100')(props),
+                        borderColor: mode('main.item4', 'whiteAlpha.100')(props),
                         borderRadius: '5px',
                         _placeholder: { color: 'secondaryGray.600' },
                     },

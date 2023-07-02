@@ -4,14 +4,17 @@ export const buttonStyles = {
     components: {
         Button: {
             baseStyle: {
-                lineHeight: "none"
+                lineHeight: "none",
+                _hover: {
+                    bg: "main.item4",
+                    color: 'white.100',
+                },
             },
             variants: {
                 outline: () => ({
                     borderRadius: '16px',
                 }),
                 playGame: () => ({
-                    color: 'black.100',
                     textTransform: "uppercase",
                     fontSize: "17px",
                     fontWeight: "600",
@@ -22,7 +25,6 @@ export const buttonStyles = {
                     borderColor: "gold.100"
                 }),
                 playGameTry: () => ({
-                    color: 'black.100',
                     textTransform: "uppercase",
                     fontSize: "17px",
                     fontWeight: "600",
@@ -33,7 +35,6 @@ export const buttonStyles = {
                     borderColor: "ocean.100"
                 }),
                 action: () => ({
-                    color: 'black.100',
                     textTransform: "uppercase",
                     fontSize: "15px",
                     fontWeight: "600",

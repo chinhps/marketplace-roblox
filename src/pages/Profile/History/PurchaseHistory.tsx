@@ -87,7 +87,7 @@ export default function PurchaseHistory() {
           <Divider />
         </Box>
         <TableContainer>
-          <Table variant="simple">
+          <Table>
             <TableCaption>Lịch sử mua tài khoản</TableCaption>
             <Thead>
               <Tr>

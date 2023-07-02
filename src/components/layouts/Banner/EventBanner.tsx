@@ -12,7 +12,6 @@ import {
   Divider,
   HStack,
   Flex,
-  Img,
   TabProps,
 } from "@chakra-ui/react";
 import TopRecharge from "./TopRecharge";

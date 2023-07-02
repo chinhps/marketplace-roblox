@@ -4,6 +4,7 @@ import { myDomain } from './version';
 import { customToast, token } from './const';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { logout } from './price';
+import CryptoJS from 'crypto-js';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API,
@@ -13,12 +14,11 @@ const axiosClient = axios.create({
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
-
 axiosClient.interceptors.request.use(config => {
   if (config.method === 'post') {
     config.data = {
       ...config.data,
-      domain: myDomain()
+      domain: myDomain(),
     };
   }
   if (config.method === 'get') {

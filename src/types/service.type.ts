@@ -30,11 +30,19 @@ export interface GameActionProps {
     cardsRef?: React.RefObject<HTMLDivElement>;
     watch?: UseFormWatch<FieldValues> | undefined;
     isTry?: boolean;
+    hiddenNumloop?: boolean;
+    textButton?: string;
+    handleClickSubmitCustom?: () => void;
     handleTry?: (numberLoop: number) => void;
 }
 
 export interface GameSelectNumloop extends Pick<GameActionProps, "register" | "service_price"> {
     hidden: boolean | null;
+}
+
+export interface ServiceHandlePostProps {
+    type: "REAL" | "FAKE";
+    numrolllop: number;
 }
 
 export interface ListGiftsInterface {

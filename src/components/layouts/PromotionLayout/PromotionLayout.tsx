@@ -9,7 +9,6 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react";
-import Service from "@/components/global/Service/Service";
 import { FaWallet } from "react-icons/fa";
 
 export default function PromotionLayout() {
@@ -18,21 +17,11 @@ export default function PromotionLayout() {
       <SimpleGrid columns={{ base: 1, lg: 12 }} gap={5} p={{ base: 2, lg: 0 }}>
         <GridItem
           colSpan={{ base: 1, lg: 9 }}
-          bg="white.500"
+          bg="main.item"
           borderRadius="5px"
-          p={5}
+          p={{ base: "2.5rem 1rem", lg: "2.5rem" }}
           shadow="base"
         >
-          <Heading
-            as="h1"
-            fontSize="3xl"
-            textTransform="uppercase"
-            mb={2}
-            textAlign="center"
-            className="showText"
-          >
-            LẬT HÌNH VUI VẺ
-          </Heading>
           <Outlet />
         </GridItem>
         <GridItem colSpan={{ base: 1, lg: 3 }}>
@@ -80,8 +69,8 @@ function RecomendServices() {
         Có thể bạn quan tâm
       </Heading>
       <VStack>
-        <Service />
-        <Service />
+        {/* <Service  />
+        <Service /> */}
       </VStack>
     </>
   );

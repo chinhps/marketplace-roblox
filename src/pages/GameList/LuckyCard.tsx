@@ -1,116 +1,180 @@
-import { GameActionProps, ListGiftsInterface } from "@/types/service.type";
-import { numberFormat, shuffleArray } from "@/utils/price";
+import { ServiceHandlePostProps } from "@/types/service.type";
 import {
   Box,
-  Button,
-  Flex,
   GridItem,
-  HStack,
-  Icon,
   Img,
-  Select,
   SimpleGrid,
-  VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useRef } from "react";
-import {
-  FieldValues,
-  SubmitHandler,
-  UseFormHandleSubmit,
-  UseFormRegister,
-  useForm,
-} from "react-hook-form";
-import { FaMoneyBill, FaUserAlt } from "react-icons/fa";
+import { useRef, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { GameAction, HeadingService } from "./GameListGlobal";
+import { useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import GameApi from "@/apis/games/gameApi";
 import { useParams } from "react-router-dom";
-import SelectNumloop from "./GameListGlobal";
+import { IServiceDetailResponse } from "@/types/response/service.type";
+import { TIMEOUT_SLEEP } from "@/utils/const";
+import ModelService from "@/components/global/Model/ModelService";
+import { shuffleArray } from "@/utils/price";
+
+const gameApi = new GameApi();
+let bgCardDefault = "";
+let elementSelectedGlobal: HTMLDivElement | null = null;
+let typeRoll: "REAL" | "FAKE" = "REAL";
 
 export default function LuckyCard() {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const { slug } = useParams();
+  useEffect(() => {
+    if (slug) {
+      gameApi.setSlug(slug);
+    }
+  }, []);
+  const serviceInfoQuery = useQuery({
+    queryKey: ["service", slug],
+    queryFn: () => gameApi.getData(),
+    enabled: !!slug,
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: ({ data }) => {
+      // Set link card default after flip
+      bgCardDefault = data.data.service_image.images.image_1;
+    },
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+
   return (
     <>
-      <Flex
-        justifyContent="space-between"
-        mb={10}
-        flexDirection={{ base: "column", md: "row" }}
-        gap={2}
-      >
-        <HStack gap={2} flexDirection={{ base: "column", md: "row" }}>
-          <Button variant="action" gap={2}>
-            <Icon as={FaUserAlt} w="13px" variant="action" />
-            Đang chơi: {Math.floor(Math.random() * 50) + 2}
-          </Button>
-          <Button variant="action" gap={2}>
-            <Icon as={FaMoneyBill} w="13px" variant="action" />
-            {numberFormat(199000)}
-          </Button>
-        </HStack>
-        <HStack justifyContent="center">
-          <Button flex={1} variant="action">
-            Thể lệ
-          </Button>
-          <Button flex={1} variant="action">
-            Lịch sử
-          </Button>
-        </HStack>
-      </Flex>
+      <HeadingService price={serviceInfoQuery.data?.data.data.price ?? 0}>
+        {serviceInfoQuery.data?.data.data.service_image.name}
+      </HeadingService>
       {/* GAMES */}
-      <GamePlay />
+      <GamePlay dataService={serviceInfoQuery.data?.data.data} />
       {/* END GAME */}
     </>
   );
 }
 
-const listGifts: Record<keyof ListGiftsInterface, string> = {
-  img1: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800724639.png",
-  img2: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800231943.png",
-  img3: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800690114.png",
-  img4: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800976235.png",
-  img5: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800454175.png",
-  img6: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800309335.png",
-  img7: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800390059.png",
-  img8: "https://quanly.gameroblox.vn/upload/doanhmuc/167985780094135.png",
-  img9: "https://quanly.gameroblox.vn/upload/doanhmuc/1679857800918120.png",
-};
-
-function GamePlay() {
+function GamePlay({
+  dataService,
+}: {
+  dataService: IServiceDetailResponse | undefined;
+}) {
+  /****----------------
+   *      FLOW: 
+   * - Add class "lucky-card-light" after selected
+   * - Call Api
+   * - Success:
+   * + Add Class "flip-back" for card selected
+   * + Change `src` Image selected by Image at Response
+   * + Delay flip for card remaining
+   * + Shuffer list `src` card images exception `src` at Response
+   * + Flip card remaining
+   * + Fill `src` Image remaining exception `src` at Response
+  ----------------****/
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const { handleSubmit, register } = useForm();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isFlip, setIsFlip] = useState<boolean>(false);
   const cardsRef = useRef<HTMLDivElement>({} as HTMLDivElement);
-  const {
-    handleSubmit,
-    register,
-    formState: { isSubmitting },
-  } = useForm();
-  // const { slug } = useParams<string>();
+  const mutation = useMutation({
+    mutationFn: ({ type, numrolllop }: ServiceHandlePostProps) => {
+      setIsFlip(false);
+      // Add effect light for card selected
+      elementSelectedGlobal?.parentElement?.classList.add(`lucky-card-light`);
+      if (type === "FAKE") {
+        return gameApi.postDataTry({
+          numrolllop,
+        });
+      }
+      return gameApi.postData({
+        numrolllop,
+      });
+    },
+    onSuccess: async ({ data }) => {
+      // Add Class "flip-back" for card selected
+      elementSelectedGlobal?.classList.add(`flip-back`);
+      // Change `src` Image selected by Image at Response
+      (elementSelectedGlobal as HTMLImageElement).src =
+        data.data?.gifts[0].image ?? "";
+      // Delay flip for card remaining
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT_SLEEP * 1000));
+      // Shuffer list `src` card images exception `src` at Response
+      const serviceGiftsShuffer = shuffleArray(
+        dataService?.gifts.filter((gift) => gift !== data.data?.gifts[0].image)
+      );
+      // Flip card remaining
+      Object.values(cardsRef?.current?.children || {})
+        .filter(
+          (card) => card.children[0].children[0] !== elementSelectedGlobal
+        )
+        .map((element, index) => {
+          element.children[0].children[0].classList.add(`flip-back`);
+          // Fill `src` Image remaining exception `src` at Response
+          (element.children[0].children[0] as HTMLImageElement).src =
+            (serviceGiftsShuffer && serviceGiftsShuffer[index]) ?? "";
+        });
+      onOpen();
+    },
+  });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data, elementTaget) => {
-    console.log(data, elementTaget?.target);
+  /****----------------
+   *      END-HOOK
+  ----------------****/
 
-    // const { numrolllop } = data;
-    // element.children[0].classList.add(`lucky-card-light`);
-    // const fetchPlaying = await productAPI.is_playing(
-    //   slug,
-    //   "real",
-    //   data.numrolllop
-    // );
-    // if (fetchPlaying.status !== "ERROR") {
-    //   // Bài được chọn lật lại
-    //   // element.children[0].children[0].classList.remove(`flip`);
-    //   element.children[0].children[0].classList.add(`flip-back`);
-    //   element.children[0].children[0].src = fetchPlaying.msg?.image;
-    //   await new Promise((resolve) => setTimeout(resolve, 2000));
-    //   // Tất cả bài còn lại cũng lật lại
-    //   flipCard("flip", "remove", element);
-    //   flipCard("flip-back", "add", element);
-    //   // Thêm hình vào cho các lá bài còn lại
-    //   srcCard(fetchPlaying.msg?.list, element, fetchPlaying.msg?.image);
-    //   setDataFetch(TextMsgGames(fetchPlaying));
-    // } else {
-    //   setDataFetch(fetchPlaying.msg.name);
-    // }
-    // setIsLoading(false);
-    // onOpen();
+  /****----------------
+   *      HANDLE
+  ----------------****/
+  // Play try
+  const onSubmitTry: SubmitHandler<FieldValues> = async (
+    numrolllop,
+    elementTaget
+  ) => {
+    elementSelectedGlobal = elementTaget?.target;
+    await mutation.mutateAsync({
+      type: "FAKE",
+      numrolllop: Number(numrolllop),
+    });
   };
+  // Play real
+  const onSubmit: SubmitHandler<FieldValues> = async (data, elementTaget) => {
+    elementSelectedGlobal = elementTaget?.target;
+    await mutation.mutateAsync({
+      type: "REAL",
+      numrolllop: Number(data.numrolllop),
+    });
+  };
+  // Handle Click Button
+  const handleClickRealFake = (type: "REAL" | "FAKE") => {
+    handleFlipCard();
+    // Change type roll outside function because not rerender
+    typeRoll = type;
+  };
+  // Handle flip card
+  const handleFlipCard = () => {
+    setIsFlip(true);
+    Object.values(cardsRef?.current?.children || {}).map((card) => {
+      (card.children[0].children[0] as HTMLImageElement).src = bgCardDefault;
+      card.children[0].children[0].classList.remove("flip-back");
+      card.children[0].children[0].classList.add("flip");
+      card.children[0].classList.remove(`lucky-card-light`);
+    });
+  };
+  /****----------------
+   *      END-HANDLE
+  ----------------****/
 
   return (
     <>
+      <ModelService isOpen={isOpen} onClose={onClose} />
       <SimpleGrid
         columns={3}
         w={{ "2sm": "100%", md: "50%" }}
@@ -118,117 +182,42 @@ function GamePlay() {
         gap={2}
         ref={cardsRef}
       >
-        {Object.keys(listGifts ?? []).map((image, key) => (
+        {dataService?.gifts.map((image, key) => (
           <GridItem key={key} className="shake-card">
             <Box className="transtion">
               <Img
                 transition="2s"
-                // pointerEvents="none"
                 w="lg"
                 alt="lucky card chinh.dev"
                 onClick={(e) => {
-                  const submitHandler = handleSubmit((d) => {
-                    onSubmit(d, e);
-                  });
-                  submitHandler(e);
+                  if (isFlip) {
+                    const submitHandler = handleSubmit((d) => {
+                      typeRoll === "REAL" ? onSubmit(d, e) : onSubmitTry(d, e);
+                    });
+                    submitHandler(e);
+                  }
                 }}
-                src={listGifts[image as keyof ListGiftsInterface]}
+                src={image}
               />
             </Box>
           </GridItem>
         ))}
       </SimpleGrid>
-      {/* HÀNH ĐỘNG GAME */}
+      {/* ACTION */}
       <GameAction
         {...{
+          textButton: "ÚP THẺ NGAY",
+          hiddenNumloop: true,
           cardsRef,
           handleSubmit,
-          isSubmitting,
+          isSubmitting: mutation.isLoading,
           onSubmit,
           register,
-          service_price: 100000,
+          handleTry: () => handleClickRealFake("FAKE"),
+          handleClickSubmitCustom: () => handleClickRealFake("REAL"),
+          service_price: dataService?.price ?? 0,
         }}
       />
     </>
-  );
-}
-
-function GameAction({
-  cardsRef,
-  handleSubmit,
-  onSubmit,
-  register,
-  isSubmitting,
-  service_price,
-}: GameActionProps) {
-  // Src tất cả bài (đổi ảnh thẻ bài)
-  const srcCard = (
-    srcs: string[] = [],
-    excludeElm: HTMLDivElement | null = null,
-    excludeSrc: string | null = null
-  ) => {
-    // Loại các elm đã chọn
-    const filterCardsRef = Object.values(
-      cardsRef?.current?.children || {}
-    ).filter((card) => {
-      return card !== excludeElm;
-    });
-
-    // Loại ảnh kết quả nhận được
-    let filterSrcs = srcs.filter((src) => {
-      return src !== excludeSrc;
-    });
-
-    filterSrcs = shuffleArray(filterSrcs);
-
-    filterCardsRef.forEach((card, index) => {
-      if (card) {
-        const imageElement = card.children[0].children[0] as HTMLImageElement;
-        if (imageElement) {
-          imageElement.src = filterSrcs[index];
-        }
-      }
-    });
-  };
-
-  // Class tất cả bài
-  const flipCard = (className = "flip", type = "add", exclude = null) => {
-    cardsRef?.current?.children &&
-      [...cardsRef.current.children].forEach((card) => {
-        // loại bài đã chọn đi
-        if (card === exclude) return;
-
-        if (card) {
-          (card.children[0].children[0] as HTMLImageElement).src = "";
-          if (type === "add") {
-            card.children[0].children[0].classList.remove("flip-back");
-            card.children[0].children[0].classList.add(className);
-            card.children[0].classList.remove(`lucky-card-light`);
-          } else {
-            card.children[0].children[0].classList.remove(className);
-          }
-        }
-      });
-  };
-
-  return (
-    <VStack justifyContent="center" mt={4}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <SelectNumloop
-          hidden={true}
-          register={register}
-          service_price={service_price}
-        />
-        <HStack gap={1} justifyContent="center">
-          <Button
-            isLoading={isSubmitting}
-            onClick={() => flipCard("flip", "add")}
-            variant="playGame"
-          >
-            ÚP THẺ NGAY
-          </Button>
-        </HStack>
-      </form>
-    </VStack>
   );
 }

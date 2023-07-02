@@ -1,5 +1,5 @@
 import { ButtonCustomProps } from "@/types/service.type";
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useRef, useEffect } from "react";
 
 export default function ButtonCustom({

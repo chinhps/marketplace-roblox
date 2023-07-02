@@ -1,5 +1,6 @@
 import serviceApi from "@/apis/service";
-import Service from "@/components/global/Service/Service";
+// import Service from "@/components/global/Service/Service";
+import ServiceV2 from "@/components/global/Service/ServiceV2";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 import { IServiceGroupResponse } from "@/types/response/service.type";
 import { Center, Img, SimpleGrid } from "@chakra-ui/react";
@@ -41,7 +42,7 @@ function ServiceGroupHomePage({
         mb="3rem"
       >
         {data?.serviceList.map((service) => (
-          <Service key={service.id} data={service} />
+          <ServiceV2 key={service.id} data={service} />
         ))}
       </SimpleGrid>
     </>
@@ -62,7 +63,7 @@ function SkeletonServiceGroupHomePage() {
         {Array(10)
           .fill(0)
           .map((_, key) => (
-            <Service.loading key={key} />
+            <ServiceV2.loading key={key} />
           ))}
       </SimpleGrid>
     </>

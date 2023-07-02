@@ -59,8 +59,8 @@ export const listOption = [
     },
 ];
 
-export const ATM_DISCOUNT = 0.9;
-
+export const ATM_DISCOUNT = 0.9; 
+export const TIMEOUT_SLEEP = 3;// second
 export const token = () => {
     return localStorage.getItem("auth._token.local");
 }

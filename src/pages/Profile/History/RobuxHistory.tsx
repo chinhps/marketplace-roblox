@@ -76,7 +76,7 @@ export default function RobuxHistory() {
           <Divider />
         </Box>
         <TableContainer>
-          <Table variant="simple">
+          <Table>
             <TableCaption>Lịch sử rút và mua Robux</TableCaption>
             <Thead>
               <Tr>

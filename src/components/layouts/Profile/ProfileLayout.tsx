@@ -30,10 +30,10 @@ export default function ProfileLayout() {
   return (
     <IsAuthentication>
       <SimpleGrid columns={10} spacing={3}>
-        <GridItem colSpan={2} bg="white.500" p={5}>
+        <GridItem rounded="md" colSpan={2} bg="main.item" p={5}>
           <SideBar />
         </GridItem>
-        <GridItem colSpan={8} bg="white.500" p={10}>
+        <GridItem rounded="md" colSpan={8} bg="main.item" p={10}>
           <Outlet />
         </GridItem>
       </SimpleGrid>

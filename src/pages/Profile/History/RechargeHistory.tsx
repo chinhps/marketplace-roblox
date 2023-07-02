@@ -80,7 +80,7 @@ export default function RechargeHistory() {
           <Divider />
         </Box>
         <TableContainer>
-          <Table variant="simple">
+          <Table>
             <TableCaption>
               Lịch sử nạp thẻ (Thực nhận chưa tính khuyến mãi)
             </TableCaption>

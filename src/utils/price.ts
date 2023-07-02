@@ -6,7 +6,8 @@ export const numberFormat = (price: number, currency: boolean = true) => {
   return format;
 }
 
-export function shuffleArray(arr: Array<string>) {
+export function shuffleArray(arr: Array<string> | undefined) {
+  if (!arr) return arr;
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];

@@ -65,7 +65,7 @@ export default function GameHistory() {
           <Divider />
         </Box>
         <TableContainer>
-          <Table variant="simple">
+          <Table>
             <TableCaption>Lịch sử chơi Game</TableCaption>
             <Thead>
               <Tr>

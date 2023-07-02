@@ -307,7 +307,7 @@ function BannerBlur() {
 function RecommendFeature() {
   return (
     <>
-      <HStack justifyContent="space-between">
+      <HStack spacing={3} justifyContent="space-between">
         <RecommendFeatureItem
           icon={<Icon as={FiLogIn} fontSize="40px" />}
           heading="NẠP THẺ NGAY"
@@ -332,6 +332,7 @@ function RecommendFeature() {
     </>
   );
 }
+
 function RecommendFeatureItem({
   icon,
   heading,

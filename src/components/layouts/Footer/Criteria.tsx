@@ -18,9 +18,16 @@ export default function Criteria() {
         bgRepeat="no-repeat"
         bgSize="cover"
         py="6rem"
+        borderBottom="1px"
+        borderColor="main.item4"
       >
         <Container maxW="container.2xl" height="100%" flex={1} p={0} zIndex={5}>
-          <HStack alignItems="flex-start" color="white.100" spacing={8}>
+          <HStack
+            flexDirection={{ base: "column", lg: "row" }}
+            alignItems="flex-start"
+            color="white.100"
+            spacing={{ base: 12, lg: 8 }}
+          >
             <CriteriaItem
               icon={<FiLock />}
               heading="An Toàn"

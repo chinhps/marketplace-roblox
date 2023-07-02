@@ -2,10 +2,14 @@ export const tableStyles = {
     components: {
         Table: {
             baseStyle: {
-                backgroundColor: "red",
-                borderCollapse: "separate",
-                borderSpacing: 0,
+                border: "solid 1.5px",
+                borderColor: "gold.100"
             },
-        }
+        },
+        Divider: {
+            baseStyle: {
+                borderColor: "gray.600"
+            },
+        },
     }
 }

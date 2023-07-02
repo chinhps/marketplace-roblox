@@ -80,7 +80,7 @@ export default function BuyGamepassHistory() {
           <Divider />
         </Box>
         <TableContainer>
-          <Table variant="simple">
+          <Table>
             <TableCaption>Lịch sử mua Gamepass </TableCaption>
             <Thead>
               <Tr>

@@ -1,75 +1,106 @@
-import { GameActionProps } from "@/types/service.type";
-import { numberFormat } from "@/utils/price";
-import { Box, Button, Flex, HStack, Icon, Img, VStack } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { Box, HStack, Img, useDisclosure } from "@chakra-ui/react";
+import { useRef } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { FaCaretRight, FaMoneyBill, FaUserAlt } from "react-icons/fa";
-import SelectNumloop from "./GameListGlobal";
+import { GameAction, HeadingService } from "./GameListGlobal";
+import GameApi from "@/apis/games/gameApi";
+import { useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { IServiceDetailResponse } from "@/types/response/service.type";
+import { TIMEOUT_SLEEP } from "@/utils/const";
+import ModelService from "@/components/global/Model/ModelService";
+import { ServiceHandlePostProps } from "@/types/service.type";
+
+const gameApi = new GameApi();
 
 export default function LuckyBox() {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const { slug } = useParams();
+  useEffect(() => {
+    if (slug) {
+      gameApi.setSlug(slug);
+    }
+  }, []);
+  const serviceInfoQuery = useQuery({
+    queryKey: ["service", slug],
+    queryFn: () => gameApi.getData(),
+    enabled: !!slug,
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+
   return (
     <>
-      <Flex
-        justifyContent="space-between"
-        mb={10}
-        flexDirection={{ base: "column", md: "row" }}
-        gap={2}
-      >
-        <HStack gap={2} flexDirection={{ base: "column", md: "row" }}>
-          <Button variant="action" gap={2}>
-            <Icon as={FaUserAlt} w="13px" variant="action" />
-            Đang chơi: {Math.floor(Math.random() * 50) + 2}
-          </Button>
-          <Button variant="action" gap={2}>
-            <Icon as={FaMoneyBill} w="13px" variant="action" />
-            {numberFormat(199000)}
-          </Button>
-        </HStack>
-        <HStack justifyContent="center">
-          <Button flex={1} variant="action">
-            Thể lệ
-          </Button>
-          <Button flex={1} variant="action">
-            Lịch sử
-          </Button>
-        </HStack>
-      </Flex>
-      <GamePlay />
+      <HeadingService price={serviceInfoQuery.data?.data.data.price ?? 0}>
+        {serviceInfoQuery.data?.data.data.service_image.name}
+      </HeadingService>
+      {/* GAMES */}
+      <GamePlay dataService={serviceInfoQuery.data?.data.data} />
+      {/* END GAME */}{" "}
     </>
   );
 }
 
-function GamePlay() {
+function GamePlay({
+  dataService,
+}: {
+  dataService: IServiceDetailResponse | undefined;
+}) {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const { handleSubmit, register, watch } = useForm();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const wheelImg = useRef<HTMLImageElement>({} as HTMLImageElement);
-  const {
-    handleSubmit,
-    register,
-    watch,
-    formState: { isSubmitting },
-  } = useForm();
+  const mutation = useMutation({
+    mutationFn: async ({ type, numrolllop }: ServiceHandlePostProps) => {
+      // Delay result
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT_SLEEP * 1000));
+      if (type === "FAKE") {
+        return gameApi.postDataTry({
+          numrolllop,
+        });
+      }
+      return gameApi.postData({
+        numrolllop,
+      });
+    },
+    onSuccess: ({ data }) => {
+      onOpen();
+      console.log(data);
+    },
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
 
-  const [isTry, setIsTry] = useState<boolean>(false);
-  const [giftBingo, setGiftBingo] = useState<number | undefined>(undefined);
-
-  // const { slug } = useParams<string>();
-
-  const service_background =
-    "https://quanly.gameroblox.vn/upload/doanhmuc/1680018275408537.png";
-  const service_pending_image =
-    "https://quanly.gameroblox.vn/upload/doanhmuc/1680018275471186.gif";
-  const service_default_image =
-    "https://quanly.gameroblox.vn/upload/doanhmuc/1680273849415480.gif";
-  const service_gifts: Array<string> = [];
-
-  // Handle
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
-  };
-
+  /****----------------
+   *      HANDLE
+  ----------------****/
+  // Play try
   const handleTry = async (numrolllop: number) => {
-    console.log(numrolllop);
+    await mutation.mutateAsync({
+      type: "FAKE",
+      numrolllop: Number(numrolllop),
+    });
   };
 
+  // Play real
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    await mutation.mutateAsync({
+      type: "REAL",
+      numrolllop: Number(data.numrolllop),
+    });
+  };
+  /****----------------
+   *      END-HANDLE
+  ----------------****/
   function GiftLuckyBox({ image }: { image: string }) {
     return (
       <>
@@ -79,15 +110,13 @@ function GamePlay() {
           zIndex={3}
           _hover={{ opacity: 0.7 }}
           top={-5}
-          left={0}
-          right={0}
-          bottom={0}
+          inset={0}
           transition="0.5s"
           opacity={1}
           cursor="pointer"
           m="auto"
           w="400px"
-          alt="chinh.dev"
+          alt={dataService?.service_image.name + " by chinh.dev"}
           src={image}
         />
       </>
@@ -96,6 +125,7 @@ function GamePlay() {
 
   return (
     <>
+      <ModelService isOpen={isOpen} onClose={onClose} />
       <HStack justifyContent="center" mt={3}>
         <Box position="relative" zIndex={1}>
           <Img
@@ -104,72 +134,35 @@ function GamePlay() {
             transition="2s"
             pointerEvents="none"
             w="lg"
-            alt="chinh.dev"
-            src={service_background}
+            alt={dataService?.service_image.name + " by chinh.dev"}
+            src={dataService?.service_image.images.image_1 ?? ""}
           />
-          {isSubmitting || isTry ? (
-            <GiftLuckyBox image={service_pending_image} />
-          ) : giftBingo ? (
-            <GiftLuckyBox image={service_gifts[giftBingo]} />
+          {mutation.isLoading ? (
+            <GiftLuckyBox
+              image={dataService?.service_image.images.image_3 ?? ""}
+            />
+          ) : mutation.isSuccess ? (
+            <GiftLuckyBox
+              image={mutation.data.data.data?.gifts[0].image ?? ""}
+            />
           ) : (
-            <GiftLuckyBox image={service_default_image} />
+            <GiftLuckyBox
+              image={dataService?.service_image.images.image_2 ?? ""}
+            />
           )}
         </Box>
       </HStack>
       <GameAction
         {...{
           handleSubmit,
-          isSubmitting,
           onSubmit,
           register,
-          service_price: 100000,
-          isTry,
+          isSubmitting: mutation.isLoading,
+          service_price: dataService?.price ?? 0,
           watch,
           handleTry,
         }}
       />
     </>
-  );
-}
-
-function GameAction({
-  handleSubmit,
-  onSubmit,
-  register,
-  isSubmitting,
-  service_price,
-  isTry,
-  watch,
-  handleTry,
-}: GameActionProps) {
-  return (
-    <VStack justifyContent="center" mt={4}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <SelectNumloop
-          hidden={false}
-          register={register}
-          service_price={service_price}
-        />
-        <HStack gap={2} justifyContent="center">
-          <Button
-            flex={1}
-            isLoading={isTry}
-            variant="playGameTry"
-            onClick={() => handleTry && watch && handleTry(watch("numrolllop"))}
-          >
-            Chơi thử
-          </Button>
-          <Button
-            flex={1}
-            variant="playGame"
-            isLoading={isSubmitting}
-            type="submit"
-          >
-            <Icon as={FaCaretRight} />
-            Quay ngay
-          </Button>
-        </HStack>
-      </form>
-    </VStack>
   );
 }

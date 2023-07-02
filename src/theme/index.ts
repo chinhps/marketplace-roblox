@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, withDefaultSize, withDefaultVariant } from "@chakra-ui/react";
 import { breakpoints } from "./foundations/breakpoints"
 import { sizes } from "./sizes"
 import { globalStyles } from "./styles/globalStyles"
@@ -7,10 +7,18 @@ import { inputStyles } from "./components/input";
 import { tableStyles } from "./components/table";
 
 export default extendTheme(
+    withDefaultVariant({
+        variant: 'unstyled',
+        components: ['Table'],
+    }),
+    withDefaultSize({
+        size: "lg",
+        components: ['Table'],
+    }),
     { breakpoints },
+    tableStyles,
     globalStyles,
     buttonStyles,
-    tableStyles,
     inputStyles,
     { sizes },
 );

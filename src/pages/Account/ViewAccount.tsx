@@ -19,12 +19,14 @@ import { Link } from "react-router-dom";
 
 export default function ViewAccount() {
   const {
-    isOpen: isOpenConfirm,
+    // isOpen: isOpenConfirm,
     onOpen: onOpenConfirm,
-    onClose: onCloseConfirm,
+    // onClose: onCloseConfirm,
   } = useDisclosure();
 
   const handleClick = (id: number) => {
+    console.log(id);
+    
     onOpenConfirm();
   };
 
