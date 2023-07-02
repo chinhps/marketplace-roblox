@@ -23,6 +23,17 @@ class ServiceDetailRepository implements ServiceDetailInterface
         $idListNotAllowExclude = $this->model->where('excluding', 'ON')->whereNotIn('id', $idServiceExclude)->pluck('id');
         return [...$unexclude, ...$idListNotAllowExclude];
     }
+
+    public function serviceDetail(string $slug, array $listIdAllow)
+    {
+        return $this->model
+            ->where('slug', $slug)
+            ->whereIn('id', $listIdAllow)
+            ->with(['serviceImage', 'service.game_list', 'serviceOdds.serviceGifts' => function ($query) {
+                $query->select('id', 'odds_id', 'image');
+            }])
+            ->first() ?? false;
+    }
 }
 
 class ServiceDetailByDomain

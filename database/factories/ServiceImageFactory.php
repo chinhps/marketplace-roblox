@@ -22,7 +22,7 @@ class ServiceImageFactory extends Factory
         }
         return [
             "name" => $this->faker->text(60),
-            "thumb" => $this->faker->imageUrl(640, 480, null, true, "Thumb game"),
+            "thumb" => "https://i.imgur.com/Owoq65A.png",//$this->faker->imageUrl(640, 480, null, true, "Thumb game"),
             "images" => json_encode($images)
         ];
     }

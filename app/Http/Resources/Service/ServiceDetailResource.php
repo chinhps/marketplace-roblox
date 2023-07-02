@@ -14,6 +14,17 @@ class ServiceDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "game_key" => $this->service->game_list->game_key,
+            "service_image" => [
+                "name" => $this->serviceImage->name,
+                "images" => json_decode($this->serviceImage->images, true)
+            ],
+            "notification" => $this->service->notification,
+            "price" => $this->service->price,
+            "sale" => $this->service->sale,
+            "gifts" => $this->serviceOdds->serviceGifts->pluck('image') ?? []
+        ];
     }
 }

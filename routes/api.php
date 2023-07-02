@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\User\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\User\LogoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    # Logout
+    Route::middleware(['decryptToken:sanctum'])->prefix('logout')->group(function () {
+        # Logout current device
+        Route::post('/',  [LogoutController::class, 'logout']);
+        # Logout all device
+        Route::post('/all',  [LogoutController::class, 'logoutAll']);
+    });
 });
 
 # information website
@@ -36,13 +43,13 @@ Route::prefix('news')->group(function () {
 # View Service home
 Route::prefix('services')->group(function () {
     Route::get('/', [ServiceController::class, 'serviceList']);
-    Route::get('/view/{slug}', []);
+    Route::get('/view/{slug}', [ServiceController::class, 'serviceDetail']);
     Route::get('/recomends/{slug}', []);
     Route::get('/histories/{slug}', []);
 
     # play game
-    Route::post('/is_play_try', []);
-    Route::post('/is_play', [])->middleware('decryptToken:sanctum');
+    Route::post('/is_play_try/{slug}', [ServiceController::class, 'handelPlayTry']);
+    Route::post('/is_play/{slug}', [ServiceController::class, 'handelPlay'])->middleware('decryptToken:sanctum');
 
     # Buy account
     Route::post('/buy_account', [])->middleware('decryptToken:sanctum');
@@ -57,13 +64,6 @@ Route::prefix('plugins')->group(function () {
 Route::middleware(['decryptToken:sanctum'])->group(function () {
     # Get infor current user
     Route::get('/user',  [AuthController::class, 'getCurrentInfo']);
-    # Logout
-    Route::prefix('auth')->group(function () {
-        # Logout current device
-        Route::post('/',  [AuthController::class, '']);
-        # Logout all device
-        Route::post('/all',  [AuthController::class, '']);
-    });
 
     # Profile user
     Route::prefix('profile')->group(function () {

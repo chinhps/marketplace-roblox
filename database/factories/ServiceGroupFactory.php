@@ -20,7 +20,7 @@ class ServiceGroupFactory extends Factory
             "prioritize" => $this->faker->numberBetween(1, 999),
             "name" => $this->faker->name(),
             "active" => "ON", //$this->faker->randomElement(['ON','OFF']),
-            "image" => $this->faker->imageUrl(450, 55, null, true, "Thumb game")
+            "image" => "https://i.imgur.com/RGyMGhs.png", //$this->faker->imageUrl(450, 55, null, true, "Thumb game")
         ];
     }
 }
