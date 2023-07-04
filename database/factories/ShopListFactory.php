@@ -21,7 +21,10 @@ class ShopListFactory extends Factory
     {
         return [
             'stt' => $this->faker->numberBetween(1, 100),
-            'domain' => $this->faker->domainName,
+            'domain' => $this->faker->unique()->randomElement([
+                'localhost',
+                $this->faker->unique()->domainName()
+            ]),
             'shop' => $this->faker->word,
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Repository\Transaction;
 use App\Models\TransactionDiamond;
 use App\Models\TransactionPrice;
 use App\Models\TransactionRobux;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,22 @@ class TransactionRepository implements TransactionInterface
         private string $note
     ) {
     }
+    /**********
+     * GET *
+     **********/
+    // public function getPrice(User $user)
+    // {
+    //     new Transaction(
+    //         model: new TransactionPrice,
+    //         custom: ['diamond' => $this->value],
+    //         note: $this->note
+    //     );
+    // }
 
+
+    /**********
+     * CREATE *
+     **********/
     public function createPrice()
     {
         new Transaction(

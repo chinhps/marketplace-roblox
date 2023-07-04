@@ -16,19 +16,21 @@ class GameListFactory extends Factory
      */
     public function definition(): array
     {
+        $game_key =  $this->faker->unique()->randomElement([
+            "ACCOUNT", # MUA BÁN TÀI KHOẢN (FF, LQ, RB)
+            "CATEGORY", # DANH MỤC CHỨA NHIỀU CON BÊN TRONG (KHÔNG PHẢI LÀ GAME)
+            "RANDOM", # CÁC DẠNG RANDOM
+            "LINKTO", # CHUYỂN HƯỚNG ĐẾN ĐƯỜNG DẪN
+            # GAME
+            "WHEEL", # VÒNG QUAY
+            "LUCKY_BOX", # MỞ HỘP QUÀ
+            "LUCKY_CARD", # LẬT HÌNH
+            "BOX" # các loại hòm
+        ]);
         return [
-            "game_key" => $this->faker->unique()->randomElement([
-                "ACCOUNT", # MUA BÁN TÀI KHOẢN (FF, LQ, RB)
-                "CATEGORY", # DANH MỤC CHỨA NHIỀU CON BÊN TRONG (KHÔNG PHẢI LÀ GAME)
-                "RANDOM", # CÁC DẠNG RANDOM
-                "LINKTO", # CHUYỂN HƯỚNG ĐẾN ĐƯỜNG DẪN
-                # GAME
-                "WHEEL", # VÒNG QUAY
-                "LUCKY_BOX", # MỞ HỘP QUÀ
-                "LUCKY_CARD", # LẬT HÌNH
-                "BOX" # các loại hòm
-            ]),
-            "game_name" => $this->faker->name()
+            "game_key" => $game_key,
+            "game_name" => $this->faker->name(),
+            "is_game" => ($game_key == "WHEEL" | $game_key == "LUCKY_BOX" | $game_key == "LUCKY_CARD") ? true : false
         ];
     }
 }

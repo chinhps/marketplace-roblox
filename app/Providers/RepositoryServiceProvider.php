@@ -6,6 +6,8 @@ use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupRepository;
+use App\Repository\Service\ServiceInterface;
+use App\Repository\Service\ServiceRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
 use App\Repository\Transaction\TransactionInterface;
@@ -26,6 +28,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ShopInterface::class, ShopRepository::class);
         $this->app->bind(ServiceGroupInterface::class, ServiceGroupRepository::class);
         $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
+        $this->app->bind(ServiceInterface::class, ServiceRepository::class);
     }
 
     /**

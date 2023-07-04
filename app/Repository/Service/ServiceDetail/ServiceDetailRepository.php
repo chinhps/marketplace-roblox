@@ -2,7 +2,9 @@
 
 namespace App\Repository\Service\ServiceDetail;
 
+use App\Models\Service;
 use App\Models\ServiceDetail;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceDetailRepository implements ServiceDetailInterface
@@ -33,6 +35,15 @@ class ServiceDetailRepository implements ServiceDetailInterface
                 $query->select('id', 'odds_id', 'image');
             }])
             ->first() ?? false;
+    }
+
+    public function serviceTurn(User $user, Service $service)
+    {
+        // return dd($service->first());
+        return  dd($this->model
+            ->where('slug', "quae-impedit-quam-libero-voluptas-fuga")
+            // ->with(['service.serviceTurns'])
+            ->first() ?? false);
     }
 }
 

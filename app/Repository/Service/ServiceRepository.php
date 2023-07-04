@@ -2,18 +2,25 @@
 
 namespace App\Repository\Service;
 
+use App\Models\Service;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+
 class ServiceRepository implements ServiceInterface
 {
-    public function serviceList()
-    {
+    public function __construct(
+        private Model $model = new Service
+    ) {
     }
-    public function serviceDetail()
+    public function serviceTurn(Service $service, User $user)
     {
-    }
-    public function servicePlay()
-    {
-    }
-    public function servicePlayTry()
-    {
+        return
+            $this->model
+            ->find($service->id)
+            ->serviceTurns()
+            ->where('id', $user->id)
+            ->select('turn')
+            ->first()
+            ->turn ?? false;
     }
 }
