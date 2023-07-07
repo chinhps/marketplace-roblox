@@ -31,9 +31,8 @@ class Crypto
             if ($decrypted === false) return false;
 
             return $decrypted;
-        } else {
-            // Xử lý lỗi tính toàn vẹn dữ liệu, Lưu thêm log ở đây
-            return false;
         }
+        // Xử lý lỗi tính toàn vẹn dữ liệu, Lưu thêm log ở đây
+        return false;
     }
 }

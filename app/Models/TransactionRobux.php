@@ -9,4 +9,10 @@ class TransactionRobux extends Model
 {
     use HasFactory;
     protected $table = "transactions_robux";
+
+    protected $fillable = [
+        "user_id",
+        "robux",
+        "note"
+    ];
 }

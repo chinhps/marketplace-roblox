@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
+use App\Repository\History\ServiceHistory\ServiceHistoryRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
@@ -29,6 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceGroupInterface::class, ServiceGroupRepository::class);
         $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
         $this->app->bind(ServiceInterface::class, ServiceRepository::class);
+        $this->app->bind(ServiceHistoryInterface::class, ServiceHistoryRepository::class);
     }
 
     /**

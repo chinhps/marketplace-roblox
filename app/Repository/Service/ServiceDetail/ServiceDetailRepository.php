@@ -4,6 +4,7 @@ namespace App\Repository\Service\ServiceDetail;
 
 use App\Models\Service;
 use App\Models\ServiceDetail;
+use App\Models\ServiceGift;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,19 +32,34 @@ class ServiceDetailRepository implements ServiceDetailInterface
         return $this->model
             ->where('slug', $slug)
             ->whereIn('id', $listIdAllow)
-            ->with(['serviceImage', 'service.game_list', 'serviceOdds.serviceGifts' => function ($query) {
-                $query->select('id', 'odds_id', 'image');
-            }])
-            ->first() ?? false;
+            ->with([
+                'serviceImage',
+                'service.game_list',
+                'serviceOdds.serviceGifts:id,odds_id,image,game_currency_id',
+            ])
+            ->firstOrNew() ?? false;
     }
 
-    public function serviceTurn(User $user, Service $service)
+    public function serviceGifts(string $slug, array $listIdAllow)
     {
-        // return dd($service->first());
-        return  dd($this->model
-            ->where('slug', "quae-impedit-quam-libero-voluptas-fuga")
-            // ->with(['service.serviceTurns'])
-            ->first() ?? false);
+        return $this->model
+            ->where('slug', $slug)
+            ->whereIn('id', $listIdAllow)
+            ->with([
+                'serviceImage',
+                'service.game_list',
+                'serviceOdds.serviceGifts'
+            ])
+            ->firstOrNew() ?? false;
+    }
+
+    public function giftForUser($serviceGifts, array $listIdGift)
+    {
+        return $serviceGifts->serviceGifts()
+            ->with('gameCurrency:id,currency_key,currency_name')
+            ->where('vip', 'NO')
+            ->whereIn("id", $listIdGift)
+            ->get();
     }
 }
 

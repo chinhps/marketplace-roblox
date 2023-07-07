@@ -11,51 +11,49 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionRepository implements TransactionInterface
 {
-
-    public function __construct(
-        private float $value,
-        private string $note
-    ) {
-    }
     /**********
      * GET *
      **********/
-    // public function getPrice(User $user)
-    // {
-    //     new Transaction(
-    //         model: new TransactionPrice,
-    //         custom: ['diamond' => $this->value],
-    //         note: $this->note
-    //     );
-    // }
+    public function getPrice(User $user)
+    {
+        return TransactionPrice::where('user_id', $user->id)->sum('price');
+    }
+    public function getDiamond(User $user)
+    {
+        return TransactionDiamond::where('user_id', $user->id)->sum('diamond');
+    }
+    public function getRobux(User $user)
+    {
+        return TransactionRobux::where('user_id', $user->id)->sum('robux');
+    }
 
 
     /**********
      * CREATE *
      **********/
-    public function createPrice()
+    public function createPrice(float $value, string $note)
     {
-        new Transaction(
+        return (new Transaction(
             model: new TransactionPrice,
-            custom: ['diamond' => $this->value],
-            note: $this->note
-        );
+            custom: ['price' =>  $value],
+            note: $note
+        ))->create();
     }
-    public function createDiamond()
+    public function createDiamond(float $value, string $note)
     {
-        new Transaction(
+        return (new Transaction(
             model: new TransactionDiamond,
-            custom: ['diamond' => $this->value],
-            note: $this->note
-        );
+            custom: ['diamond' =>  $value],
+            note: $note
+        ))->create();
     }
-    public function creaeteRobux()
+    public function creaeteRobux(float $value, string $note)
     {
-        new Transaction(
+        return (new Transaction(
             model: new TransactionRobux,
-            custom: ['robux' => $this->value],
-            note: $this->note
-        );
+            custom: ['robux' =>  $value],
+            note: $note
+        ))->create();
     }
 }
 

@@ -14,13 +14,22 @@ class ServiceRepository implements ServiceInterface
     }
     public function serviceTurn(Service $service, User $user)
     {
-        return
-            $this->model
+        return $this->model
             ->find($service->id)
             ->serviceTurns()
             ->where('id', $user->id)
             ->select('turn')
             ->first()
             ->turn ?? false;
+    }
+
+    public function decrementTurn(Service $service, User $user, float $turn)
+    {
+        return $this->model
+            ->find($service->id)
+            ->serviceTurns()
+            ->where('id', $user->id)
+            ->select('turn')
+            ->decrement('turn', $turn) ?? false;
     }
 }

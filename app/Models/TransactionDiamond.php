@@ -9,4 +9,10 @@ class TransactionDiamond extends Model
 {
     use HasFactory;
     protected $table = "transactions_diamond";
+
+    protected $fillable = [
+        "user_id",
+        "diamond",
+        "note"
+    ];
  }

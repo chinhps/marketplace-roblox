@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('service_groups', function (Blueprint $table) {
-            $table->string('image');
+        Schema::table('admins', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('service_groups', function (Blueprint $table) {
-            $table->dropColumn('image');
+        Schema::table('admins', function (Blueprint $table) {
+            //
         });
     }
 };

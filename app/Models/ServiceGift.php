@@ -9,4 +9,9 @@ class ServiceGift extends Model
 {
     use HasFactory;
     protected $table = "service_gifts";
+
+    public function gameCurrency()
+    {
+        return $this->belongsTo(GameCurrency::class, 'game_currency_id');
+    }
 }
