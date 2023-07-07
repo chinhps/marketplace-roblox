@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions_diamond', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->float('diamond');
+            $table->float('diamond', 8, 0);
             $table->string('note')->nullable();
             $table->timestamps();
 

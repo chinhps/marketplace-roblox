@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('service_type', ['WHEEL', 'LUCKY_BOX', 'LUCKY_CARD', 'RANDOM', 'ROBUX_BOX']);
             $table->string('service_key')->unique();
             $table->enum('excluding', ['ON', 'OFF']);
-            $table->float('price');
+            $table->float('price', 15, 0);
             $table->integer('sale')->unsigned()->default(100);
             $table->text('notification')->nullable();
             $table->json('information')->nullable();

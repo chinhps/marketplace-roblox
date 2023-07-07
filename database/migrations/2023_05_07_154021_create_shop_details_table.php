@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('shop_id');
             $table->string('shop_title');
             $table->float('percent_cash');
-            $table->float('cash_new_user');
+            $table->float('cash_new_user', 6, 0);
             $table->json('information');
             $table->timestamps();
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('shop_id');
             $table->foreign('shop_id')->references('id')->on('shop_list')->onDelete('cascade');
-            $table->float('price');
+            $table->float('price', 15, 0);
             $table->timestamps();
         });
     }

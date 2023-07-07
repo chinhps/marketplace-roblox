@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('provider_id', 20);
             $table->string('name');
             $table->string('username');
-            $table->float('price_temporary')->nullable();
-            $table->float('diamond_temporary')->nullable();
+            $table->float('price_temporary', 15, 0)->nullable();
+            $table->float('diamond_temporary', 15, 0)->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->enum('block', ['on', 'off']);

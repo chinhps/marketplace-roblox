@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id');
             $table->json('detail_public')->nullable();
             $table->json('detail_private')->nullable();
-            $table->float('price');
+            $table->float('price', 15, 0);
             $table->string('thumb')->nullable();
             $table->json('images')->nullable();
             $table->boolean('active')->default(true);

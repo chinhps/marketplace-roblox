@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions_robux', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->float('robux');
+            $table->float('robux', 15, 0);
             $table->string('note')->nullable();
             $table->timestamps();
 

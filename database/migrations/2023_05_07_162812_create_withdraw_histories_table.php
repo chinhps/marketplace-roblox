@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('shop_id')->constrained('shop_list');
             $table->string('task_number');
             $table->enum('withdraw_type', ['ROBUX', 'DIAMOND']);
-            $table->float('value');
-            $table->float('cost');
+            $table->float('value', 15, 0);
+            $table->float('cost', 15, 0);
             $table->enum('status', [0, 1, 2, 3, 4])->default(0);
             $table->json('detail')->nullable();
             $table->timestamps();

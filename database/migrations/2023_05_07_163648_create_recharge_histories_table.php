@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('recharge_id');
             $table->json('detail')->nullable();
             $table->tinyInteger('refund')->default(0);
-            $table->float('price');
+            $table->float('price', 15, 0);
             $table->string('task_number');
             $table->tinyInteger('status')->default(0);
             $table->string('ip')->nullable();

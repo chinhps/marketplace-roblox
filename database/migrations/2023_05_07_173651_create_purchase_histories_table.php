@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('shop_id');
             $table->boolean('refund')->default(false);
-            $table->float('price');
+            $table->float('price', 15, 0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
