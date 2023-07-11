@@ -71,7 +71,7 @@ class Transaction
 
     public function create()
     {
-        $this->model->create([
+        return $this->model->create([
             'user_id' => $this->userId,
             'note' => $this->note,
             ...$this->custom

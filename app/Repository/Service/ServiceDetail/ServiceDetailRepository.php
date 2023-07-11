@@ -5,6 +5,7 @@ namespace App\Repository\Service\ServiceDetail;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceGift;
+use App\Models\ServiceOdds;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,9 +38,12 @@ class ServiceDetailRepository implements ServiceDetailInterface
                 'service.game_list',
                 'serviceOdds.serviceGifts:id,odds_id,image,game_currency_id',
             ])
-            ->firstOrNew() ?? false;
+            ->first() ?? false;
     }
 
+    /**
+     * @return \App\Models\ServiceDetail
+     */
     public function serviceGifts(string $slug, array $listIdAllow)
     {
         return $this->model
@@ -50,15 +54,23 @@ class ServiceDetailRepository implements ServiceDetailInterface
                 'service.game_list',
                 'serviceOdds.serviceGifts'
             ])
-            ->firstOrNew() ?? false;
+            ->first() ?? false;
     }
 
-    public function giftForUser($serviceGifts, array $listIdGift)
+    public function giftForUserByListId(ServiceOdds $serviceOdds, array $listIdGift)
     {
-        return $serviceGifts->serviceGifts()
+        return $serviceOdds->serviceGifts()
             ->with('gameCurrency:id,currency_key,currency_name')
             ->where('vip', 'NO')
             ->whereIn("id", $listIdGift)
+            ->get();
+    }
+
+    public function giftForUser(ServiceOdds $serviceOdds)
+    {
+        return $serviceOdds->serviceGifts()
+            ->with('gameCurrency:id,currency_key,currency_name')
+            ->where('vip', 'NO')
             ->get();
     }
 }

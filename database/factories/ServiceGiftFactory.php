@@ -24,7 +24,7 @@ class ServiceGiftFactory extends Factory
             "value2" => $gift_type === 'RANDOM' ? $this->faker->numberBetween(101, 999) : null,
             "vip" => $this->faker->randomElement(['YES', 'NO']),
             "cost" => $this->faker->numberBetween(1, 20),
-            "percent_random" => $gift_type === 'FIXED' ? $this->faker->numberBetween(1, 50) : null
+            "percent_random" => $gift_type === 'RANDOM' ? $this->faker->numberBetween(1, 50) : null
         ];
     }
 }

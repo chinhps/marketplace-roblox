@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\Helper\RandomPercent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Service\ServiceDetailResource;
 use App\Http\Resources\Service\ServiceListResource;
+use App\Models\Service;
+use App\Models\ServiceDetail;
+use App\Models\ServiceGift;
+use App\Models\ServiceOdds;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
@@ -78,28 +83,29 @@ class ServiceController extends Controller
     # Xử lý hành động quay(real)
     public function handelPlay(string $slug, Request $request)
     {
+
         $domain = $request->domain;
         $numrolllop = $request->numrolllop;
 
         # Check Slug url === Slug payload(decode)
-        if ($slug !== $request->slug) return false;
+        if ($slug !== $request->slug) return "payload khong dung";
         # Check service at `Domain`
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
         # Get odds service
-        $service = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
-        if (!$service) return "Khong ton tai service";
+        $serviceDetail = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
+        if (!$serviceDetail) return "Khong ton tai service";
 
         # Check `type service`: "WHEEL" | "LUCKYCARD" | "LUCKYBOX" -> Exception return false
-        if (!$service->service->game_list->is_game) return "service khong dung";
+        if (!$serviceDetail->service->game_list->is_game) return "service khong dung";
 
         // ==============================================
         # Get price service * numloop = PRICE_SERVICE
-        $priceService = $service->service->price * $numrolllop;
+        $priceService = $serviceDetail->service->price * $numrolllop;
 
         # Check turn
         $checkTurn = false;
         # Check free turn
-        $countFreeTurn = $this->serviceRepository->serviceTurn($service->service, Auth::user()) ?? 0;
+        $countFreeTurn = $this->serviceRepository->serviceTurn($serviceDetail->service, Auth::user()) ?? 0;
         if (floor($countFreeTurn / $numrolllop) >= 1) $checkTurn = true;
         # Get turn by "price" current user
         $price = $this->transactionRepository->getPrice(Auth::user());
@@ -107,98 +113,130 @@ class ServiceController extends Controller
 
         if (!$checkTurn)  return "Khong du tien hoac luot quay";
 
-        DB::beginTransaction();
 
         try {
+
+            DB::beginTransaction();
+
             $decrementTurn = false;
             # Minus `Price` or `Turn` of current user
             # *Priority loop free turn
             if (floor($countFreeTurn / $numrolllop) >= 1) {
-                $decrementTurn = $this->serviceRepository->decrementTurn($service->service, Auth::user(), $numrolllop);
+                $decrementTurn = $this->serviceRepository->decrementTurn($serviceDetail->service, Auth::user(), $numrolllop);
                 if (!$decrementTurn) return "Khong the tru luot quay nen loi";
-                echo "loop by turn";
             }
             # if not decrement turn then decrement price
             if (!$decrementTurn && floor($price / $priceService) >= 1) {
-                $this->transactionRepository->createPrice(
+                $decrementTurn = $this->transactionRepository->createPrice(
                     -$priceService,
-                    "X$numrolllop, Sử dụng : {$service->serviceImage->name}, #ID: {$service->id}"
+                    "X$numrolllop, Sử dụng : {$serviceDetail->serviceImage->name}, #ID: {$serviceDetail->id}"
                 );
-                $decrementTurn = true;
-                echo "loop by price";
             }
 
             if (!$decrementTurn) return "Khong the tru luot quay hay tru tien nen loi";
             // ==============================================
 
-            $serviceGifts = $this->serviceDetailRepository->serviceGifts($slug, $idListAllow)->serviceOdds;
-            # is user
-            if ($serviceGifts->odds_user_type === "RANDOM") {
-            }
-            if ($serviceGifts->odds_user_type === "FIXED") {
-                $listGiftFix = json_decode($serviceGifts->odds_user, true);
-                $giftForUser = $this->serviceDetailRepository->giftForUser($serviceGifts, $listGiftFix);
+            /**
+             * @var \App\Models\ServiceOdds
+             */
+            $serviceOdds = $this->serviceDetailRepository->serviceGifts($slug, $idListAllow)->serviceOdds;
 
-                # Get quantity used service in history
-                $quantityHistory = $this->serviceHistoryRepository->getQuantityUserByService(Auth::user(), $service->service);
-                # Times count array "fixed" => position in array
-                $currentLoop = $quantityHistory === 0 ? 0 : ($quantityHistory - 1) % count($listGiftFix);
+            # ================= USER =================
+            # Get all gift service of user
+            /**
+             * @var ['giftForUser' => Model ServiceGift, 'currentLoop' => float]
+             */
+            $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForUser($serviceOdds, $serviceDetail);
+            # ================= END-USER =================
 
-                $gifts = [];
-                $giftTotal = [];
+            # ================= ADMIN =================
+            # $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForAdmin($serviceOdds, $serviceDetail);
+            # ================= END-ADMIN =================
 
-                for ($i = 0; $i < $numrolllop; $i++) {
-                    # if loop outside array "fixed" then set is 0(start)
-                    if ($currentLoop >= count($listGiftFix)) $currentLoop = 0;
+            /**
+             * @var float
+             */
+            $currentLoop = $giftAndCurrentLoopForUser['currentLoop'];
+            /**
+             * @var \Illuminate\Database\Eloquent\Collection|\App\Models\ServiceGift[]
+             */
+            $giftForUser = $giftAndCurrentLoopForUser['giftForUser'];
 
-                    $currentGift = $giftForUser->find($listGiftFix[$currentLoop]);
-                    $valueGift = ServiceHandle::handleGuardValueOdds($currentGift, $currentGift->gameCurrency->currency_key);
-                    # if error then rollback
-                    if (!$valueGift) {
-                        DB::rollBack();
-                        return "rollback";
-                    }
-                    # add gift to list
-                    $gifts[] = [
-                        "id" => $currentGift->id,
-                        "location" => 0,
-                        "type" => $currentGift->gameCurrency->currency_key,
-                        "type_name" => $currentGift->gameCurrency->currency_name,
-                        "image" => $currentGift->image,
-                        "msg" => "Chúc mừng bạn đã trúng $valueGift {$currentGift->gameCurrency->currency_name}",
-                        "value" => $valueGift
-                    ];
-                    # add total
-                    $currencyKey = $currentGift->gameCurrency->currency_key;
-                    $currencyName = $currentGift->gameCurrency->currency_name;
-                    $giftTotal[$currencyKey] = [
-                        "type" => $currencyKey,
-                        "type_name" => $currencyName,
-                        "value" => isset($giftTotal[$currencyKey]) ? $giftTotal[$currencyKey]['value'] + ($valueGift ?? 0) : ($valueGift ?? 0)
-                    ];
-                    $currentLoop++;
+
+
+            $gifts = [];
+            $giftTotal = [];
+
+            for ($i = 0; $i < $numrolllop; $i++) {
+
+                # USER
+                switch ($serviceOdds->odds_user_type) {
+                    case "FIXED":
+                        # Get list gift fixed
+                        $listGiftFix = json_decode($serviceOdds->odds_user, true);
+                        # if loop outside array "fixed" then set is 0(start)
+                        if ($currentLoop >= count($listGiftFix)) $currentLoop = 0;
+                        $currentLoop++;
+                        $currentGift = $giftForUser->find($listGiftFix[$currentLoop]);
+                        break;
+
+                    case "RANDOM":
+                        dd($giftForUser->map(function (ServiceGift $serviceGift) {
+                            return ["name" => 123, 'percentage' => $serviceGift->percent_random];
+                        }));
+                        // RandomPercent::randomItemByPercentage();
+                        $currentGift = $giftForUser->find(1);
+                        break;
                 }
-                # Save to history service
-                $serviceHistory = $this->serviceHistoryRepository->create(Auth::user(), $service->service, $numrolllop, [
-                    "default" => "Tổng lượt quay: x$numrolllop | Tổng phần thưởng nhận được: X",
-                    "details" => collect($gifts)->map(function ($value) {
-                        return [
-                            "service_gift_id" => $value['id'],
-                            "msg" => $value['msg']
-                        ];
-                    })
-                ]);
-                # give gift
-                collect($giftTotal)->each(function ($value) use ($serviceHistory, $service) {
-                    ServiceHandle::handleGiveGiftByService(
-                        transactionRepository: $this->transactionRepository,
-                        idServiceHistory: $serviceHistory->id,
-                        nameService: $service->serviceImage->name,
-                        currency: $value['type'],
-                        value: $value['value']
-                    );
-                });
+
+                # Get current gift
+                $valueGift = ServiceHandle::handleGuardValueOdds($currentGift, $currentGift->gameCurrency->currency_key);
+
+                # if error then rollback
+                if (!$valueGift) {
+                    DB::rollBack();
+                    return "rollback";
+                }
+                # add gift to list
+                $gifts[] = [
+                    "id" => $currentGift->id,
+                    "location" => 0,
+                    "type" => $currentGift->gameCurrency->currency_key,
+                    "type_name" => $currentGift->gameCurrency->currency_name,
+                    "image" => $currentGift->image,
+                    "msg" => "Chúc mừng bạn đã trúng $valueGift {$currentGift->gameCurrency->currency_name}",
+                    "value" => $valueGift
+                ];
+                # add total
+                $currencyKey = $currentGift->gameCurrency->currency_key;
+                $currencyName = $currentGift->gameCurrency->currency_name;
+                $giftTotal[$currencyKey] = [
+                    "type" => $currencyKey,
+                    "type_name" => $currencyName,
+                    "value" => isset($giftTotal[$currencyKey]) ? $giftTotal[$currencyKey]['value'] + ($valueGift ?? 0) : ($valueGift ?? 0)
+                ];
             }
+            # Save to history service
+            $serviceHistory = $this->serviceHistoryRepository->create(Auth::user(), $serviceDetail->service, $numrolllop, [
+                "default" => "Tổng lượt quay: x$numrolllop | Tổng phần thưởng nhận được: X",
+                "details" => collect($gifts)->map(function ($value) {
+                    return [
+                        "service_gift_id" => $value['id'],
+                        "msg" => $value['msg']
+                    ];
+                })
+            ]);
+            # give gift
+            collect($giftTotal)->each(function ($value) use ($serviceHistory, $serviceDetail) {
+                ServiceHandle::handleGiveGiftByService(
+                    transactionRepository: $this->transactionRepository,
+                    idServiceHistory: $serviceHistory->id,
+                    nameService: $serviceDetail->serviceImage->name,
+                    currency: $value['type'],
+                    value: $value['value']
+                );
+            });
+
 
             DB::commit();
             dd($gifts, $giftTotal);
@@ -209,6 +247,31 @@ class ServiceController extends Controller
         # admin
 
         // return $serviceGifts->serviceGifts()->where('vip', 'NO')->get();
+    }
+
+    private function getGiftAndCountLoopForUser(ServiceOdds $serviceOdds, ServiceDetail $serviceDetail)
+    {
+
+        switch ($serviceOdds->odds_user_type) {
+            case "FIXED":
+                $listGiftFix = json_decode($serviceOdds->odds_user, true);
+                # Get quantity used service in history
+                $quantityHistory = $this->serviceHistoryRepository->getQuantityUserByService(Auth::user(), $serviceDetail->service);
+                # Times count array "fixed" => position in array
+                $currentLoop = $quantityHistory === 0 ? 0 : ($quantityHistory - 1) % count($listGiftFix);
+
+                # Get all gift service of user
+                $giftForUser = $this->serviceDetailRepository->giftForUserByListId($serviceOdds, $listGiftFix);
+                break;
+
+            case "RANDOM":
+                # Get all gift service of user
+                $giftForUser = $this->serviceDetailRepository->giftForUser($serviceOdds);
+                $currentLoop = 0;
+                break;
+        }
+
+        return ['giftForUser' => $giftForUser, 'currentLoop' => $currentLoop];
     }
 
     public function handelPlayTry()
