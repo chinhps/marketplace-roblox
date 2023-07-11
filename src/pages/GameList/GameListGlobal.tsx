@@ -116,6 +116,7 @@ export function GameAction({
     setIsTrying(!isSubmitting && isTrying);
     setIsPlaying(false);
   }, [isSubmitting, isTrying]);
+
   return (
     <VStack justifyContent="center" mt={4}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -146,11 +147,13 @@ export function GameAction({
             variant="playGame"
             isDisabled={isTrying}
             isLoading={!isPlaying ? !isTrying && isSubmitting : isPlaying}
-            onClick={() => {
-              setIsPlaying(true);
-              handleClickSubmitCustom && handleClickSubmitCustom();
-            }}
             type={handleClickSubmitCustom ? "button" : "submit"}
+            onClick={() => {
+              if (hiddenNumloop) {
+                setIsPlaying(true);
+                handleClickSubmitCustom && handleClickSubmitCustom();
+              }
+            }}
           >
             <Icon as={FaCaretRight} />
             {textButton ?? "Quay ngay"}

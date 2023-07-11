@@ -44,9 +44,9 @@ export interface IServiceHandle {
     roll_name: string,
     price: number,
     gifts: Array<{
-        location: number,
-        type: string,
-        type_name: string,
+        location: number, // potion gift in game
+        type: string, // ROBUX, DIAMOND,...
+        type_name: string, // name in type
         image?: string,
         msg: string,
         value: number,
