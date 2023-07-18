@@ -4,6 +4,17 @@ namespace App\Helper;
 
 class RandomPercent
 {
+    /**
+     * randomItemByPercentage
+     *
+     * @param array $items
+     * In Params $items:
+     * - 'percentage': percent random
+     * - 'value': value
+     * 
+     * @return array|null
+     * Return this child array after random
+     */
     public static function randomItemByPercentage(array $items)
     {
         $ranges = [];

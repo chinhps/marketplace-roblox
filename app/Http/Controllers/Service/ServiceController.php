@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Service;
 
 use App\Helper\RandomPercent;
+use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Service\ServiceDetailResource;
 use App\Http\Resources\Service\ServiceListResource;
+use App\Http\Resources\Service\ServicePlayResource;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceGift;
@@ -47,6 +49,9 @@ class ServiceController extends Controller
         # Kiểm tra service đó có tồn tại trong shop đang được gửi lên hay không
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
         $service = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
+        if (!$service) {
+            return BaseResponse::msg("Không tồn tại dịch vụ", 404);
+        }
         # Trả về kết quả
         return new ServiceDetailResource($service);
     }
@@ -98,44 +103,51 @@ class ServiceController extends Controller
         # Check `type service`: "WHEEL" | "LUCKYCARD" | "LUCKYBOX" -> Exception return false
         if (!$serviceDetail->service->game_list->is_game) return "service khong dung";
 
+
+        DB::beginTransaction();
+
         // ==============================================
-        # Get price service * numloop = PRICE_SERVICE
-        $priceService = $serviceDetail->service->price * $numrolllop;
-
-        # Check turn
-        $checkTurn = false;
-        # Check free turn
-        $countFreeTurn = $this->serviceRepository->serviceTurn($serviceDetail->service, Auth::user()) ?? 0;
-        if (floor($countFreeTurn / $numrolllop) >= 1) $checkTurn = true;
-        # Get turn by "price" current user
-        $price = $this->transactionRepository->getPrice(Auth::user());
-        if (floor($price / $priceService) >= 1) $checkTurn = true;
-
-        if (!$checkTurn)  return "Khong du tien hoac luot quay";
-
-
         try {
-
-            DB::beginTransaction();
-
+            # Get price service * numloop = PRICE_SERVICE
+            $priceService = $serviceDetail->service->price * $numrolllop;
+            # Check turn
             $decrementTurn = false;
-            # Minus `Price` or `Turn` of current user
-            # *Priority loop free turn
+            # Check free turn
+            $countFreeTurn = $this->serviceRepository->serviceTurn($serviceDetail->service, Auth::user()) ?? 0;
             if (floor($countFreeTurn / $numrolllop) >= 1) {
+                # Minus `Price` or `Turn` of current user
+                # *Priority loop free turn
                 $decrementTurn = $this->serviceRepository->decrementTurn($serviceDetail->service, Auth::user(), $numrolllop);
-                if (!$decrementTurn) return "Khong the tru luot quay nen loi";
+                if (!$decrementTurn) {
+                    DB::rollBack();
+                    return "Khong the tru luot quay nen loi";
+                }
             }
             # if not decrement turn then decrement price
-            if (!$decrementTurn && floor($price / $priceService) >= 1) {
-                $decrementTurn = $this->transactionRepository->createPrice(
-                    -$priceService,
-                    "X$numrolllop, Sử dụng : {$serviceDetail->serviceImage->name}, #ID: {$serviceDetail->id}"
-                );
+            if (!$decrementTurn) {
+                # Get turn by "price" current user
+                $price = $this->transactionRepository->getPrice(Auth::user());
+                if (floor($price / $priceService) >= 1) {
+                    $decrementTurn = $this->transactionRepository->createPrice(
+                        -$priceService,
+                        "X$numrolllop, Sử dụng : {$serviceDetail->serviceImage->name}, #ID: {$serviceDetail->id}"
+                    );
+                    if (!$decrementTurn) {
+                        DB::rollBack();
+                        return "Khong the tru tien nen loi";
+                    }
+                }
             }
+            // ERROR
+            if (!$decrementTurn)  return "Khong du tien hoac luot quay";
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd("lỗi hệ thống từ module trừ tiền");
+        }
+        // ==============================================
 
-            if (!$decrementTurn) return "Khong the tru luot quay hay tru tien nen loi";
-            // ==============================================
-
+        // ==============================================
+        try {
             /**
              * @var \App\Models\ServiceOdds
              */
@@ -149,6 +161,7 @@ class ServiceController extends Controller
             $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForUser($serviceOdds, $serviceDetail);
             # ================= END-USER =================
 
+
             # ================= ADMIN =================
             # $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForAdmin($serviceOdds, $serviceDetail);
             # ================= END-ADMIN =================
@@ -161,12 +174,18 @@ class ServiceController extends Controller
              * @var \Illuminate\Database\Eloquent\Collection|\App\Models\ServiceGift[]
              */
             $giftForUser = $giftAndCurrentLoopForUser['giftForUser'];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd("lỗi hệ thống từ module lấy quà");
+        }
+        // ==============================================
 
 
+        // ==============================================
+        $gifts = [];
+        $giftTotal = [];
 
-            $gifts = [];
-            $giftTotal = [];
-
+        try {
             for ($i = 0; $i < $numrolllop; $i++) {
 
                 # USER
@@ -181,22 +200,22 @@ class ServiceController extends Controller
                         break;
 
                     case "RANDOM":
-                        dd($giftForUser->map(function (ServiceGift $serviceGift) {
-                            return ["name" => 123, 'percentage' => $serviceGift->percent_random];
-                        }));
-                        // RandomPercent::randomItemByPercentage();
-                        $currentGift = $giftForUser->find(1);
+                        $createRandomGift = $giftForUser->map(function (ServiceGift $serviceGift) {
+                            return ["value" => $serviceGift, 'percentage' => $serviceGift->percent_random];
+                        });
+                        $randomGift = RandomPercent::randomItemByPercentage($createRandomGift->toArray());
+                        $currentGift = $randomGift['value'];
                         break;
                 }
 
                 # Get current gift
                 $valueGift = ServiceHandle::handleGuardValueOdds($currentGift, $currentGift->gameCurrency->currency_key);
-
                 # if error then rollback
                 if (!$valueGift) {
                     DB::rollBack();
-                    return "rollback";
+                    return "Phần thưởng đăng gặp vấn đề!";
                 }
+
                 # add gift to list
                 $gifts[] = [
                     "id" => $currentGift->id,
@@ -216,6 +235,14 @@ class ServiceController extends Controller
                     "value" => isset($giftTotal[$currencyKey]) ? $giftTotal[$currencyKey]['value'] + ($valueGift ?? 0) : ($valueGift ?? 0)
                 ];
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd("lỗi hệ thống từ module xử lý nhận quà");
+        }
+        // ==============================================
+
+        // ==============================================
+        try {
             # Save to history service
             $serviceHistory = $this->serviceHistoryRepository->create(Auth::user(), $serviceDetail->service, $numrolllop, [
                 "default" => "Tổng lượt quay: x$numrolllop | Tổng phần thưởng nhận được: X",
@@ -226,7 +253,7 @@ class ServiceController extends Controller
                     ];
                 })
             ]);
-            # give gift
+            # give gift to transaction
             collect($giftTotal)->each(function ($value) use ($serviceHistory, $serviceDetail) {
                 ServiceHandle::handleGiveGiftByService(
                     transactionRepository: $this->transactionRepository,
@@ -236,17 +263,17 @@ class ServiceController extends Controller
                     value: $value['value']
                 );
             });
-
-
-            DB::commit();
-            dd($gifts, $giftTotal);
         } catch (\Exception $e) {
             DB::rollBack();
+            dd("lỗi hệ thống từ module tạo giao dịch và lịch sử");
         }
+        // ==============================================
 
-        # admin
-
-        // return $serviceGifts->serviceGifts()->where('vip', 'NO')->get();
+        DB::commit();
+        $return = [];
+        $return['giftTotal'] = $giftTotal;
+        $return['gifts'] = $gifts;
+        return new ServicePlayResource($return);
     }
 
     private function getGiftAndCountLoopForUser(ServiceOdds $serviceOdds, ServiceDetail $serviceDetail)
