@@ -136,7 +136,11 @@ function GamePlay({
   ----------------****/
   return (
     <>
-      <ModelService isOpen={isOpen} onClose={onClose} />
+      <ModelService
+        isOpen={isOpen}
+        onClose={onClose}
+        data={mutation.data?.data}
+      />
       <HStack justifyContent="center" mt={3}>
         <Box position="relative" zIndex={1} overflow="hidden">
           <Box position="relative" ref={wheelImg}>

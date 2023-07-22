@@ -62,7 +62,13 @@ axiosClient.interceptors.response.use(
       });
       logout();
     }
-
+    if (status === 404 || status === 402) {
+      toast({
+        status: "warning",
+        description: err?.response.data.msg,
+        ...customToast
+      });
+    }
     if (typeof err.response !== "undefined")
       throw err.response.data;
     throw err;

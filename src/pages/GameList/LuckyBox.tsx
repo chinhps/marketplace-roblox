@@ -37,7 +37,10 @@ export default function LuckyBox() {
 
   return (
     <>
-      <HeadingService price={serviceInfoQuery.data?.data.data.price ?? 0}>
+      <HeadingService
+        price={serviceInfoQuery.data?.data.data.price ?? 0}
+        notification={<Box dangerouslySetInnerHTML={{ __html: serviceInfoQuery.data?.data.data.notification ?? "" }} />}
+      >
         {serviceInfoQuery.data?.data.data.service_image.name}
       </HeadingService>
       {/* GAMES */}
@@ -125,7 +128,11 @@ function GamePlay({
 
   return (
     <>
-      <ModelService isOpen={isOpen} onClose={onClose} />
+      <ModelService
+        data={mutation.data?.data}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <HStack justifyContent="center" mt={3}>
         <Box position="relative" zIndex={1}>
           <Img

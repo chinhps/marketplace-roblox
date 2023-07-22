@@ -29,7 +29,7 @@ import { useUserData } from "@/hooks/UserDataProvider";
 export default function ProfileLayout() {
   return (
     <IsAuthentication>
-      <SimpleGrid columns={10} spacing={3}>
+      <SimpleGrid columns={10} spacing={3} color="white.100">
         <GridItem rounded="md" colSpan={2} bg="main.item" p={5}>
           <SideBar />
         </GridItem>

@@ -14,7 +14,7 @@ import { FaWallet } from "react-icons/fa";
 export default function PromotionLayout() {
   return (
     <>
-      <SimpleGrid columns={{ base: 1, lg: 12 }} gap={5} p={{ base: 2, lg: 0 }}>
+      <SimpleGrid columns={{ base: 1, lg: 12 }} gap={5} p={{ base: 2, lg: 0 }} color="white.100">
         <GridItem
           colSpan={{ base: 1, lg: 9 }}
           bg="main.item"
@@ -55,7 +55,7 @@ function RecomendServices() {
           <Button
             colorScheme="blue"
             onClick={() => {
-              navigate("/profile/nap-the-cao");
+              navigate("/profile/recharge");
             }}
             size="sm"
             rounded="md"

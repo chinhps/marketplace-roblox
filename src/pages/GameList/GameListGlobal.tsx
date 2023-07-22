@@ -1,3 +1,4 @@
+import ModelBase from "@/components/global/Model/ModelBase";
 import { GameActionProps, GameSelectNumloop } from "@/types/service.type";
 import { numberFormat } from "@/utils/price";
 import {
@@ -8,6 +9,7 @@ import {
   Icon,
   Select,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { FaCaretRight, FaMoneyBill, FaUserAlt } from "react-icons/fa";
@@ -53,12 +55,17 @@ export default function SelectNumloop({
 export function HeadingService({
   children,
   price,
+  notification,
 }: {
   children: string | undefined;
   price: number;
+  notification: React.ReactElement | string;
 }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
+      <ModelBase TextData={notification} isOpen={isOpen} onClose={onClose} />
       <Heading
         as="h1"
         fontSize="3xl"
@@ -86,7 +93,7 @@ export function HeadingService({
           </Button>
         </HStack>
         <HStack justifyContent="center">
-          <Button flex={1} variant="action">
+          <Button flex={1} variant="action" onClick={onOpen}>
             Thể lệ
           </Button>
           <Button flex={1} variant="action">
@@ -112,10 +119,15 @@ export function GameAction({
 }: GameActionProps) {
   const [isTrying, setIsTrying] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
   useEffect(() => {
-    setIsTrying(!isSubmitting && isTrying);
-    setIsPlaying(false);
-  }, [isSubmitting, isTrying]);
+    if (isSubmitting === false) {
+      setIsTrying(false);
+      setIsPlaying(false);
+    }
+  }, [isSubmitting]);
+
+  console.log(isSubmitting);
 
   return (
     <VStack justifyContent="center" mt={4}>
@@ -128,15 +140,11 @@ export function GameAction({
         <HStack gap={2} justifyContent="center">
           <Button
             flex={1}
-            isDisabled={!isPlaying ? !isTrying && isSubmitting : isPlaying}
+            isDisabled={isTrying || isPlaying}
             isLoading={isTrying}
             variant="playGameTry"
             onClick={() => {
               setIsTrying(true);
-              if (hiddenNumloop) {
-                handleTry && handleTry(1);
-                return;
-              }
               return handleTry && watch && handleTry(watch("numrolllop"));
             }}
           >
@@ -145,14 +153,15 @@ export function GameAction({
           <Button
             flex={1}
             variant="playGame"
-            isDisabled={isTrying}
-            isLoading={!isPlaying ? !isTrying && isSubmitting : isPlaying}
-            type={handleClickSubmitCustom ? "button" : "submit"}
-            onClick={() => {
-              if (hiddenNumloop) {
-                setIsPlaying(true);
-                handleClickSubmitCustom && handleClickSubmitCustom();
+            isDisabled={isTrying || isPlaying}
+            isLoading={isPlaying}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsPlaying(true);
+              if (handleClickSubmitCustom) {
+                return handleClickSubmitCustom();
               }
+              return handleSubmit(onSubmit)();
             }}
           >
             <Icon as={FaCaretRight} />

@@ -1,3 +1,5 @@
+import { IBaseResponseDetail } from "@/types/response/base.type";
+import { IServiceHandle } from "@/types/response/service.type";
 import { numberFormat } from "@/utils/price";
 import {
   Modal,
@@ -9,30 +11,65 @@ import {
   ModalCloseButton,
   Text,
   Button,
+  HStack,
+  Grid,
+  GridItem,
+  Img,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
+import Tag from "../Tag/Tag";
 
 export default function ModelService({
   isOpen,
   onClose,
+  data,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  data: IBaseResponseDetail<IServiceHandle> | undefined;
 }) {
   return (
     <>
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="main.item">
+        <ModalContent bg="main.item" color="white.100">
           <ModalHeader>Thông báo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontWeight="bold" mb="1rem">
-              Bạn có chắc là muốn đăng xuất không?
+              Kết quả(
+              <Text as="b" color="red.500">
+                {data?.data.roll_name}
+              </Text>
+              ): Quay {data?.data.gifts.length ?? 0} lần - Giá{" "}
+              {numberFormat(data?.data.price ?? 0)}
             </Text>
-            <Text>
-              Bạn có có thể thoát nhiều thiết bị hoặc chỉ thoát thiết bị hiện
-              tại!
-            </Text>
+            <HStack mb="1rem">
+              <Text>Tổng trúng:</Text>
+              {data?.data.total.map((vl) => (
+                <Tag
+                  key={vl.type}
+                  value={`${numberFormat(vl.value, false)} ${vl.type_name}`}
+                />
+              ))}
+            </HStack>
+            <Grid templateColumns="repeat(3,1fr)" gap={5} alignItems="center">
+              <GridItem colSpan={1} p="1rem">
+                {data?.data.gifts && data?.data.gifts.length > 0 ? (
+                  <Img src={data?.data.gifts[0].image} alt="gift" />
+                ) : null}
+              </GridItem>
+              <GridItem colSpan={2}>
+                <List spacing={1}>
+                  {data?.data.gifts.map((vl, index) => (
+                    <ListItem key={index}>
+                      Quay lần {index + 1}: {vl.type_name}
+                    </ListItem>
+                  ))}
+                </List>
+              </GridItem>
+            </Grid>
           </ModalBody>
 
           <ModalFooter gap={2}>
@@ -45,28 +82,3 @@ export default function ModelService({
     </>
   );
 }
-
-// const TextMsgGames = (data) => {
-//   return (
-//     <>
-//       <Text>
-//         Kết quả quay
-//         <Text as="span" textColor="brand.500">
-//           ({data?.msg.type_playing})
-//         </Text>
-//         : Quay {data?.msg.name.length} lần - giá {numberFormat(data.msg.cash)}
-//       </Text>
-//       <Text>
-//         <Text as="b"> Mua X{data?.msg.name.length}</Text>: Tổng Trúng
-//         <Text as="span" textColor="brand.500" pl={2}>
-//           {data?.msg.diamond}
-//         </Text>
-//       </Text>
-//       {data?.msg.name.map((vl, index) => (
-//         <Text key={index}>
-//           - Quay lần {index + 1}: {vl}
-//         </Text>
-//       ))}
-//     </>
-//   );
-// };

@@ -174,7 +174,11 @@ function GamePlay({
 
   return (
     <>
-      <ModelService isOpen={isOpen} onClose={onClose} />
+      <ModelService
+        data={mutation.data?.data}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <SimpleGrid
         columns={3}
         w={{ "2sm": "100%", md: "50%" }}
