@@ -6,6 +6,9 @@ use App\Models\ServiceOdds;
 
 interface ServiceDetailInterface
 {
+    /**
+     * @return array
+     */
     public function idServiceDetailList(string $domain);
     /**
      * @return \App\Models\ServiceDetail
@@ -17,4 +20,6 @@ interface ServiceDetailInterface
     public function serviceGifts(string $slug, array $listIdAllow);
     public function giftForUserByListId(ServiceOdds $serviceOdds, array $listIdGift);
     public function giftForUser(ServiceOdds $serviceOdds);
+    public function giftForAdminByListId(ServiceOdds $serviceOdds, array $listIdGift);
+    public function giftForAdmin(ServiceOdds $serviceOdds);
 }

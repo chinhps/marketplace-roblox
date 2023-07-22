@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-02T19:05:03.596Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67" etag="NW6HOFgLiz2WG-TKNTWk" version="21.5.2" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-07-20T06:18:19.025Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82" etag="K30K9fQQw96itnZcJcgl" version="21.6.1" type="device" pages="3">
   <diagram name="Page-1" id="KmQgnTv5vvOI3r4hxGTt">
-    <mxGraphModel dx="1834" dy="804" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1834" dy="756" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -22,7 +22,7 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-3" value="Chi tiết game" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">
           <mxGeometry x="40.3125" y="300" width="120.9375" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-4" value="Sử dụng được game" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-4" value="Sử dụng được game" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">
           <mxGeometry x="40.3125" y="420" width="120.9375" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-9" value="Giai đoạn 1&lt;br&gt;Cung cấp các thứ cơ bản" style="swimlane;whiteSpace=wrap;html=1;startSize=40;" parent="98oBXOV-pdoTwL55DlCH-10" vertex="1">

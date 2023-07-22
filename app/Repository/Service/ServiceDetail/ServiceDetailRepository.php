@@ -57,6 +57,21 @@ class ServiceDetailRepository implements ServiceDetailInterface
             ->first() ?? false;
     }
 
+    public function giftForAdminByListId(ServiceOdds $serviceOdds, array $listIdGift)
+    {
+        return $serviceOdds->serviceGifts()
+            ->with('gameCurrency:id,currency_key,currency_name')
+            ->whereIn("id", $listIdGift)
+            ->get();
+    }
+
+    public function giftForAdmin(ServiceOdds $serviceOdds)
+    {
+        return $serviceOdds->serviceGifts()
+            ->with('gameCurrency:id,currency_key,currency_name')
+            ->get();
+    }
+
     public function giftForUserByListId(ServiceOdds $serviceOdds, array $listIdGift)
     {
         return $serviceOdds->serviceGifts()

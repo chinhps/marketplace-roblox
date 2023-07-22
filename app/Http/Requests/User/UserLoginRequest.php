@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests\User;
 
+use App\Http\Requests\BaseRequest;
 use App\Rules\Domain;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserLoginRequest extends FormRequest
+class UserLoginRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +23,9 @@ class UserLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "domain" => ["required", "string", "exists:shop_list,domain", new Domain],
+            "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain],
             "username" => [
+                "bail",
                 'required', // Tài khoản là bắt buộc
                 'min:5', // Tài khoản tối thiểu 5 ký tự
                 'max:255', // Tài khoản tối đa 255 ký tự
@@ -34,6 +33,7 @@ class UserLoginRequest extends FormRequest
                 'exists:users', // Tài khoản phải tồn tại trong bảng 'users'
             ],
             "password" => [
+                "bail",
                 'required', // Mật khẩu là bắt buộc
                 'string', // Mật khẩu phải là chuỗi
                 'min:8', // Mật khẩu tối thiểu 8 ký tự
@@ -54,10 +54,5 @@ class UserLoginRequest extends FormRequest
             "password.string" => 'Mật khẩu của bạn phải là chuỗi',
             "password.min" => 'Mật khẩu ít nhất phải 8 ký tự',
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json(["msg" => $validator->errors()->all()], 422));
     }
 }

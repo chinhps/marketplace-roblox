@@ -30,7 +30,7 @@ class ServiceHandle
      */
     public static function handleGuardValueOdds(ServiceGift $serviceGift, $currency)
     {
-        $valueGift = self::giftType($serviceGift->gift_type, $serviceGift->value1, $serviceGift->value1);
+        $valueGift = self::giftType($serviceGift->gift_type, $serviceGift->value1, $serviceGift->value2);
 
         switch ($currency) {
             case "DIAMOND":
@@ -72,7 +72,7 @@ class ServiceHandle
         }
     }
 
-    private static function giftType($giftType, float $value1, float|null $value2)
+    public static function giftType($giftType, float $value1, float|null $value2)
     {
         switch ($giftType) {
             case "FIXED":
@@ -80,5 +80,37 @@ class ServiceHandle
             case "RANDOM":
                 return rand($value1, $value2);
         }
+    }
+
+    /**
+     * CheckNumLoop
+     *
+     * @param  float $numRollLoop
+     * @return float
+     */
+    public static function CheckNumLoop(float $numRollLoop)
+    {
+        # Numroll to loop
+        switch ($numRollLoop) {
+            case 1:
+                $loop = 1;
+                break;
+            case 2:
+                $loop = 3;
+                break;
+            case 3:
+                $loop = 5;
+                break;
+            case 4:
+                $loop = 7;
+                break;
+            case 5:
+                $loop = 10;
+                break;
+            default:
+                $loop = 0;
+                break;
+        }
+        return $loop;
     }
 }

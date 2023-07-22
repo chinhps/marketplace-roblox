@@ -15,8 +15,8 @@ class ServicePlayResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "roll_name" => "Chơi thật",
-            "price" => 0,
+            "roll_name" => $this['price'] > 0 ? "Chơi thật" : "Chơi thử",
+            "price" => $this['price'],
             "gifts" => $this['gifts'],
             "total" => collect($this['giftTotal'])->map(function ($giftTotal) {
                 return [
@@ -24,7 +24,7 @@ class ServicePlayResource extends JsonResource
                     "type_name" => $giftTotal['type_name'],
                     "value" => $giftTotal['value'],
                 ];
-            })
+            })->values()
         ];
     }
 }
