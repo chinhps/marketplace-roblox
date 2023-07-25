@@ -19,7 +19,7 @@ class ServicePlayRequest extends BaseRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'numrolllop' => 'bail|required|numeric|in:1,2,3,4,5',
@@ -28,7 +28,7 @@ class ServicePlayRequest extends BaseRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'numrolllop.required' => 'Chưa chọn số lần quay',

@@ -31,4 +31,9 @@ class Service extends Model
     {
         return $this->belongsToMany(User::class, 'service_turns', 'service_id', 'user_id')->withPivot('turn');
     }
+
+    public function accounts()
+    {
+        return $this->hasMany(AccountList::class, 'service_id', 'id');
+    }
 }

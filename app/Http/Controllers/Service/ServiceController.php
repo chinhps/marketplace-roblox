@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Service;
 use App\Helper\RandomPercent;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Service\ServiceFilterRequest;
 use App\Http\Requests\Service\ServicePlayRequest;
+use App\Http\Resources\Service\ServiceAccountDetailResource;
+use App\Http\Resources\Service\ServiceAccountListResource;
 use App\Http\Resources\Service\ServiceDetailResource;
 use App\Http\Resources\Service\ServiceListResource;
 use App\Http\Resources\Service\ServicePlayResource;
@@ -44,6 +47,27 @@ class ServiceController extends Controller
         return ServiceListResource::collection($this->serviceGroupRepository->serviceGroupList($idListAllow));
     }
 
+    public function serviceDetailAccountList($slug, ServiceFilterRequest $request)
+    {
+        /**
+         * @var array ['id','price','sort']
+         */
+        $filter = $request->validated();
+        $domain = $request->domain;
+        # Check service exists at domain
+        $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
+        $serviceDetail = $this->serviceDetailRepository->serviceDetailHaveAccounts($slug, $idListAllow, $filter);
+        if (!$serviceDetail) {
+            return BaseResponse::msg("Không tồn tại dịch vụ", 404);
+        }
+        # Check `type service`: "BOX" | "RANDOM" | "ACCOUNT" -> Exception return false
+        $checkKeyService = ServiceHandle::isServiceHaveAccounts($serviceDetail->service->game_list->game_key);
+        if (!$checkKeyService) {
+            return BaseResponse::msg("Dịch vụ không thể sử dụng", 404);
+        }
+        return ServiceAccountListResource::collection($serviceDetail->service->accounts);
+    }
+
     # Service Detail
     public function serviceDetail($slug, Request $request)
     {
@@ -54,8 +78,11 @@ class ServiceController extends Controller
         if (!$service) {
             return BaseResponse::msg("Không tồn tại dịch vụ", 404);
         }
-        # Trả về kết quả
-        return new ServiceDetailResource($service);
+        # Return response
+        if ($service->service_odds_id) {
+            return new ServiceDetailResource($service);
+        }
+        return new ServiceAccountDetailResource($service);
     }
 
     /********
@@ -87,7 +114,7 @@ class ServiceController extends Controller
      * 
      ********/
 
-    # Xử lý hành động quay(real)
+    # Handel Play(real)
     public function handelPlay(string $slug, ServicePlayRequest $request)
     {
         $validated = $request->validated();

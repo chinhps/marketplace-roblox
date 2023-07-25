@@ -44,6 +44,7 @@ Route::prefix('news')->group(function () {
 Route::prefix('services')->group(function () {
     Route::get('/', [ServiceController::class, 'serviceList']);
     Route::get('/view/{slug}', [ServiceController::class, 'serviceDetail']);
+    Route::get('/detail-list/{slug}', [ServiceController::class, 'serviceDetailAccountList']);
     Route::get('/recomends/{slug}', []);
     Route::get('/histories/{slug}', []);
 

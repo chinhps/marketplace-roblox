@@ -15,6 +15,11 @@ interface ServiceDetailInterface
      */
     public function serviceDetail(string $slug, array $listIdAllow);
     /**
+     * @param array ['id','price','sort']
+     * @return \App\Models\ServiceDetail
+     */
+    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter);
+    /**
      * @return \App\Models\ServiceDetail
      */
     public function serviceGifts(string $slug, array $listIdAllow);

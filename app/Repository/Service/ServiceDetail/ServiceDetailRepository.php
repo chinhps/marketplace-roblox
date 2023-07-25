@@ -2,11 +2,9 @@
 
 namespace App\Repository\Service\ServiceDetail;
 
-use App\Models\Service;
+use App\Helper\FilterHelper;
 use App\Models\ServiceDetail;
-use App\Models\ServiceGift;
 use App\Models\ServiceOdds;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceDetailRepository implements ServiceDetailInterface
@@ -39,6 +37,42 @@ class ServiceDetailRepository implements ServiceDetailInterface
                 'serviceOdds.serviceGifts:id,odds_id,image,game_currency_id',
             ])
             ->first() ?? false;
+    }
+
+    /**
+     * @param array ['id','price','sort']
+     * @return \App\Models\ServiceDetail
+     */
+    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter)
+    {
+        $service = $this->model
+            ->where('slug', $slug)
+            ->whereIn('id', $listIdAllow)
+            ->with(['serviceImage', 'service.game_list', 'service.accounts'])
+            ->first();
+
+        if (!$service) {
+            return false;
+        }
+
+        $accounts = $service->service->accounts()
+            ->select("id", "service_id", "note", "detail_public", "price", "thumb", "images")
+            ->where('active', 'YES')
+            ->where('status', 'NOTSELL');
+
+        if (isset($filter['id'])) {
+            $accounts = $accounts->where('id', $filter['id']);
+        }
+        if (isset($filter['price'])) {
+            $accounts = $accounts->whereBetween('price', FilterHelper::GetPriceFilter($filter['price']));
+        }
+        if (isset($filter['sort'])) {
+            $accounts = $accounts->orderBy('price', $filter['sort'] == 1 ? "ASC" : "DESC");
+        }
+
+        $service->service->setRelation('accounts', $accounts->paginate(15));
+
+        return $service;
     }
 
     /**

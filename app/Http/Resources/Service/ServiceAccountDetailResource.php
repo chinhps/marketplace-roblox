@@ -5,7 +5,7 @@ namespace App\Http\Resources\Service;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceDetailResource extends JsonResource
+class ServiceAccountDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +16,11 @@ class ServiceDetailResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "game_key" => $this->service->game_list->game_key,
             "service_image" => [
                 "name" => $this->serviceImage->name,
-                "images" => json_decode($this->serviceImage->images, true)
+                "image" => $this->serviceImage->thumb
             ],
             "notification" => $this->service->notification,
-            "price" => $this->service->price,
-            "sale" => $this->service->sale,
-            "gifts" => $this->serviceOdds->serviceGifts->pluck('image') ?? []
         ];
     }
 }

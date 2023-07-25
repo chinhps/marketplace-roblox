@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\ServiceGift;
 use App\Models\ServiceHistory;
 use App\Repository\Transaction\TransactionInterface;
+use Exception;
 
 enum Currencies
 {
@@ -80,6 +81,21 @@ class ServiceHandle
             case "RANDOM":
                 return rand($value1, $value2);
         }
+    }
+
+    /**
+     * isServiceHaveAccounts\
+     * Check service have account
+     *
+     * @param string $game_key
+     * @return bool
+     */
+    public static function isServiceHaveAccounts($game_key)
+    {
+        return match ($game_key) {
+            "BOX", "RANDOM", "ACCOUNT" => true,
+            default => false,
+        };
     }
 
     /**

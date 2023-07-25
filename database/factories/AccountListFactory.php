@@ -47,6 +47,7 @@ class AccountListFactory extends Factory
                     "value" => $this->faker->text(15)
                 ]
             ]),
+            "note" => $this->faker->text(200),
             "price" => $this->faker->numberBetween(10, 50) * 10000,
             "thumb" => $this->faker->imageUrl(640, 480, null, true, "Thumb account"),
             "images" => function () {
