@@ -127,8 +127,6 @@ export function GameAction({
     }
   }, [isSubmitting]);
 
-  console.log(isSubmitting);
-
   return (
     <VStack justifyContent="center" mt={4}>
       <form onSubmit={handleSubmit(onSubmit)}>

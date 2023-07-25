@@ -1,5 +1,5 @@
-import { IBaseResponseDetail } from "@/types/response/base.type";
-import { IServiceDetailResponse, IServiceHandle } from "@/types/response/service.type";
+import { IBaseResponse, IBaseResponseDetail } from "@/types/response/base.type";
+import { IAccountService, IServiceAccountDetail, IServiceDetailResponse, IServiceHandle } from "@/types/response/service.type";
 import axiosClient from "@/utils/axiosClient";
 
 class GameApi {
@@ -18,6 +18,20 @@ class GameApi {
     getData() {
         const url = this.baseUrl + "/view/" + this.slug;
         return axiosClient.get<IBaseResponseDetail<IServiceDetailResponse>>(url);
+    }
+    // Lấy thông tin của dịch vụ
+    getDataAccount() {
+        const url = this.baseUrl + "/view/" + this.slug;
+        return axiosClient.get<IBaseResponseDetail<IServiceAccountDetail>>(url);
+    }
+    getAccountList(page: number, filter?: object) {
+        const url = this.baseUrl + "/detail-list/" + this.slug;
+        return axiosClient.get<IBaseResponse<IAccountService>>(url, {
+            data: {
+                page,
+                ...filter
+            }
+        });
     }
     // Chỉ dành cho mua tài khoản
     buyAccout(id: number) {

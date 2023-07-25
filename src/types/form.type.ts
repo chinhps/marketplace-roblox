@@ -11,7 +11,8 @@ export interface IFormBase {
     textBtn: string,
     CustomComponent?: any,
     hiddenLable?: boolean,
-    onSubmit: SubmitHandler<any>
+    onSubmit: SubmitHandler<any>,
+    dataDefault?: object
 }
 
 export interface IFormInput {
@@ -31,4 +32,4 @@ export interface IFormInput {
 export interface IButtonNextUser extends ButtonProps {
     nameCheck: string;
     watch: UseFormWatch<FieldValues>;
-  }
+}

@@ -2,7 +2,7 @@ import { Box, Tag, useDisclosure } from "@chakra-ui/react";
 import "./carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { isMobile } from "react-device-detect";
-import ModelAlert from "../ModelAlert/ModelAlert";
+import ModelBase from "../Model/ModelBase";
 
 interface ICarouselsImage {
   listImages: Array<string>;
@@ -36,11 +36,11 @@ function CarouselsImage({
 
   return (
     <>
-      <ModelAlert
+      <ModelBase
+        size="2xl"
         isOpen={isOpen}
-        title="Chi tiết hình ảnh"
-        isClose={false}
-        msg={
+        onClose={onClose}
+        TextData={
           <Carousel {...getConfigurableProps()}>
             {listImages.map((url, index) => (
               <Box
@@ -54,8 +54,7 @@ function CarouselsImage({
             ))}
           </Carousel>
         }
-        onClose={onClose}
-        size="5xl"
+        children={null}
       />
       <Box position={"relative"} width="100%">
         <Carousel {...getConfigurableProps()}>

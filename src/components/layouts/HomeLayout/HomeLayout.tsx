@@ -65,7 +65,7 @@ function MiniBackground({ miniBackground }: { miniBackground: string }) {
           right={0}
           top="50%"
           bottom={0}
-          bgGradient="linear(to bottom,  #ff000000, white)"
+          bgGradient="linear(to bottom,  #ff000000, #131930)"
         />
         <Box
           zIndex={1}
@@ -74,7 +74,7 @@ function MiniBackground({ miniBackground }: { miniBackground: string }) {
           right={0}
           top={0}
           bottom={0}
-          filter="blur(20px)"
+          filter="blur(15px)"
           backgroundSize="cover"
           backgroundImage={miniBackground}
         />

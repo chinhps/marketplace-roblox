@@ -243,3 +243,50 @@ body {
     transform: rotateY(0);
   }
 }
+
+.navigate {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  .disabled {
+    color: gray;
+  }
+  .page-paginate {
+    transition: 0.3s;
+    font-weight: bold;
+    &:hover {
+      color: #d21616;
+    }
+  }
+  a {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #ffffff;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  .hd {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  .active {
+    border-radius: 5px;
+    background-color: var(--bg-item2-main-color);
+    &:hover {
+      color: initial;
+    }
+  }
+  .break {
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

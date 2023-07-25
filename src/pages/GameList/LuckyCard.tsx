@@ -51,7 +51,16 @@ export default function LuckyCard() {
 
   return (
     <>
-      <HeadingService price={serviceInfoQuery.data?.data.data.price ?? 0}>
+      <HeadingService
+        price={serviceInfoQuery.data?.data.data.price ?? 0}
+        notification={
+          <Box
+            dangerouslySetInnerHTML={{
+              __html: serviceInfoQuery.data?.data.data.notification ?? "",
+            }}
+          />
+        }
+      >
         {serviceInfoQuery.data?.data.data.service_image.name}
       </HeadingService>
       {/* GAMES */}

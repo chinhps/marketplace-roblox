@@ -58,3 +58,32 @@ export interface IServiceHandle {
         value: number,
     }>
 }
+
+export interface IServiceAccountDetail {
+    id: number,
+    service_image: {
+        name: string,
+        image: string
+    },
+    notification: string
+}
+
+export interface IAccountService {
+    id: number,
+    detail: Array<{
+        key: string,
+        name: string,
+        value: string | number
+    }>,
+    sale: number | null,
+    note: string | null,
+    price: number,
+    thumb: string,
+    images: Array<string>
+}
+
+export interface IPaginate {
+    current_page: number,
+    last_page: number,
+    total: number
+}

@@ -44,7 +44,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
             >
               <VStack>
                 <Tag value="Mới" />
-                <Tag fontWeight="bold" value="50%" bg="red" />
+                <Tag value="50%" bg="red" />
               </VStack>
               <HStack>
                 <Icon as={FiCreditCard} />

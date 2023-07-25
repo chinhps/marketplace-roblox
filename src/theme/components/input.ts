@@ -9,14 +9,10 @@ export const inputStyles = {
                     borderRadius: '8px',
                     bg: mode('main.item', 'navy.800')(props),
                     border: '1px solid',
-                    color: 'secondaryGray.600',
+                    color: "white.100",
                     borderColor: mode('main.item4', 'whiteAlpha.100')(props),
                 },
             }),
-
-            variants: {
-
-            },
         },
         NumberInput: {
             baseStyle: (props: any) => ({
@@ -42,13 +38,13 @@ export const inputStyles = {
                     field: {
                         bg: mode('main.item', 'navy.800')(props),
                         border: '1px solid',
-                        color: 'secondaryGray.600',
                         borderColor: mode('main.item4', 'whiteAlpha.100')(props),
                         borderRadius: '5px',
-                        _placeholder: { color: 'secondaryGray.600' },
+                        color: "white.100",
+                        _placeholder: { color: "white.100" },
                     },
                     icon: {
-                        color: 'secondaryGray.600',
+                        color: "white.100",
                     },
                 }),
             },

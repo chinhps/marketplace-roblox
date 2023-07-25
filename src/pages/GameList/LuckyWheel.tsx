@@ -45,7 +45,16 @@ export default function LuckyWheel() {
 
   return (
     <>
-      <HeadingService price={serviceInfoQuery.data?.data.data.price ?? 0}>
+      <HeadingService
+        price={serviceInfoQuery.data?.data.data.price ?? 0}
+        notification={
+          <Box
+            dangerouslySetInnerHTML={{
+              __html: serviceInfoQuery.data?.data.data.notification ?? "",
+            }}
+          />
+        }
+      >
         {serviceInfoQuery.data?.data.data.service_image.name}
       </HeadingService>
       {/* GAMES */}
@@ -83,7 +92,6 @@ function GamePlay({
     },
     onSuccess: ({ data }) => {
       onOpen();
-      console.log(data);
       handleLoop(1);
       // Clear class effect swing
       wheelImg.current.classList.remove(`rotating`);

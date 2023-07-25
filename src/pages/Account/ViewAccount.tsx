@@ -25,8 +25,6 @@ export default function ViewAccount() {
   } = useDisclosure();
 
   const handleClick = (id: number) => {
-    console.log(id);
-    
     onOpenConfirm();
   };
 
@@ -50,7 +48,7 @@ export default function ViewAccount() {
   return (
     <>
       <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
-        <GridItem bg="white.500" p={5} rounded="2xl">
+        <GridItem bg="main.item" p={5} rounded="md">
           <CarouselsImage
             thumb={true}
             popup={true}
@@ -61,14 +59,14 @@ export default function ViewAccount() {
             }
           />
         </GridItem>
-        <GridItem bg="white.500" p={5} rounded="2xl">
+        <GridItem bg="main.item" p={5} rounded="md">
           <VStack gap={3}>
             <Box
               w="100%"
               backgroundImage="/bg-1.jpeg"
               backgroundSize="cover"
               color="white"
-              rounded="2xl"
+              rounded="md"
               py={3}
               px={5}
             >
@@ -82,7 +80,7 @@ export default function ViewAccount() {
               justifyContent="space-between"
               p={5}
               bg="red.250"
-              rounded="2xl"
+              rounded="md"
               alignItems="center"
             >
               <Box>
@@ -105,7 +103,7 @@ export default function ViewAccount() {
                 </Text>
               </Box>
             </Flex>
-            <Box w="100%" p={5} bg="white.100" rounded="2xl">
+            <Box w="100%" p={5} bg="white.100" rounded="md">
               <Text as="b" mb={2}>
                 Thông tin
               </Text>
@@ -125,7 +123,9 @@ export default function ViewAccount() {
               MUA NGAY
             </Button>
             <Link to="/help">
-              <Text as="b">Mua bằng ATM / MOMO Tại đây</Text>
+              <Text as="b" color="white.100">
+                Mua bằng ATM / MOMO Tại đây
+              </Text>
             </Link>
           </VStack>
         </GridItem>
@@ -140,7 +140,7 @@ function RecomendAccount() {
   return (
     <>
       <Box mt="2rem">
-        <Heading as="h2" fontSize="20px" mb={5} textShadow="0 0 30px white">
+        <Heading color="white.100" as="h2" fontSize="20px" mb={5}>
           TÀI KHOẢN ĐỒNG GIÁ
         </Heading>
         <SimpleGrid
@@ -149,9 +149,9 @@ function RecomendAccount() {
           px={{ base: 2, lg: 0 }}
           mt={{ base: "2rem", lg: 0 }}
         >
-          {new Array(10).fill(0).map((_, index) => (
+          {/* {new Array(10).fill(0).map((_, index) => (
             <Account key={index} />
-          ))}
+          ))} */}
         </SimpleGrid>
       </Box>
     </>

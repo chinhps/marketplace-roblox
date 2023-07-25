@@ -15,6 +15,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export default function FormBase({
   dataForm,
@@ -22,12 +23,23 @@ export default function FormBase({
   CustomComponent,
   onSubmit,
   hiddenLable,
+  dataDefault,
 }: IFormBase) {
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  useEffect(() => {
+    dataDefault &&
+      Object.entries(dataDefault).forEach(([key, value]) => {
+        if (value) {
+          setValue(key, value);
+        }
+      });
+  }, []);
 
   function Test({ children }: { children: React.ReactNode }) {
     return (
@@ -47,7 +59,7 @@ export default function FormBase({
         <Test>
           {dataForm?.map((form, index) => (
             <FormControl
-              mb={5}
+              mb={3}
               key={index}
               isInvalid={errors[form.name] ? true : false}
             >

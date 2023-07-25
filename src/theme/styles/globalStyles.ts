@@ -32,7 +32,8 @@ export const globalStyles = {
         ocean: {
             50: "#0bc6e3",
             100: "#0BC4E2",
-            200: "#2C8CC2"
+            200: "#2C8CC2",
+            300: "#005281"
         },
         red: {
             99: "#DB0E0E",
