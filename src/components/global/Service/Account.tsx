@@ -16,6 +16,7 @@ import Skeleton from "../Skeleton/Skeleton";
 import { IAccountService } from "@/types/response/service.type";
 import { numberFormat } from "@/utils/price";
 import Tag from "../Tag/Tag";
+import { Link } from "react-router-dom";
 
 export default function Account({ data }: { data: IAccountService }) {
   return (
@@ -41,17 +42,25 @@ export default function Account({ data }: { data: IAccountService }) {
           shadow: "md",
         }}
       >
-        <Flex position="absolute" top=".5rem" left=".5rem" gap="6px" flexDirection="column">
+        <Flex
+          position="absolute"
+          top=".5rem"
+          left=".5rem"
+          gap="6px"
+          flexDirection="column"
+        >
           <Tag value={"MS " + data.id} />
           <Tag bgColor="ocean.100" value={data.sale + "%"} />
         </Flex>
         <Box as="figure" height="170px" overflow="hidden">
-          <Img
-            src={data.thumb}
-            transition=".3s"
-            alt="hihi"
-            _hover={{ transform: "scale(1.02)" }}
-          />
+          <Link to={"/accounts/view/" + data.id}>
+            <Img
+              src={data.thumb}
+              transition=".3s"
+              alt="hihi"
+              _hover={{ transform: "scale(1.02)" }}
+            />
+          </Link>
         </Box>
         <Flex py={3} px={4} gap={2} alignItems="center" overflow="hidden">
           <Icon as={FiGift} color="red.500" fontSize="18px" />

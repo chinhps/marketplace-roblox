@@ -37,14 +37,14 @@ function CarouselsImage({
   return (
     <>
       <ModelBase
-        size="2xl"
+        size="4xl"
         isOpen={isOpen}
         onClose={onClose}
         TextData={
           <Carousel {...getConfigurableProps()}>
             {listImages.map((url, index) => (
               <Box
-                rounded="2xl"
+                rounded="md"
                 key={index}
                 overflow="hidden"
                 onClick={handlePopup}
@@ -60,7 +60,7 @@ function CarouselsImage({
         <Carousel {...getConfigurableProps()}>
           {listImages.map((url, index) => (
             <Box
-              rounded="2xl"
+              rounded="md"
               key={index}
               overflow="hidden"
               onClick={handlePopup}
@@ -70,7 +70,7 @@ function CarouselsImage({
           ))}
         </Carousel>
         {popup && !isMobile && (
-          <Tag position="absolute" zIndex={99} top="5%" left="2%" opacity=".9">
+          <Tag position="absolute" zIndex={99} top="10px" left="10px" opacity=".7">
             Click để phóng to
           </Tag>
         )}

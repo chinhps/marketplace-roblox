@@ -54,7 +54,6 @@ export default function AccountList() {
     color: "white",
     textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
   };
-  console.log(page);
 
   return (
     <>

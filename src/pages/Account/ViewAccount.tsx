@@ -1,65 +1,130 @@
+import { accountApi } from "@/apis/games/accountApi";
 import CarouselsImage from "@/components/global/CarouselsImage/CarouselsImage";
+import ModelConfirm from "@/components/global/Model/ModalConfirm";
 import Account from "@/components/global/Service/Account";
-import { IViewAccount } from "@/types/response.type";
-import { ATM_DISCOUNT } from "@/utils/const";
+import ServiceV2 from "@/components/global/Service/ServiceV2";
+import Skeleton from "@/components/global/Skeleton/Skeleton";
+import { ATM_DISCOUNT, customToast } from "@/utils/const";
 import { numberFormat } from "@/utils/price";
 import {
   Box,
   Button,
+  Center,
   Flex,
   GridItem,
   Heading,
+  Img,
   SimpleGrid,
   Text,
   VStack,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function ViewAccount() {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const { id } = useParams();
   const {
-    // isOpen: isOpenConfirm,
+    isOpen: isOpenConfirm,
     onOpen: onOpenConfirm,
-    // onClose: onCloseConfirm,
+    onClose: onCloseConfirm,
   } = useDisclosure();
+  const toast = useToast(customToast);
+  const accountBuyMutation = useMutation({
+    mutationFn: ({ id }: { id: number }) => {
+      return accountApi.buyAccount(id);
+    },
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+      onCloseConfirm();
+    },
+    onError: () => {
+      onCloseConfirm();
+    },
+  });
+  const accountDetailQuery = useQuery({
+    queryKey: ["account-detail", id],
+    queryFn: () => accountApi.accountDetail(Number(id)),
+    enabled: !!id,
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
 
-  const handleClick = (id: number) => {
-    onOpenConfirm();
+  /****----------------
+   *      Handle
+  ----------------****/
+  const handleBuy = () => {
+    if (id) {
+      accountBuyMutation.mutate({
+        id: Number(id),
+      });
+    }
   };
-
-  const OneAccountBuy: IViewAccount = {
-    id: 30503,
-    name: "ACC BLOX FRUITS T\u1ef0 CH\u1eccN",
-    thumb: "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317942643.png",
-    cash: 1200000,
-    images: [
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317428154.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317299641.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317503092.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317723644.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317883773.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/1679414317427867.png",
-      "https://quanly.gameroblox.vn/upload/doanhmuc/167941431752849.png",
-    ],
-    description: "Max Level + T\u1ed9c Th\u1ecf V4 Full Gear C\u1ef1c Ngon",
-  };
+  /****----------------
+   *      END-Handle
+  ----------------****/
 
   return (
     <>
+      <ModelConfirm
+        isLoading={accountBuyMutation.isLoading}
+        isOpen={isOpenConfirm}
+        onClose={onCloseConfirm}
+        handleConfirm={handleBuy}
+        TextData={`Bạn có chắc muốn mua #${id}?`}
+        children={null}
+      />
       <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
         <GridItem bg="main.item" p={5} rounded="md">
-          <CarouselsImage
-            thumb={true}
-            popup={true}
-            listImages={
-              (OneAccountBuy?.images.length > 0
-                ? OneAccountBuy?.images
-                : [OneAccountBuy?.thumb]) ?? []
-            }
-          />
+          {accountDetailQuery.isLoading ? (
+            <Skeleton />
+          ) : (
+            <CarouselsImage
+              thumb={true}
+              popup={true}
+              listImages={accountDetailQuery.data?.data.data.images ?? []}
+            />
+          )}
         </GridItem>
-        <GridItem bg="main.item" p={5} rounded="md">
+        <GridItem
+          bg="main.item"
+          p={5}
+          rounded="md"
+          position="relative"
+          overflow="hidden"
+        >
+          {accountDetailQuery.data?.data.data.status === "SOLD" && (
+            <>
+              <Center
+                userSelect="none"
+                zIndex={5}
+                position="absolute"
+                inset={0}
+              >
+                <Img src="/images/sold.png" />
+              </Center>
+              <Box
+                position="absolute"
+                inset={0}
+                bg="black.100"
+                zIndex={1}
+                opacity={0.7}
+              />
+            </>
+          )}
+
           <VStack gap={3}>
             <Box
               w="100%"
@@ -70,10 +135,10 @@ export default function ViewAccount() {
               py={3}
               px={5}
             >
+              <Text fontSize="15px">TÀI KHOẢN</Text>
               <Heading as="h2" fontSize="25px">
-                Mã số: {OneAccountBuy?.id}
+                Mã số: {id}
               </Heading>
-              <Text fontSize="15px">DANH MỤC: {OneAccountBuy?.name}</Text>
             </Box>
             <Flex
               w="100%"
@@ -87,9 +152,13 @@ export default function ViewAccount() {
                 <Text color="red.600" fontSize="sm">
                   THẺ CÀO
                 </Text>
-                <Text fontWeight="bold" color="red.600" fontSize="25px">
-                  {numberFormat(OneAccountBuy?.cash)}
-                </Text>
+                {accountDetailQuery.data?.data.data.price && (
+                  <Text fontWeight="bold" color="red.600" fontSize="25px">
+                    {numberFormat(
+                      accountDetailQuery.data?.data.data.price ?? 0
+                    )}
+                  </Text>
+                )}
               </Box>
               <Text fontSize="sm" color="red.600">
                 hoặc
@@ -98,23 +167,38 @@ export default function ViewAccount() {
                 <Text color="red.600" fontSize="sm">
                   ATM/MOMO chỉ cần
                 </Text>
-                <Text fontWeight="bold" color="red.600" fontSize="25px">
-                  {numberFormat(OneAccountBuy?.cash * ATM_DISCOUNT)}
-                </Text>
+                {accountDetailQuery.data?.data.data.price && (
+                  <Text fontWeight="bold" color="red.600" fontSize="25px">
+                    {numberFormat(
+                      (accountDetailQuery.data?.data.data.price ?? 0) *
+                        ATM_DISCOUNT
+                    )}
+                  </Text>
+                )}
               </Box>
             </Flex>
-            <Box w="100%" p={5} bg="white.100" rounded="md">
-              <Text as="b" mb={2}>
-                Thông tin
-              </Text>
-              <Box
-                dangerouslySetInnerHTML={{ __html: OneAccountBuy?.description }}
-              />
-            </Box>
+            {accountDetailQuery.isLoading ? (
+              <Skeleton w="100%" height="100px" />
+            ) : (
+              <Box w="100%" p={5} bg="white.100" rounded="md">
+                <Text as="b" mb={2}>
+                  Thông tin
+                </Text>
+
+                <Box
+                  dangerouslySetInnerHTML={{
+                    __html: accountDetailQuery.data?.data.data.note ?? "",
+                  }}
+                />
+              </Box>
+            )}
             <Button
               w="100%"
+              isLoading={
+                accountBuyMutation.isLoading || accountDetailQuery.isLoading
+              }
               leftIcon={<FaShoppingCart />}
-              onClick={() => handleClick(OneAccountBuy?.id)}
+              onClick={onOpenConfirm}
               colorScheme="red"
               rounded="md"
               fontSize="xl"
@@ -130,18 +214,26 @@ export default function ViewAccount() {
           </VStack>
         </GridItem>
       </SimpleGrid>
-      {/* TÀI KHOẢN ĐỒNG GIÁ */}
+      {/* RECOMMENDS ACCOUNTS */}
       <RecomendAccount />
     </>
   );
 }
 
 function RecomendAccount() {
+  const recommendsQuery = useQuery({
+    queryKey: ["recommends-accounts"],
+    queryFn: () => accountApi.recommends(),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
       <Box mt="2rem">
         <Heading color="white.100" as="h2" fontSize="20px" mb={5}>
-          TÀI KHOẢN ĐỒNG GIÁ
+          TÀI KHOẢN ĐỀ XUẤT
         </Heading>
         <SimpleGrid
           columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
@@ -149,9 +241,13 @@ function RecomendAccount() {
           px={{ base: 2, lg: 0 }}
           mt={{ base: "2rem", lg: 0 }}
         >
-          {/* {new Array(10).fill(0).map((_, index) => (
-            <Account key={index} />
-          ))} */}
+          {recommendsQuery.isLoading
+            ? new Array(5)
+                .fill(0)
+                .map((_, index) => <Account.loading key={index} />)
+            : recommendsQuery.data?.data.data.map((account) => (
+                <Account key={account.id} data={account} />
+              ))}
         </SimpleGrid>
       </Box>
     </>

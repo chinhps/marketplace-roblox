@@ -4,7 +4,7 @@ import { myDomain } from './version';
 import { customToast, token } from './const';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { logout } from './price';
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API,
@@ -49,20 +49,12 @@ axiosClient.interceptors.response.use(
     if (status === 401) {
       toast({
         status: "error",
-        description: "Xác thực thất bại! Vui lòng đăng nhập lại!",
+        description: "Bạn chưa đăng nhập! Vui lòng đăng nhập để tiếp tục...",
         ...customToast
       });
       logout();
     }
-    if (status === 422) {
-      toast({
-        status: "warning",
-        description: err?.response.data.msg,
-        ...customToast
-      });
-      logout();
-    }
-    if (status === 404 || status === 402) {
+    if (status === 404 || status === 402 || status === 422 || status === 403) {
       toast({
         status: "warning",
         description: err?.response.data.msg,

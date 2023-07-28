@@ -1,11 +1,3 @@
-export interface IViewAccount {
-    "id": number,
-    "name": string,
-    "thumb": string,
-    "cash": number,
-    "images": Array<string>,
-    "description": string
-}
 export interface IHistoryRecharge {
     id: number;
     code: string;

@@ -79,7 +79,8 @@ export interface IAccountService {
     note: string | null,
     price: number,
     thumb: string,
-    images: Array<string>
+    images: Array<string>,
+    status: string | null
 }
 
 export interface IPaginate {

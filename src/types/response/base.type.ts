@@ -8,3 +8,7 @@ export interface IBaseResponse<T> {
 export interface IBaseResponseDetail<T> {
     data: T
 }
+
+export interface IResponseWithMessage {
+    msg: string | Array<string>
+}
