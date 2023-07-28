@@ -5,7 +5,6 @@ namespace App\Repository\History\ServiceHistory;
 use App\Models\Service;
 use App\Models\ServiceHistory;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 
 class ServiceHistoryRepository implements ServiceHistoryInterface
 {
@@ -13,8 +12,8 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
     {
         $history = new ServiceHistory;
         $history->quantity = $quantity;
-        $history->shop_id = $quantity;
         $history->detail = json_encode($detail);
+        $history->shop()->associate($user->shop);
         $history->service()->associate($service);
         $history->user()->associate($user);
         $history->save();

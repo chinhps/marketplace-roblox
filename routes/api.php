@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
@@ -40,6 +41,15 @@ Route::prefix('news')->group(function () {
     Route::get('/view/{slug}', []);
 });
 
+# Accounts
+Route::prefix('accounts')->group(function () {
+    Route::get('/detail/{id}', [AccountController::class, 'accountDetail']);
+    Route::get('/recommends', [AccountController::class, 'recommends']);
+
+    # Buy account
+    Route::post('/buy_account', [AccountController::class, 'buyAccount'])->middleware('decryptToken:sanctum');
+});
+
 # View Service home
 Route::prefix('services')->group(function () {
     Route::get('/', [ServiceController::class, 'serviceList']);
@@ -49,11 +59,8 @@ Route::prefix('services')->group(function () {
     Route::get('/histories/{slug}', []);
 
     # play game
-    Route::post('/is_play_try/{slug}', [ServiceController::class, 'handelPlayTry']);
-    Route::post('/is_play/{slug}', [ServiceController::class, 'handelPlay'])->middleware('decryptToken:sanctum');
-
-    # Buy account
-    Route::post('/buy_account', [])->middleware('decryptToken:sanctum');
+    Route::post('/is_play_try/{slug}', [ServiceController::class, 'handlePlayTry']);
+    Route::post('/is_play/{slug}', [ServiceController::class, 'handlePlay'])->middleware('decryptToken:sanctum');
 });
 
 # Plugin

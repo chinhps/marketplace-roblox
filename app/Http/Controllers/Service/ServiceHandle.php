@@ -33,6 +33,11 @@ class ServiceHandle
     {
         $valueGift = self::giftType($serviceGift->gift_type, $serviceGift->value1, $serviceGift->value2);
 
+        return self::handleValueGift($currency, $valueGift);
+    }
+
+    public static function handleValueGift(string $currency, float $valueGift)
+    {
         switch ($currency) {
             case "DIAMOND":
                 if ($valueGift > 300) return false;
@@ -51,15 +56,11 @@ class ServiceHandle
 
     public static function handleGiveGiftByService(
         TransactionInterface $transactionRepository,
-        float $idServiceHistory,
-        string $nameService,
         string $currency,
-        float $value
+        float $value,
+        string $note
     ) {
-        $note = json_encode([
-            "nameService" => $nameService,
-            "history_service_id" => $idServiceHistory
-        ]);
+
         switch ($currency) {
             case "DIAMOND":
                 return $transactionRepository->createDiamond($value, $note);

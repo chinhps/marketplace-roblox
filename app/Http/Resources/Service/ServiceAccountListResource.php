@@ -21,6 +21,7 @@ class ServiceAccountListResource extends BaseResource
             "price" => $this->price,
             "thumb" => $this->thumb,
             "note" => $this->note,
+            "status" => $this->status ?? null,
             "sale" => 50,
             "images" => json_decode($this->images, true)
         ];

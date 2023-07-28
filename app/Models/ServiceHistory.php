@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ServiceHistory extends Model
 {
@@ -19,13 +20,18 @@ class ServiceHistory extends Model
         "detail"
     ];
 
-    public function service()
+    public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(Service::class);
+    }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(ShopList::class, 'shop_id');
     }
 }

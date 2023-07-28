@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repository\Account\AccountInterface;
+use App\Repository\Account\AccountRepository;
+use App\Repository\History\PurchaseHistory\PurchaseHistoryInterface;
+use App\Repository\History\PurchaseHistory\PurchaseHistoryRepository;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
 use App\Repository\History\ServiceHistory\ServiceHistoryRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
@@ -32,6 +36,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
         $this->app->bind(ServiceInterface::class, ServiceRepository::class);
         $this->app->bind(ServiceHistoryInterface::class, ServiceHistoryRepository::class);
+        $this->app->bind(AccountInterface::class, AccountRepository::class);
+        $this->app->bind(PurchaseHistoryInterface::class, PurchaseHistoryRepository::class);
     }
 
     /**

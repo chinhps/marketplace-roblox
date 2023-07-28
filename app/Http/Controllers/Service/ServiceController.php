@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Service;
 use App\Helper\RandomPercent;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DomainRequest;
 use App\Http\Requests\Service\ServiceFilterRequest;
 use App\Http\Requests\Service\ServicePlayRequest;
 use App\Http\Resources\Service\ServiceAccountDetailResource;
@@ -15,6 +16,7 @@ use App\Http\Resources\Service\ServicePlayResource;
 use App\Models\ServiceDetail;
 use App\Models\ServiceGift;
 use App\Models\ServiceOdds;
+use App\Repository\Account\AccountInterface;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
@@ -22,7 +24,6 @@ use App\Repository\Service\ServiceInterface;
 use App\Repository\Transaction\TransactionInterface;
 use App\Repository\User\UserInterface;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,14 +36,16 @@ class ServiceController extends Controller
         private ServiceDetailInterface $serviceDetailRepository,
         private TransactionInterface $transactionRepository,
         private UserInterface $userRepository,
-        private ServiceHistoryInterface $serviceHistoryRepository
+        private ServiceHistoryInterface $serviceHistoryRepository,
+        private AccountInterface $accountRepository
     ) {
     }
 
     # Get list service at home
-    public function serviceList(Request $request)
+    public function serviceList(DomainRequest $request)
     {
-        $domain = $request->domain;
+        $validated = $request->validated();
+        $domain = $validated['domain'];
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
         return ServiceListResource::collection($this->serviceGroupRepository->serviceGroupList($idListAllow));
     }
@@ -69,9 +72,10 @@ class ServiceController extends Controller
     }
 
     # Service Detail
-    public function serviceDetail($slug, Request $request)
+    public function serviceDetail($slug, DomainRequest $request)
     {
-        $domain = $request->domain;
+        $validated = $request->validated();
+        $domain = $validated['domain'];
         # Check service exists at domain
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
         $service = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
@@ -114,8 +118,8 @@ class ServiceController extends Controller
      * 
      ********/
 
-    # Handel Play(real)
-    public function handelPlay(string $slug, ServicePlayRequest $request)
+    # handle Play(real)
+    public function handlePlay(string $slug, ServicePlayRequest $request)
     {
         $validated = $request->validated();
         $domain = $validated['domain'];
@@ -210,21 +214,21 @@ class ServiceController extends Controller
         // ==============================================
 
 
-        // ============= HANDEL LOOP GIFT ===============
+        // ============= handle LOOP GIFT ===============
         try {
-            $handelGiftWithLoop = $this->handelGiftWithLoop(
+            $handleGiftWithLoop = $this->handleGiftWithLoop(
                 numrolllop: $numrolllop,
                 serviceOdds: $serviceOdds,
                 giftForUser: $giftForUser,
                 currentLoopLocal: $currentLoop,
                 checkGuard: true
             );
-            if (!$handelGiftWithLoop) {
+            if (!$handleGiftWithLoop) {
                 DB::rollBack();
                 return BaseResponse::msg("Phần thưởng đăng gặp vấn đề!", 404);
             }
-            $gifts = $handelGiftWithLoop['gifts'];
-            $giftTotal = $handelGiftWithLoop['giftTotal'];
+            $gifts = $handleGiftWithLoop['gifts'];
+            $giftTotal = $handleGiftWithLoop['giftTotal'];
         } catch (\Exception $e) {
             DB::rollBack();
             dd("lỗi hệ thống từ module xử lý nhận quà", $e->getMessage());
@@ -245,12 +249,15 @@ class ServiceController extends Controller
             ]);
             # give gift to transaction
             collect($giftTotal)->each(function ($value) use ($serviceHistory, $serviceDetail) {
+                $note = json_encode([
+                    "nameService" => $serviceDetail->serviceImage->name,
+                    "history_service_id" => $serviceHistory->id
+                ]);
                 ServiceHandle::handleGiveGiftByService(
                     transactionRepository: $this->transactionRepository,
-                    idServiceHistory: $serviceHistory->id,
-                    nameService: $serviceDetail->serviceImage->name,
                     currency: $value['type'],
-                    value: $value['value']
+                    value: $value['value'],
+                    note: $note
                 );
             });
         } catch (\Exception $e) {
@@ -262,6 +269,51 @@ class ServiceController extends Controller
         DB::commit();
         $return = [];
         $return['price'] = $priceService;
+        $return['giftTotal'] = $giftTotal;
+        $return['gifts'] = $gifts;
+        return new ServicePlayResource($return);
+    }
+
+    public function handlePlayTry(string $slug, ServicePlayRequest $request)
+    {
+        $validated = $request->validated();
+        $domain = $validated['domain'];
+        $numrolllop = ServiceHandle::CheckNumLoop($validated['numrolllop']);
+        $slugPayload = $validated['slug'];
+
+        try {
+            # Check service at `Domain`
+            $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
+            $this->checkService(
+                slug: $slug,
+                slugPayload: $slugPayload,
+                idListAllow: $idListAllow,
+            );
+        } catch (\Exception $e) {
+            return BaseResponse::msg($e->getMessage(), 404);
+        }
+        // ========== GET ALL GIFT BY SERVICE ===========
+        /**
+         * @var \App\Models\ServiceOdds
+         */
+        $serviceOdds = $this->serviceDetailRepository->serviceGifts($slug, $idListAllow)->serviceOdds;
+        $giftForAdmin = $this->serviceDetailRepository->giftForAdmin($serviceOdds);
+        // ==============================================
+
+        // ============= handle LOOP GIFT ===============
+        $handleGiftWithLoop = $this->handleGiftWithLoop(
+            numrolllop: $numrolllop,
+            serviceOdds: $serviceOdds,
+            giftForUser: $giftForAdmin,
+            currentLoopLocal: 0,
+            checkGuard: false
+        );
+        $gifts = $handleGiftWithLoop['gifts'];
+        $giftTotal = $handleGiftWithLoop['giftTotal'];
+        // ==============================================
+
+        $return = [];
+        $return['price'] = 0;
         $return['giftTotal'] = $giftTotal;
         $return['gifts'] = $gifts;
         return new ServicePlayResource($return);
@@ -292,8 +344,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * handelGiftWithLoop
-     * Handel loop gift, check value and return gifts + total gifts
+     * handleGiftWithLoop
+     * handle loop gift, check value and return gifts + total gifts
      *
      * @param  float $numrolllop
      * @param  ServiceOdds $serviceOdds
@@ -305,7 +357,7 @@ class ServiceController extends Controller
      * "gifts": Array have all gift
      * "giftTotal": Array - total gift
      */
-    private function handelGiftWithLoop(
+    private function handleGiftWithLoop(
         float $numrolllop,
         ServiceOdds $serviceOdds,
         Collection $giftForUser,
@@ -417,50 +469,5 @@ class ServiceController extends Controller
         }
 
         return ['giftForUser' => $giftForUser, 'currentLoop' => $currentLoop];
-    }
-
-    public function handelPlayTry(string $slug, ServicePlayRequest $request)
-    {
-        $validated = $request->validated();
-        $domain = $validated['domain'];
-        $numrolllop = ServiceHandle::CheckNumLoop($validated['numrolllop']);
-        $slugPayload = $validated['slug'];
-
-        try {
-            # Check service at `Domain`
-            $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
-            $this->checkService(
-                slug: $slug,
-                slugPayload: $slugPayload,
-                idListAllow: $idListAllow,
-            );
-        } catch (\Exception $e) {
-            return BaseResponse::msg($e->getMessage(), 404);
-        }
-        // ========== GET ALL GIFT BY SERVICE ===========
-        /**
-         * @var \App\Models\ServiceOdds
-         */
-        $serviceOdds = $this->serviceDetailRepository->serviceGifts($slug, $idListAllow)->serviceOdds;
-        $giftForAdmin = $this->serviceDetailRepository->giftForAdmin($serviceOdds);
-        // ==============================================
-
-        // ============= HANDEL LOOP GIFT ===============
-        $handelGiftWithLoop = $this->handelGiftWithLoop(
-            numrolllop: $numrolllop,
-            serviceOdds: $serviceOdds,
-            giftForUser: $giftForAdmin,
-            currentLoopLocal: 0,
-            checkGuard: false
-        );
-        $gifts = $handelGiftWithLoop['gifts'];
-        $giftTotal = $handelGiftWithLoop['giftTotal'];
-        // ==============================================
-
-        $return = [];
-        $return['price'] = 0;
-        $return['giftTotal'] = $giftTotal;
-        $return['gifts'] = $gifts;
-        return new ServicePlayResource($return);
     }
 }
