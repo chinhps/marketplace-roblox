@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class BaseRequest extends FormRequest
 {
+    use ValidateRulesTrait;
 
     public function failedValidation(Validator $validator)
     {

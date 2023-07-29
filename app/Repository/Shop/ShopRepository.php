@@ -16,4 +16,9 @@ class ShopRepository implements ShopInterface
     {
         return $this->model->where('domain', $domain)->first()->id;
     }
+
+    public function getInfomation(string $domain)
+    {
+        return $this->model->where('domain', $domain)->with('shopdetails')->first()->shopdetails;
+    }
 }

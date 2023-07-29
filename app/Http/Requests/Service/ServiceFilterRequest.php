@@ -21,19 +21,19 @@ class ServiceFilterRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge($this->domainRules()['rules'], [
             'id' => ["nullable", "numeric"],
             'price' => ["nullable", "numeric", "between:1,7"],
             'sort' => ["nullable", "numeric", "between:1,2"],
-        ];
+        ]);
     }
 
     public function messages(): array
     {
-        return [
+        return array_merge($this->domainRules()['messages'], [
             'id.numeric' => 'ID phải là số',
             'price.*' => 'Dữ liệu lọc giá không đúng',
             'sort.*' => 'Dữ liệu lọc sắp xếp không đúng',
-        ];
+        ]);
     }
 }

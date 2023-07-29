@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Service\ServiceController;
+use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
 use Illuminate\Support\Facades\Route;
@@ -31,8 +33,8 @@ Route::prefix('auth')->group(function () {
 
 # information website
 Route::prefix('information')->group(function () {
-    Route::get('/', []);
-    Route::get('top-recharge', []);
+    Route::get('/', [ShopController::class, 'infomationShop']);
+    Route::get('top-recharge', [TopRechargeController::class, 'getTopRechargeList']);
 });
 
 # News

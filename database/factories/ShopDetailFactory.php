@@ -19,7 +19,6 @@ class ShopDetailFactory extends Factory
     {
         return [
             'shop_title' => $this->faker->sentence(),
-            'percent_cash' => $this->faker->numberBetween(0, 100),
             'cash_new_user' => $this->faker->randomFloat(null, 0, 1000),
             'information' => $this->faker->randomElement([
                 '{"foo": "bar"}',

@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\Domain;
-
 class DomainRequest extends BaseRequest
 {
     /**
@@ -21,15 +19,11 @@ class DomainRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain],
-        ];
+        return $this->domainRules()['rules'];
     }
 
     public function messages(): array
     {
-        return [
-            'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin',
-        ];
+        return $this->domainRules()['messages'];
     }
 }

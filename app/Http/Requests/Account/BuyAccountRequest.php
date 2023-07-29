@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Account;
 
 use App\Http\Requests\BaseRequest;
-use App\Rules\Domain;
 use Illuminate\Validation\Rule;
 
 class BuyAccountRequest extends BaseRequest
@@ -23,24 +22,22 @@ class BuyAccountRequest extends BaseRequest
      */
     public function rules()
     {
-        return [
+        return array_merge($this->domainRules()['rules'], [
             'id' => [
                 'required', 'numeric', 'exists:account_list,id',
                 Rule::exists('account_list')->where(function ($query) {
                     return $query->where('status', 'NOTSELL')->where('active', 'YES')->where('price', '>', 0);
                 })
-            ],
-            "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain],
-        ];
+            ]
+        ]);
     }
 
     public function messages()
     {
-        return [
+        return array_merge($this->domainRules()['messages'], [
             'id.required' => 'Thiếu id tài khoản!',
             'id.numeric' => 'Dữ liệu gửi lên không chính xác!',
             'id.exists' => 'Tài khoản đã có người khác mua hoặc không tồn tại! Vui lòng kiểm tra lại!',
-            'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin',
-        ];
+        ]);
     }
 }

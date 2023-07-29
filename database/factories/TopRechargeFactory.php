@@ -17,7 +17,8 @@ class TopRechargeFactory extends Factory
     public function definition(): array
     {
         return [
-            "price" => $this->faker->randomFloat(null, 0, 1000)
+            "price" => $this->faker->randomFloat(null, 0, 1000),
+            "name" => $this->faker->name()
         ];
     }
 }

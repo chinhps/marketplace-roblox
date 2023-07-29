@@ -3,7 +3,6 @@
 namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
-use App\Rules\Domain;
 
 class UserLoginRequest extends BaseRequest
 {
@@ -22,29 +21,27 @@ class UserLoginRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
-            "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain],
+        return array_merge($this->domainRules()['rules'], [
             "username" => [
                 "bail",
-                'required', // Tài khoản là bắt buộc
-                'min:5', // Tài khoản tối thiểu 5 ký tự
-                'max:255', // Tài khoản tối đa 255 ký tự
-                'alpha_num', // Tài khoản chỉ chứa chữ và số, không có ký tự đặc biệt
-                'exists:users', // Tài khoản phải tồn tại trong bảng 'users'
+                'required',
+                'min:5',
+                'max:255',
+                'alpha_num',
+                'exists:users',
             ],
             "password" => [
                 "bail",
-                'required', // Mật khẩu là bắt buộc
-                'string', // Mật khẩu phải là chuỗi
-                'min:8', // Mật khẩu tối thiểu 8 ký tự
+                'required',
+                'string',
+                'min:8',
             ]
-        ];
+        ]);
     }
 
     public function messages(): array
     {
-        return [
-            'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin',
+        return array_merge($this->domainRules()['messages'], [
             "username.required" => 'Bạn cần nhập Tài khoản',
             "username.min" => 'Tài khoản quá ngắn 5 ký tự',
             "username.max" => 'Tài khoản quá dài 255 ký tự',
@@ -53,6 +50,6 @@ class UserLoginRequest extends BaseRequest
             "password.required" => 'Bạn cần nhập mật khẩu',
             "password.string" => 'Mật khẩu của bạn phải là chuỗi',
             "password.min" => 'Mật khẩu ít nhất phải 8 ký tự',
-        ];
+        ]);
     }
 }

@@ -16,6 +16,8 @@ use App\Repository\Service\ServiceInterface;
 use App\Repository\Service\ServiceRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
+use App\Repository\TopRecharge\TopRechargeInterface;
+use App\Repository\TopRecharge\TopRechargeRepository;
 use App\Repository\Transaction\TransactionInterface;
 use App\Repository\Transaction\TransactionRepository;
 use App\Repository\User\UserInterface;
@@ -38,6 +40,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceHistoryInterface::class, ServiceHistoryRepository::class);
         $this->app->bind(AccountInterface::class, AccountRepository::class);
         $this->app->bind(PurchaseHistoryInterface::class, PurchaseHistoryRepository::class);
+        $this->app->bind(TopRechargeInterface::class, TopRechargeRepository::class);
     }
 
     /**
