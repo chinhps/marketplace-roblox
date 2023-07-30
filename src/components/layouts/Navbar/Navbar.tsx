@@ -30,6 +30,8 @@ import { Image } from "@chakra-ui/react";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Link as ReactLink } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
+import Skeleton from "@/components/global/Skeleton/Skeleton";
 
 export default function Navbar() {
   const { isOpen, onToggle, onClose } = useDisclosure();
@@ -63,11 +65,7 @@ export default function Navbar() {
               }}
             />
             <Link as={ReactLink} to="/">
-              <Image
-                src="https://i.imgur.com/wUN2rtT.png"
-                alt="logo"
-                height="50px"
-              />
+              <LogoNav />
             </Link>
           </Flex>
 
@@ -90,6 +88,23 @@ export default function Navbar() {
         <MobileNav isOpen={isOpen} onClose={onClose} />
       </Collapse>
     </Box>
+  );
+}
+
+function LogoNav() {
+  const data = useInformationShopData();  
+  return (
+    <>
+      {data?.status === "loading" ? (
+        <Skeleton w="150px" height="40px" rounded="lg" />
+      ) : (
+        <Image
+          src={data?.data?.data.information.logo_url}
+          alt="logo"
+          height="50px"
+        />
+      )}
+    </>
   );
 }
 

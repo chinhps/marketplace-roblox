@@ -220,7 +220,7 @@ function CountdownTime() {
 
       if (seconds <= 0) {
         clearInterval(interval);
-        setCountdown("Expired");
+        setCountdown("Hết hạn");
       } else {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);

@@ -1,3 +1,4 @@
+import { ITopRecharge, ITopRechargeItem } from "@/types/response/recharge";
 import { numberFormat } from "@/utils/price";
 import {
   Flex,
@@ -12,36 +13,25 @@ import {
 } from "@chakra-ui/react";
 import { FiAward, FiOctagon } from "react-icons/fi";
 
-interface ITopRecharge {
-  id: number;
-  name: string;
-  price: number;
-}
-
 export default function TopRecharge() {
   const data: Array<ITopRecharge> = [
     {
-      id: 1,
       name: "pham haong chinhwerwerwerert",
       price: 60000000,
     },
     {
-      id: 2,
       name: "hoang pahm werwerwe",
       price: 5300000,
     },
     {
-      id: 3,
       name: "hoang pahm werwerwe",
       price: 430000,
     },
     {
-      id: 4,
       name: "hoang pahm sdfsdfwer",
       price: 300000,
     },
     {
-      id: 5,
       name: "hoang pahm dfghdg dfgdf",
       price: 20000,
     },
@@ -57,12 +47,12 @@ export default function TopRecharge() {
         justifyContent="flex-start"
         gap={3}
       >
-        {data.map((user) => (
+        {data.map((user, index) => (
           <TopRechargeItem
-            key={user.id}
+            key={index + 1}
             name={user.name}
             price={user.price}
-            stt={user.id}
+            stt={index + 1}
           />
         ))}
       </Flex>
@@ -78,12 +68,6 @@ export default function TopRecharge() {
       </VStack>
     </>
   );
-}
-
-interface ITopRechargeItem {
-  stt: number;
-  name: string;
-  price: number;
 }
 
 function TopRechargeItem({ stt, name, price }: ITopRechargeItem) {

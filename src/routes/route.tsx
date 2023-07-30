@@ -23,6 +23,7 @@ import {
 import AuthLayout from "@/components/layouts/Authentication/AuthLayout";
 import ProfileLayout from "@/components/layouts/Profile/ProfileLayout";
 import { Helmet } from "react-helmet-async";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 
 export const router = createBrowserRouter([
   {
@@ -230,10 +231,35 @@ function TitleSeo({
   title: string;
   ComponentPage: any;
 }) {
+  const data = useInformationShopData();
   return (
     <>
       <Helmet>
-        <title>{title}</title>
+        <title>{`${title} | ${data?.data?.data.title_website || ""}`}</title>
+        <link
+          rel="icon"
+          type="image/x-icon"
+          href={data?.data?.data.information.favicon_url}
+        />
+        <link
+          rel="shortcut icon"
+          href={data?.data?.data.information.favicon_url}
+          type="image/x-icon"
+        />
+
+        <meta property="og:url" content={window.location.href} />
+        <meta
+          property="og:title"
+          content={`${title} | ${data?.data?.data.title_website || ""}`}
+        />
+        <meta
+          name="keywords"
+          content={data?.data?.data.information.keyword || ""}
+        />
+        <meta
+          name="description"
+          content={data?.data?.data.title_website || ""}
+        />
       </Helmet>
       <ComponentPage />
     </>

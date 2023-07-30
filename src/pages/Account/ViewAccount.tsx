@@ -2,7 +2,6 @@ import { accountApi } from "@/apis/games/accountApi";
 import CarouselsImage from "@/components/global/CarouselsImage/CarouselsImage";
 import ModelConfirm from "@/components/global/Model/ModalConfirm";
 import Account from "@/components/global/Service/Account";
-import ServiceV2 from "@/components/global/Service/ServiceV2";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 import { ATM_DISCOUNT, customToast } from "@/utils/const";
 import { numberFormat } from "@/utils/price";
