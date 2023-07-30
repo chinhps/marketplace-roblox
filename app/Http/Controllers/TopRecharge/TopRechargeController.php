@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\TopRecharge;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DomainRequest;
+use App\Http\Requests\TopRecharge\TopRechargeRequest;
 use App\Http\Resources\TopRecharge\TopRechargeResource;
 use App\Repository\TopRecharge\TopRechargeInterface;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TopRechargeController extends Controller
 {
@@ -15,13 +15,22 @@ class TopRechargeController extends Controller
     ) {
     }
 
-    public function getTopRechargeList(DomainRequest $request)
+    public function getTopRechargeList(TopRechargeRequest $request)
     {
         $validated = $request->validated();
         $domain = $validated['domain'];
 
-        $month = date('m');
-        $year =  date('Y');
+        $timeNow = Carbon::now();
+        switch ($validated['time']) {
+            case "present":
+                $month = $timeNow->month;
+                $year =  $timeNow->year;
+                break;
+            case "last-month":
+                $month = $timeNow->subMonth(1)->month;
+                $year =  $timeNow->year;
+                break;
+        }
 
         $dataTop = collect([
             ...$this->topRechargeRepository->topRecharges($domain, $month, $year),
@@ -29,9 +38,5 @@ class TopRechargeController extends Controller
         ])->sortByDesc('price')->take(5);
 
         return TopRechargeResource::collection($dataTop);
-    }
-
-    public function topRechargeInformation()
-    {
     }
 }

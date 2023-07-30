@@ -41,6 +41,10 @@ class ServiceController extends Controller
     ) {
     }
 
+    public function recommendsService() {
+        return 123;
+    }
+
     # Get list service at home
     public function serviceList(DomainRequest $request)
     {
