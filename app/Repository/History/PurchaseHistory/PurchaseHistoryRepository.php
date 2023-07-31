@@ -6,6 +6,7 @@ use App\Models\AccountList;
 use App\Models\Admin;
 use App\Models\PurchaseHistory;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseHistoryRepository implements PurchaseHistoryInterface
 {
@@ -22,5 +23,13 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
         $purchase->detail_private = $account->detail_private;
         $purchase->save();
         return $purchase;
+    }
+
+    public function list()
+    {
+        return PurchaseHistory::where('user_id', Auth::user()->id)
+            ->orderBy('id', 'desc')
+            ->with(['account.service'])
+            ->paginate(10);
     }
 }

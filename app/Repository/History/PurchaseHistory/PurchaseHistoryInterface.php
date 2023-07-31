@@ -9,4 +9,5 @@ use App\Models\User;
 interface PurchaseHistoryInterface
 {
     public function create(User $user, Admin $admin, AccountList $account);
+    public function list();
 }

@@ -83,7 +83,7 @@ class AuthController extends Controller
             "block" => "off",
             "active" => "on"
         ])) {
-            return BaseResponse::msg("Mật khẩu không đúng! Vui lòng kiểm tra lại", 400);
+            return BaseResponse::msg("Mật khẩu không đúng! Hoặc chưa kích hoạt tài khoản! Vui lòng kiểm tra lại", 400);
         }
 
         $user = Auth::user();

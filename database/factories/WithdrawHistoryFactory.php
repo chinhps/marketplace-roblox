@@ -23,9 +23,21 @@ class WithdrawHistoryFactory extends Factory
             "value" => $this->faker->numberBetween(50, 9999),
             "cost" => $this->faker->numberBetween(10, 999),
             "status" => $this->faker->randomElement(['0', '1', '2', '3', '4']),
-            "detail" => $withdraw_type === "ROBUX" ?
-                '{ "link": "' . $this->faker->url() . '" }'
-                : '{"id_game":"' . $this->faker->numberBetween(1000000, 9999999) . '"}'
+            "detail" => json_encode($withdraw_type === "ROBUX" ?
+                [
+                    [
+                        "key" => "link",
+                        "name" => "Đường dẫn",
+                        "value" => $this->faker->url()
+                    ],
+                ]
+                : [
+                    [
+                        "key" => "id_game",
+                        "name" => "ID Game",
+                        "value" => $this->faker->numberBetween(1000000, 9999999)
+                    ],
+                ])
         ];
     }
 }

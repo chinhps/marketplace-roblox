@@ -18,7 +18,6 @@ class TopRechargeFactory extends Factory
     {
         return [
             "price" => $this->faker->randomFloat(null, 0, 1000),
-            "name" => $this->faker->name()
         ];
     }
 }

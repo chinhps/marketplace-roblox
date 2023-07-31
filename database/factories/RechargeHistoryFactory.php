@@ -24,11 +24,23 @@ class RechargeHistoryFactory extends Factory
             "ip" => $this->faker->ipv4(),
             "detail" => json_encode(
                 [
-                    "type" => $this->faker->randomElement(['VIETTEL', 'VINAPHONE', 'MOBIFONE']),
-                    "serial" => $this->faker->numberBetween(100000000000, 900000000000),
-                    "code" => $this->faker->numberBetween(1000000000000, 9000000000000),
+                    [
+                        "key" => "type",
+                        "name" => "Loại thẻ",
+                        "value" => $this->faker->randomElement(['VIETTEL', 'VINAPHONE', 'MOBIFONE'])
+                    ],
+                    [
+                        "key" => "serial",
+                        "name" => "Serial",
+                        "value" => $this->faker->numberBetween(100000000000, 900000000000)
+                    ],
+                    [
+                        "key" => "code",
+                        "name" => "Mã thẻ",
+                        "value" => $this->faker->numberBetween(1000000000000, 9000000000000)
+                    ]
                 ]
             )
-        ];   
+        ];
     }
 }

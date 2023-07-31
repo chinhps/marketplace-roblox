@@ -5,6 +5,7 @@ namespace App\Repository\History\ServiceHistory;
 use App\Models\Service;
 use App\Models\ServiceHistory;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceHistoryRepository implements ServiceHistoryInterface
 {
@@ -19,6 +20,7 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
         $history->save();
         return $history;
     }
+
     public function getQuantityUserByService(User $user, Service $service)
     {
         $history = ServiceHistory::where('user_id', $user->id)
@@ -26,5 +28,10 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
             ->whereMonth('created_at', date('m')) // only current month
             ->sum('quantity');
         return $history;
+    }
+
+    public function list()
+    {
+        return ServiceHistory::where('user_id', Auth::user()->id)->with('service')->paginate(10);
     }
 }

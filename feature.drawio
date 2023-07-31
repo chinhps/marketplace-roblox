@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-31T07:59:24.363Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188" etag="-y3-_ZlMEVVWXhQfLDoD" version="21.6.6" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-07-31T14:59:13.058Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188" etag="4nEPFVk_hTZpY282vU3x" version="21.6.6" type="device" pages="3">
   <diagram name="Page-1" id="KmQgnTv5vvOI3r4hxGTt">
     <mxGraphModel dx="1834" dy="756" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -61,7 +61,7 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-22" value="Thông tin thành viên" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-18" vertex="1">
           <mxGeometry x="37.2890625" y="300" width="120.9375" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-23" value="Nạp thẻ&lt;br&gt;Rút tài sản&lt;br&gt;Mua tài sản" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-18" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-23" value="Nạp thẻ&lt;br&gt;Rút tài sản&lt;br&gt;Mua tài sản" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="98oBXOV-pdoTwL55DlCH-18" vertex="1">
           <mxGeometry x="30.234375" y="420" width="136.0546875" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-24" value="" style="group" parent="98oBXOV-pdoTwL55DlCH-38" vertex="1" connectable="0">
@@ -70,19 +70,19 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-25" value="Giai đoạn 4&lt;br&gt;Lịch sử hoạt động" style="swimlane;whiteSpace=wrap;html=1;startSize=40;" parent="98oBXOV-pdoTwL55DlCH-24" vertex="1">
           <mxGeometry width="201.5625" height="630" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-26" value="Lịch sử nạp thẻ&lt;br&gt;Lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-26" value="Lịch sử nạp thẻ&lt;br&gt;Lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
           <mxGeometry x="35.2734375" y="60" width="131.015625" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-27" value="Lịch sử dùng &lt;br&gt;dịch vụ game" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-27" value="Lịch sử dùng &lt;br&gt;dịch vụ game" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
           <mxGeometry x="40.3125" y="180" width="120.9375" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-36" value="Lịch sử biến động số dư" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-36" value="Lịch sử biến động số dư" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="98oBXOV-pdoTwL55DlCH-25" vertex="1">
           <mxGeometry x="30.234375" y="540" width="136.0546875" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-28" value="Lịch sử rút/mua &lt;br&gt;tài sản" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-24" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-28" value="Lịch sử rút/mua &lt;br&gt;tài sản" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-24" vertex="1">
           <mxGeometry x="37.2890625" y="300" width="120.9375" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-29" value="Lịch sử gamepass" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-24" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-29" value="Lịch sử gamepass" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="98oBXOV-pdoTwL55DlCH-24" vertex="1">
           <mxGeometry x="30.234375" y="420" width="136.0546875" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-30" value="" style="group" parent="98oBXOV-pdoTwL55DlCH-38" vertex="1" connectable="0">
@@ -265,10 +265,10 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-137" value="Thống kê" style="rounded=0;whiteSpace=wrap;html=1;horizontal=1;verticalAlign=middle;flipH=1;flipV=1;fillColor=#6a00ff;fontColor=#ffffff;strokeColor=#3700CC;" parent="98oBXOV-pdoTwL55DlCH-90" vertex="1">
           <mxGeometry x="40.77999999999997" y="530" width="120" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-1" value="Phần quà top nạp" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-1" value="Phần quà top nạp" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="550" y="750" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-2" value="socket lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-2" value="socket lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="790" y="750" width="120" height="60" as="geometry" />
         </mxCell>
       </root>

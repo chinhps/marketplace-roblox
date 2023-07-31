@@ -18,6 +18,7 @@ class PluginFactory extends Factory
     {
         return [
             "name" => $this->faker->name(),
+            "plugin_key" => $this->faker->userName(),
             "status" => $this->faker->randomElement(['ON', 'OFF']),
             "excluding" => $this->faker->randomElement(['ON', 'OFF']),
             "information" => json_encode($this->generateInfo($this->faker->numberBetween(2, 15)))

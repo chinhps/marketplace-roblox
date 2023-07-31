@@ -9,4 +9,5 @@ interface ServiceHistoryInterface
 {
     public function create(User $user, Service $service, float $quantity, array $detail);
     public function getQuantityUserByService(User $user, Service $service);
+    public function list();
 }

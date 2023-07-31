@@ -6,8 +6,12 @@ use App\Repository\Account\AccountInterface;
 use App\Repository\Account\AccountRepository;
 use App\Repository\History\PurchaseHistory\PurchaseHistoryInterface;
 use App\Repository\History\PurchaseHistory\PurchaseHistoryRepository;
+use App\Repository\History\RechargeHistory\RechargeHistoryInterface;
+use App\Repository\History\RechargeHistory\RechargeHistoryRepository;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
 use App\Repository\History\ServiceHistory\ServiceHistoryRepository;
+use App\Repository\History\WithdrawHistory\WithdrawHistoryInterface;
+use App\Repository\History\WithdrawHistory\WithdrawHistoryRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
@@ -41,6 +45,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AccountInterface::class, AccountRepository::class);
         $this->app->bind(PurchaseHistoryInterface::class, PurchaseHistoryRepository::class);
         $this->app->bind(TopRechargeInterface::class, TopRechargeRepository::class);
+        $this->app->bind(RechargeHistoryInterface::class, RechargeHistoryRepository::class);
+        $this->app->bind(WithdrawHistoryInterface::class, WithdrawHistoryRepository::class);
     }
 
     /**

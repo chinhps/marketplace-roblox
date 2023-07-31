@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Histories\PurchaseHistoryController;
+use App\Http\Controllers\Histories\RechargeHistoryController;
+use App\Http\Controllers\Histories\ServiceHistoryController;
+use App\Http\Controllers\Histories\WithdrawHistoryController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
@@ -80,12 +84,12 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
 
         # history profile
         Route::prefix('history')->group(function () {
-            Route::get('purchases', [HistoryBuyController::class, 'list']);
-            Route::get('recharge', [HistoryRechargeController::class, 'list']);
-            Route::get('services', [ServiceController::class, 'list']);
+            Route::get('purchases', [PurchaseHistoryController::class, 'list']);
+            Route::get('recharge', [RechargeHistoryController::class, 'list']);
+            Route::get('services', [ServiceHistoryController::class, 'list']);
 
-            Route::get('withdraw', [PaydiamondController::class, 'list']);
-            Route::get('rent', [RentController::class, 'list']);
+            Route::get('withdraw', [WithdrawHistoryController::class, 'list']);
+            // Route::get('rent', [RentController::class, 'list']);
         });
 
         # create any services
