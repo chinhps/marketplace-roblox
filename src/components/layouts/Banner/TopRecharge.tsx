@@ -1,4 +1,5 @@
-import { ITopRecharge, ITopRechargeItem } from "@/types/response/recharge";
+import rechargeApi from "@/apis/recharge";
+import { ITopRechargeItem } from "@/types/response/recharge.type";
 import { numberFormat } from "@/utils/price";
 import {
   Flex,
@@ -10,32 +11,21 @@ import {
   Button,
   Icon,
   VStack,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { FiAward, FiOctagon } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 export default function TopRecharge() {
-  const data: Array<ITopRecharge> = [
-    {
-      name: "pham haong chinhwerwerwerert",
-      price: 60000000,
-    },
-    {
-      name: "hoang pahm werwerwe",
-      price: 5300000,
-    },
-    {
-      name: "hoang pahm werwerwe",
-      price: 430000,
-    },
-    {
-      name: "hoang pahm sdfsdfwer",
-      price: 300000,
-    },
-    {
-      name: "hoang pahm dfghdg dfgdf",
-      price: 20000,
-    },
-  ];
+  const topRechargeQuery = useQuery({
+    queryKey: ["top-recharge"],
+    queryFn: () => rechargeApi.topRecharge("present"),
+    retry: false,
+    cacheTime: 120000,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
@@ -47,7 +37,12 @@ export default function TopRecharge() {
         justifyContent="flex-start"
         gap={3}
       >
-        {data.map((user, index) => (
+        {topRechargeQuery.isLoading && (
+          <Center height="100%">
+            <Spinner />
+          </Center>
+        )}
+        {topRechargeQuery.data?.data.data.map((user, index) => (
           <TopRechargeItem
             key={index + 1}
             name={user.name}
@@ -62,15 +57,17 @@ export default function TopRecharge() {
           <AlertIcon />
           Đang có sự kiện: Phần thưởng người mới (Nhận ngay)
         </Alert>
-        <Button variant="rechargeNow" className="changeColor">
-          <Text className="showText"> NẠP THẺ NGAY</Text>
-        </Button>
+        <Link to="/profile/recharge" style={{ width: "100%" }}>
+          <Button variant="rechargeNow" className="changeColor">
+            <Text className="showText"> NẠP THẺ NGAY</Text>
+          </Button>
+        </Link>
       </VStack>
     </>
   );
 }
 
-function TopRechargeItem({ stt, name, price }: ITopRechargeItem) {
+export function TopRechargeItem({ stt, name, price }: ITopRechargeItem) {
   return (
     <Flex justifyContent="space-between" as="li">
       <Flex w="60%" gap=".5rem" alignItems="center">

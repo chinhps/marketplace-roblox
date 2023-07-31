@@ -119,9 +119,9 @@ export default function Banner() {
               bg="main.item"
             >
               {!isSwitchEvent ? (
-                <EventBanner {...{ handleSwitchEvent }} />
-              ) : (
                 <EventBanner.v1 {...{ handleSwitchEvent }} />
+              ) : (
+                <EventBanner {...{ handleSwitchEvent }} />
               )}
             </GridItem>
           </SimpleGrid>

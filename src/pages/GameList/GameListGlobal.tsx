@@ -65,7 +65,7 @@ export function HeadingService({
 
   return (
     <>
-      <ModelBase TextData={notification} isOpen={isOpen} onClose={onClose} />
+      <ModelBase TextData={notification} isOpen={isOpen} onClose={onClose} children />
       <Heading
         as="h1"
         fontSize="3xl"

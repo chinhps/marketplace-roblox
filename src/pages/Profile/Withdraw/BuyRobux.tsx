@@ -38,9 +38,6 @@ export default function BuyRobux() {
             </Text>
             <Divider orientation="horizontal" my={2} />
             <FormBuyRobux />
-            <Text textAlign="center" color="red">
-              2342342342323423234423
-            </Text>
           </GridItem>
           <GridItem colSpan={1}>
             <Heading as="h2" size="md" mb={3}>

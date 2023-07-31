@@ -1,7 +1,8 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
+  Flex,
   GridItem,
   HStack,
   Heading,
@@ -10,11 +11,19 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaWallet } from "react-icons/fa";
+import serviceApi from "@/apis/service";
+import { useQuery } from "@tanstack/react-query";
+import ServiceV2 from "@/components/global/Service/ServiceV2";
 
 export default function PromotionLayout() {
   return (
     <>
-      <SimpleGrid columns={{ base: 1, lg: 12 }} gap={5} p={{ base: 2, lg: 0 }} color="white.100">
+      <SimpleGrid
+        columns={{ base: 1, lg: 12 }}
+        gap={5}
+        p={{ base: 2, lg: 0 }}
+        color="white.100"
+      >
         <GridItem
           colSpan={{ base: 1, lg: 9 }}
           bg="main.item"
@@ -34,6 +43,17 @@ export default function PromotionLayout() {
 
 function RecomendServices() {
   const navigate = useNavigate();
+  const { slug } = useParams();
+
+  const recommendServiceQuery = useQuery({
+    queryKey: ["top-recharge", slug],
+    queryFn: () => serviceApi.recommend(slug ?? ""),
+    retry: false,
+    enabled: !!slug, // Only fetch data user when have token ,
+    cacheTime: 120000,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
       <Box
@@ -68,10 +88,11 @@ function RecomendServices() {
       <Heading as="h2" fontSize="xl" textTransform="uppercase" ml={2} mb={5}>
         Có thể bạn quan tâm
       </Heading>
-      <VStack>
-        {/* <Service  />
-        <Service /> */}
-      </VStack>
+      <Flex flexDirection="column" gap={5}>
+        {recommendServiceQuery.data?.data.data.map((service) => (
+          <ServiceV2 key={service.id} data={service} />
+        ))}
+      </Flex>
     </>
   );
 }

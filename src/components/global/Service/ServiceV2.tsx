@@ -57,7 +57,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
               bottom="30%"
               bgGradient="linear(to top,  #00000000, black 100%)"
             />
-            <Img src={data.thumb} w="100%" h="100%" objectFit="cover" />
+            <Img src={data.thumb} alt={data.name} w="100%" h="100%" objectFit="cover" />
           </Link>
         </Box>
         <Flex
