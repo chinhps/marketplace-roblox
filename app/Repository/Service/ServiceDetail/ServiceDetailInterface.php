@@ -2,6 +2,7 @@
 
 namespace App\Repository\Service\ServiceDetail;
 
+use App\Models\ServiceDetail;
 use App\Models\ServiceOdds;
 
 interface ServiceDetailInterface
@@ -27,4 +28,5 @@ interface ServiceDetailInterface
     public function giftForUser(ServiceOdds $serviceOdds);
     public function giftForAdminByListId(ServiceOdds $serviceOdds, array $listIdGift);
     public function giftForAdmin(ServiceOdds $serviceOdds);
+    public function simalarServices(ServiceDetail $serviceDetail, array $listIdAllow);
 }

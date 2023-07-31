@@ -13,6 +13,40 @@ class ServiceDetailRepository implements ServiceDetailInterface
         private Model $model = new ServiceDetail()
     ) {
     }
+
+    public function simalarServices(ServiceDetail $serviceDetail, array $listIdAllow)
+    {
+        return $this->model->whereIn('id', $listIdAllow)
+            ->where('service_group_id', $serviceDetail->service_group_id)
+            ->select(
+                "id",
+                "service_group_id",
+                "service_id",
+                "service_odds_id",
+                "service_image_id",
+                "slug",
+            )
+            ->with([
+                'service' => function ($query) {
+                    $query->select(
+                        "id",
+                        "price",
+                        "sale",
+                        "note",
+                        "game_id"
+                    )->with(['game_list', 'serviceCouter']);
+                },
+                'serviceImage' => function ($query) {
+                    $query->select(
+                        "id",
+                        "thumb",
+                        "images",
+                        "name",
+                    );
+                }
+            ])->inRandomOrder()->limit(2)->get();
+    }
+
     public function idServiceDetailList(string $domain)
     {
         $serviceDetailByDomain = new ServiceDetailByDomain(domain: $domain);

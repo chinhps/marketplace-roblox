@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-07-30T09:46:49.228Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188" etag="UfDzXcCT-_fs5Q1sjN4G" version="21.6.6" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-07-31T07:59:24.363Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188" etag="-y3-_ZlMEVVWXhQfLDoD" version="21.6.6" type="device" pages="3">
   <diagram name="Page-1" id="KmQgnTv5vvOI3r4hxGTt">
     <mxGraphModel dx="1834" dy="756" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -52,7 +52,7 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-19" value="Giai đoạn 3" style="swimlane;whiteSpace=wrap;html=1;startSize=40;" parent="98oBXOV-pdoTwL55DlCH-18" vertex="1">
           <mxGeometry width="201.5625" height="500" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-20" value="Gợi ý các game" style="rounded=0;whiteSpace=wrap;html=1;" parent="98oBXOV-pdoTwL55DlCH-19" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-20" value="Gợi ý các game" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-19" vertex="1">
           <mxGeometry x="35.2734375" y="60" width="131.015625" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-21" value="Thông tin của danh mục tài khoản" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-19" vertex="1">
@@ -265,10 +265,10 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-137" value="Thống kê" style="rounded=0;whiteSpace=wrap;html=1;horizontal=1;verticalAlign=middle;flipH=1;flipV=1;fillColor=#6a00ff;fontColor=#ffffff;strokeColor=#3700CC;" parent="98oBXOV-pdoTwL55DlCH-90" vertex="1">
           <mxGeometry x="40.77999999999997" y="530" width="120" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-1" value="Phần quà top nạp" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-1" value="Phần quà top nạp" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="550" y="750" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-2" value="socket lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="2n1mQ6zMXTsMzKGnb1sT-2" value="socket lịch sử mua" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="790" y="750" width="120" height="60" as="geometry" />
         </mxCell>
       </root>

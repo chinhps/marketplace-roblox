@@ -23,15 +23,14 @@ class TopRechargeController extends Controller
         $timeNow = Carbon::now();
         switch ($validated['time']) {
             case "present":
-                $month = $timeNow->month;
+                $month = date("m");
                 $year =  $timeNow->year;
                 break;
             case "last-month":
-                $month = $timeNow->subMonth(1)->month;
+                $month = date("m", strtotime("first day of previous month"));
                 $year =  $timeNow->year;
                 break;
         }
-
         $dataTop = collect([
             ...$this->topRechargeRepository->topRecharges($domain, $month, $year),
             ...$this->topRechargeRepository->topVirtualRecharges($domain, $month, $year)

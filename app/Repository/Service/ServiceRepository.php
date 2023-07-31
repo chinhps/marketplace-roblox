@@ -12,6 +12,7 @@ class ServiceRepository implements ServiceInterface
         private Model $model = new Service
     ) {
     }
+
     public function serviceTurn(Service $service, User $user)
     {
         return $this->model

@@ -13,6 +13,7 @@ use App\Http\Resources\Service\ServiceAccountListResource;
 use App\Http\Resources\Service\ServiceDetailResource;
 use App\Http\Resources\Service\ServiceListResource;
 use App\Http\Resources\Service\ServicePlayResource;
+use App\Http\Resources\Service\ServiceResource;
 use App\Models\ServiceDetail;
 use App\Models\ServiceGift;
 use App\Models\ServiceOdds;
@@ -41,8 +42,14 @@ class ServiceController extends Controller
     ) {
     }
 
-    public function recommendsService() {
-        return 123;
+    public function recommendsService($slug, DomainRequest $request)
+    {
+        $validated = $request->validated();
+        $domain = $validated['domain'];
+        # Check service exists at domain
+        $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
+        $serviceDetail = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
+        return ServiceResource::collection($this->serviceDetailRepository->simalarServices($serviceDetail, $idListAllow));
     }
 
     # Get list service at home

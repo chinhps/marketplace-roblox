@@ -13,6 +13,7 @@ class ServiceGroupRepository implements ServiceGroupInterface
         private Model $model = new ServiceGroup(),
     ) {
     }
+
     public function serviceGroupList(array $idListAllow)
     {
         return $this->model->where('active', 'ON')
@@ -47,6 +48,6 @@ class ServiceGroupRepository implements ServiceGroupInterface
                         }
                     ]);
                 }
-            ])->select('id', 'name','image')->orderBy('prioritize', 'desc')->get();
+            ])->select('id', 'name', 'image')->orderBy('prioritize', 'desc')->get();
     }
 }
