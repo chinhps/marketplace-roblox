@@ -51,10 +51,10 @@ export const listOption = [
                 lable: 'Lịch sử rút/mua Robux',
                 link: '/profile/history/robux',
             },
-            {
-                lable: 'Lịch sử mua Gamepass',
-                link: '/profile/history/buy-gamepass',
-            },
+            // {
+            //     lable: 'Lịch sử mua Gamepass',
+            //     link: '/profile/history/buy-gamepass',
+            // },
         ],
     },
 ];

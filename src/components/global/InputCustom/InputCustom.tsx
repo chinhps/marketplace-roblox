@@ -46,6 +46,7 @@ export default function InputCustom({
             _placeholder={{ fontWeight: "700", fontSize: "17px" }}
             py="2rem"
             px="1.5rem"
+            color="black.100"
             {...register(name, validate)}
           />
           {type === "password" && (

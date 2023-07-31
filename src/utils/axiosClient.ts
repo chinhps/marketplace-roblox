@@ -54,7 +54,7 @@ axiosClient.interceptors.response.use(
       });
       logout();
     }
-    if (status === 404 || status === 402 || status === 422 || status === 403) {
+    if (status === 404 || status === 402 || status === 422 || status === 403 || status === 400) {
       toast({
         status: "warning",
         description: err?.response.data.msg,

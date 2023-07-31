@@ -1,5 +1,6 @@
-import { IHistoryRobux, Links, Meta } from "@/types/response.type";
-import { colorStatus, numberFormat } from "@/utils/price";
+import profileApi from "@/apis/profile";
+import { token } from "@/utils/const";
+import { colorStatus, nameStatus, numberFormat } from "@/utils/price";
 import {
   Box,
   Divider,
@@ -15,53 +16,24 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
-type IDataResponse = {
-  data: IHistoryRobux[];
-  links: Links;
-  meta: Meta;
-};
-
 export default function RobuxHistory() {
-  const histories: IDataResponse = {
-    data: [
-      {
-        id: 4020,
-        robux: 200,
-        created_at: "2023-05-10T18:15:38.000000Z",
-        updated_at: "2023-06-10T18:15:38.000000Z",
-        status: 1,
-        name_withdraw: "120h",
-        status_name: "Th\u1ea5t b\u1ea1i",
-        type_withdraw: "Mua",
-      },
-    ],
-    links: {
-      first: "https://api.anhbaphairoblox.vn/api/profile/withdraws?page=1",
-      last: "https://api.anhbaphairoblox.vn/api/profile/withdraws?page=1",
-      prev: null,
-      next: null,
-    },
-    meta: {
-      current_page: 1,
-      from: 1,
-      last_page: 1,
-      links: [
-        { url: null, label: "&laquo; Previous", active: false },
-        {
-          url: "https://api.anhbaphairoblox.vn/api/profile/withdraws?page=1",
-          label: "1",
-          active: true,
-        },
-        { url: null, label: "Next &raquo;", active: false },
-      ],
-      path: "https://api.anhbaphairoblox.vn/api/profile/withdraws",
-      per_page: 10,
-      to: 1,
-      total: 1,
-    },
-  };
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const dataQuery = useQuery({
+    queryKey: ["purchase-history"],
+    queryFn: () => profileApi.historyWithdraw(),
+    retry: false,
+    cacheTime: 120000,
+    enabled: !!token(), // Only fetch data user when have token ,
+    refetchOnWindowFocus: false,
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
 
   return (
     <>
@@ -83,13 +55,13 @@ export default function RobuxHistory() {
                 <Th>Mã Đơn</Th>
                 <Th>Loại</Th>
                 <Th>Số Robux</Th>
+                <Th>Thông tin</Th>
                 <Th>Thời Gian</Th>
-                <Th>Thời duyệt robux</Th>
                 <Th>Trạng thái</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {histories?.data?.map((vl, index) => (
+              {dataQuery?.data?.data.data.map((vl, index) => (
                 <Tr key={index}>
                   <Td>
                     <Text as="b" lineHeight={2}>
@@ -100,24 +72,24 @@ export default function RobuxHistory() {
                     <Text
                       as="b"
                       lineHeight={2}
-                      color={vl.type_withdraw == "Rút" ? "green" : "ocean.100"}
+                      color={vl.withdraw_type == "DIAMOND" ? "green" : "yellow"}
                     >
-                      {vl.type_withdraw} {vl.name_withdraw}
+                      {vl.withdraw_type}
                     </Text>
                   </Td>
                   <Td>
-                    <Text lineHeight={2}>{numberFormat(vl.robux, false)}</Text>
+                    <Text lineHeight={2}>{numberFormat(vl.value, false)}</Text>
+                  </Td>
+                  <Td>
+                    {vl.detail.map((dt, index) => (
+                      <Text key={index} lineHeight={2}>
+                        {dt.name}: {dt.value}
+                      </Text>
+                    ))}
                   </Td>
                   <Td>
                     <Text lineHeight={2}>
                       {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
-                    </Text>
-                  </Td>
-                  <Td>
-                    <Text as="b" lineHeight={2} color={colorStatus(vl.status)}>
-                      {vl.created_at !== vl.updated_at
-                        ? moment(vl.updated_at).format("DD/MM/yyyy hh:mm")
-                        : "Chưa duyệt"}
                     </Text>
                   </Td>
                   <Td>
@@ -127,7 +99,7 @@ export default function RobuxHistory() {
                       color={colorStatus(vl.status)}
                       lineHeight={2}
                     >
-                      {vl.status_name}
+                      {nameStatus(vl.status)}
                     </Text>
                   </Td>
                 </Tr>

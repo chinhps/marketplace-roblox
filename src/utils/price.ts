@@ -19,13 +19,24 @@ export const logout = () => {
   localStorage.removeItem("auth._token.local");
 }
 
-export function colorStatus(status: number) {
+export function colorStatus(status: string) {
   switch (status) {
-    case 3:
+    case "3":
       return "green";
-    case 1:
+    case "1":
       return "red";
     default:
       return "gray";
+  }
+}
+
+export function nameStatus(status: string) {
+  switch (status) {
+    case "3":
+      return "Đã duyệt";
+    case "1":
+      return "Đã hủy";
+    default:
+      return "Chờ duyệt";
   }
 }

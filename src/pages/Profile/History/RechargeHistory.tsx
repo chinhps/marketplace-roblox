@@ -1,8 +1,8 @@
-import { IHistoryRecharge, Links, Meta } from "@/types/response.type";
+import profileApi from "@/apis/profile";
+import { token } from "@/utils/const";
 import { numberFormat } from "@/utils/price";
 import {
   Box,
-  Center,
   Divider,
   Flex,
   Heading,
@@ -16,56 +16,28 @@ import {
   Th,
   Thead,
   Tr,
+  VStack,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 
 import moment from "moment";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-type IDataResponse = {
-  data: IHistoryRecharge[];
-  links: Links;
-  meta: Meta;
-};
-
 export default function RechargeHistory() {
-  const histories: IDataResponse = {
-    data: [
-      {
-        id: 8553,
-        code: "56756756765556",
-        serial: "56756756756756",
-        cash: 10000,
-        status_name: "Th\u1ea5t b\u1ea1i",
-        status: false,
-        type: "VIETTEL",
-        created_at: "2023-02-06T16:36:51.000000Z",
-      },
-    ],
-    links: {
-      first: "https://api.anhbaphairoblox.vn/api/profile/recharge?page=1",
-      last: "https://api.anhbaphairoblox.vn/api/profile/recharge?page=1",
-      prev: null,
-      next: null,
-    },
-    meta: {
-      current_page: 1,
-      from: 1,
-      last_page: 1,
-      links: [
-        { url: null, label: "&laquo; Previous", active: false },
-        {
-          url: "https://api.anhbaphairoblox.vn/api/profile/recharge?page=1",
-          label: "1",
-          active: true,
-        },
-        { url: null, label: "Next &raquo;", active: false },
-      ],
-      path: "https://api.anhbaphairoblox.vn/api/profile/recharge",
-      per_page: 5,
-      to: 1,
-      total: 1,
-    },
-  };
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const dataQuery = useQuery({
+    queryKey: ["recharge-history"],
+    queryFn: () => profileApi.historyRecharge(),
+    retry: false,
+    cacheTime: 120000,
+    enabled: !!token(), // Only fetch data user when have token ,
+    refetchOnWindowFocus: false,
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
 
   return (
     <>
@@ -92,11 +64,11 @@ export default function RechargeHistory() {
               </Tr>
             </Thead>
             <Tbody>
-              {histories?.data?.map((vl, index) => (
+              {dataQuery?.data?.data.data.map((vl, index) => (
                 <Tr key={index}>
                   <Td>
                     <Text as="b" lineHeight={2}>
-                      {vl.type}
+                      {vl.recharge_type}
                     </Text>
                     <Text lineHeight={2}>
                       {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
@@ -105,43 +77,51 @@ export default function RechargeHistory() {
                       as="b"
                       fontSize="sm"
                       color={
-                        vl.status_name == "Chờ duyệt"
+                        vl.status === "PENDING"
                           ? "gray"
-                          : vl.status
+                          : vl.status === "SUCCESS"
                           ? "green"
                           : "red"
                       }
                       lineHeight={2}
                     >
-                      {vl.status_name}
+                      {vl.status}
                     </Text>
                   </Td>
                   <Td>
-                    <Text as="b" lineHeight={2}>
-                      Mã thẻ: {vl.code}
-                    </Text>
-                    <Text lineHeight={2}>Seri: {vl.serial}</Text>
+                    {vl.detail.map((dt, index) => (
+                      <Text key={index} lineHeight={2}>
+                        {dt.name}: <Text as="b">{dt.value}</Text>
+                      </Text>
+                    ))}
                   </Td>
                   <Td>
-                    <Center justifyContent="left">
-                      <Icon as={FaChevronUp} mr={2} w="10px" />
-                      <Text lineHeight={2}>
-                        Gửi Thẻ: {numberFormat(vl.cash)}
-                      </Text>
-                    </Center>
-
-                    <Center justifyContent="left">
-                      <Icon
-                        as={FaChevronDown}
-                        mr={2}
-                        w="10px"
-                        color="brand.500"
-                      />
-                      <Text lineHeight={2} color="brand.500">
-                        Nhận:{" "}
-                        {vl.status ? numberFormat(vl.cash) : numberFormat(0)}
-                      </Text>
-                    </Center>
+                    <VStack align="left">
+                      <Flex alignItems="center">
+                        <Icon as={FaChevronUp} w="10px" />
+                        <Text as="b" lineHeight={2} ml={2}>
+                          Gửi Thẻ:
+                        </Text>
+                        <Text ml={2}>{numberFormat(vl.price)}</Text>
+                      </Flex>
+                      <Flex alignItems="center">
+                        <Icon as={FaChevronDown} w="10px" color="green" />
+                        <Text as="b" lineHeight={2} ml={2}>
+                          Nhận:
+                        </Text>
+                        <Text ml={2}>
+                          {vl.status === "SUCCESS"
+                            ? numberFormat(vl.price)
+                            : numberFormat(0)}
+                        </Text>
+                      </Flex>
+                      <Flex alignItems="center">
+                        <Text as="b" lineHeight={2} ml={2}>
+                          Hoàn tiền:
+                        </Text>
+                        <Text ml={2}>{vl.refund ? "Có" : "Không"}</Text>
+                      </Flex>
+                    </VStack>
                   </Td>
                 </Tr>
               ))}
