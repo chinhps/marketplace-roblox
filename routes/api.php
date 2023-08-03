@@ -62,7 +62,7 @@ Route::prefix('services')->group(function () {
     Route::get('/view/{slug}', [ServiceController::class, 'serviceDetail']);
     Route::get('/detail-list/{slug}', [ServiceController::class, 'serviceDetailAccountList']);
     Route::get('/recommends/{slug}', [ServiceController::class, 'recommendsService']);
-    Route::get('/histories/{slug}', []);
+    // Route::get('/histories/{slug}', []);
 
     # play game
     Route::post('/is_play_try/{slug}', [ServiceController::class, 'handlePlayTry']);
@@ -94,9 +94,9 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
 
         # create any services
         Route::prefix('services')->group(function () {
-            Route::post('withdraw-robox', [PaydiamondController::class, 'withdraw_robux']);
-            Route::post('buy-robux', [PaydiamondController::class, 'buy_robux']);
-            Route::post('rent', [RentController::class, 'buy']);
+            Route::post('withdraw-robox', []);
+            Route::post('buy-robux', []);
+            Route::post('rent', []);
         });
     });
 });
