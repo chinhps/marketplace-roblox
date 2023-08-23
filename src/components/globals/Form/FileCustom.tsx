@@ -1,16 +1,8 @@
-import {
-  Box,
-  Center,
-  HStack,
-  Icon,
-  Image,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Icon, Image, Input, Text } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 import { useState } from "react";
 
-export default function FileCustom() {
+export default function FileCustom({ multiple }: { multiple?: boolean }) {
   const [fileList, setFileList] = useState<File[]>([]);
 
   const handleFileDrop = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,11 +12,10 @@ export default function FileCustom() {
       setFileList((old) => [...old, ...files]);
     }
   };
-  console.log(fileList);
 
   return (
     <>
-      <HStack>
+      <Flex flexWrap="wrap" gap="1rem">
         {fileList.map((file, index) => (
           <Center
             key={index}
@@ -65,31 +56,33 @@ export default function FileCustom() {
             </Text>
           </Center>
         ))}
-
-        <Center
-          position="relative"
-          flexDirection="column"
-          border="2px dashed "
-          borderColor="red.200"
-          rounded="7px"
-          width="200px"
-          height="200px"
-        >
-          <Icon as={FiPlus} fontSize="20px" />
-          <Text>Upload</Text>
-          <Input
-            position="absolute"
-            type="file"
-            cursor="pointer"
-            top="0"
-            w="full"
-            h="full"
-            opacity="0"
-            outline="none"
-            onChange={handleFileDrop}
-          />
-        </Center>
-      </HStack>
+        {fileList.length == 0 && (
+          <Center
+            position="relative"
+            flexDirection="column"
+            border="2px dashed "
+            borderColor="red.200"
+            rounded="7px"
+            width="200px"
+            height="200px"
+          >
+            <Icon as={FiPlus} fontSize="20px" />
+            <Text>Upload</Text>
+            <Input
+              position="absolute"
+              type="file"
+              multiple={multiple}
+              cursor="pointer"
+              top="0"
+              w="full"
+              h="full"
+              opacity="0"
+              outline="none"
+              onChange={handleFileDrop}
+            />
+          </Center>
+        )}
+      </Flex>
     </>
   );
 }

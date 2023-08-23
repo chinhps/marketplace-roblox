@@ -7,6 +7,7 @@ import { numberFormat } from "@/utils/function";
 import { Button, Flex, Image, Td, Text, Tr } from "@chakra-ui/react";
 import moment from "moment";
 import { SubmitHandler } from "react-hook-form";
+import { FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 export default function ShopListPage() {
@@ -217,6 +218,7 @@ function FormSearch() {
         textBtn="Tìm kiếm"
         CustomComponent={CustomStyle}
         hiddenLable={true}
+        icon={<FiSearch />}
         // dataDefault={filter}
       />
     </>

@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import {
   Button,
-  Center,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -13,6 +12,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Switch,
   Textarea,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
@@ -65,16 +65,28 @@ export default function FormBase({
               gridArea={form.gridAreaName}
               mb={3}
               key={index}
+              isRequired={form.isRequired}
               isInvalid={errors[form.name] ? true : false}
             >
               {!hiddenLable && <FormLabel>{form.label}</FormLabel>}
               {form.type === "FILE" ? (
                 <FileCustom />
+              ) : form.type === "SWITCH" ? (
+                <Switch
+                  fontSize="sm"
+                  fontWeight="500"
+                  size="lg"
+                  {...register(form.name, {
+                    value: form.default ?? null,
+                    ...(form.validate ?? null),
+                  })}
+                />
               ) : form.type === "INPUT" ? (
                 <Input
                   variant="auth"
                   fontSize="sm"
                   fontWeight="500"
+                  disabled={form.disable}
                   size="lg"
                   {...register(form.name, {
                     value: form.default ?? null,
@@ -97,6 +109,7 @@ export default function FormBase({
               ) : form.type === "NUMBER" ? (
                 <NumberInput
                   variant="auth"
+                  size="lg"
                   max={form.max ?? undefined}
                   min={form.min ?? 1}
                 >
@@ -117,12 +130,12 @@ export default function FormBase({
                   fontSize="sm"
                   fontWeight="500"
                   size="lg"
+                  placeholder={form.placeholder ?? form.label}
                   {...register(form.name, {
                     value: form.default ?? null,
                     ...(form.validate ?? null),
                   })}
                 >
-                  <option value="">{form.label}</option>
                   {form.selects?.map((select, index) => (
                     <option key={index} value={select.value}>
                       {select.label}
@@ -146,6 +159,7 @@ export default function FormBase({
             />
           ) : (
             <Button
+              gridArea="button"
               isLoading={isSubmitting}
               fontSize="md"
               type="submit"

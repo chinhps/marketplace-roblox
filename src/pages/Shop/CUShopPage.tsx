@@ -102,6 +102,7 @@ function CustomStyle({ children }: { children: React.ReactNode }) {
           "c c c"
           "d d d"
           "item1 item2 item3"
+          "button button button"
         `}
       >
         {children}

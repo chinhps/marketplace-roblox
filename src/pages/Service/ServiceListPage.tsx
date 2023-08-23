@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import OddsList from "./Odds/OddsList";
 import GiftList from "./Gift/GiftList";
 import ServiceGroupList from "./ServiceGroup/ServiceGroupList";
+import { ServiceDetailTableList } from "./ServiceDetail/ServiceDetailList";
 
 export default function ServiceListPage() {
   return (
@@ -46,9 +47,6 @@ export default function ServiceListPage() {
               <MenuItem as={Link} to="../">
                 Tỷ lệ
               </MenuItem>
-              <MenuItem as={Link} to="../">
-                Hình ảnh
-              </MenuItem>
             </MenuList>
           </Menu>
         }
@@ -58,6 +56,7 @@ export default function ServiceListPage() {
         <Tabs position="relative" variant="unstyled">
           <TabList>
             <Tab>Danh sách Dịch vụ</Tab>
+            <Tab>Tất cả game đang hiển thị</Tab>
             <Tab>Danh sách tỷ lệ</Tab>
             <Tab>Danh sách quà</Tab>
             <Tab>Danh sách nhóm dịch vụ</Tab>
@@ -67,6 +66,9 @@ export default function ServiceListPage() {
           <TabPanels>
             <TabPanel>
               <TableList />
+            </TabPanel>
+            <TabPanel>
+              <ServiceDetailTableList />
             </TabPanel>
             <TabPanel>
               <OddsList />

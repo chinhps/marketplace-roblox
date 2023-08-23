@@ -12,10 +12,13 @@ export interface IFormBase {
 
 export interface IFormInput {
     label: string,
+    isRequired?: boolean,
     name: string,
-    type: 'SELECT' | 'INPUT' | 'TEXTAREA' | 'NUMBER' | "FILE",
+    type: 'SELECT' | 'INPUT' | 'TEXTAREA' | 'NUMBER' | "FILE" | "SWITCH",
     preview?: boolean,
     default?: string,
+    placeholder?: string,
+    disable?: boolean,
     max?: number,
     min?: number,
     gridAreaName?: string,

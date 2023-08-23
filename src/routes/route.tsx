@@ -1,15 +1,20 @@
+import AuthLayout from "@/components/layouts/Authentication/AuthLayout";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
+import LoginPage from "@/pages/Auth/LoginPage";
 import BuyServiceHistoryPage from "@/pages/History/BuyServiceHistoryPage";
 import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
 import HomePage from "@/pages/HomePage";
-import AccoutListPage from "@/pages/Service/AccoutListPage";
+import AccoutListPage from "@/pages/Service/Account/AccoutListPage";
 import CUServicePage from "@/pages/Service/CUServicePage";
-import RandomListPage from "@/pages/Service/RandomListPage";
+import RandomListPage from "@/pages/Service/Random/RandomListPage";
 import ServiceDetailList from "@/pages/Service/ServiceDetail/ServiceDetailList";
 import ServiceListPage from "@/pages/Service/ServiceListPage";
 import CUShopPage from "@/pages/Shop/CUShopPage";
 import ShopListPage from "@/pages/Shop/ShopListPage";
+import TopRechargeListPage from "@/pages/TopRecharge/TopRechargeListPage";
+import AdminListPage from "@/pages/User/AdminListPage";
+import UserListPage from "@/pages/User/UserListPage";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -87,6 +92,40 @@ export const router = createBrowserRouter([
             element: <CUServicePage />,
           },
         ],
+      },
+    ],
+  },
+  {
+    path: "users",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "user",
+        element: <UserListPage />,
+      },
+      {
+        path: "admin",
+        element: <AdminListPage />,
+      },
+    ],
+  },
+  {
+    path: "top-recharge",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "",
+        element: <TopRechargeListPage />,
+      },
+    ],
+  },
+  {
+    path: "auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage />,
       },
     ],
   },

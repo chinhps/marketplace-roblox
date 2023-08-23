@@ -26,6 +26,16 @@ export const buttonStyles = {
                     bg: "main.item",
                     color: "main.text",
                 }),
+                red: () => ({
+                    bg: "red.600",
+                    color: 'white',
+                    padding: "10px 20px",
+                    rounded: "2xl",
+                    _hover: {
+                        bg: "red.500",
+                        textDecoration: "none"
+                    },
+                }),
             },
         },
     },

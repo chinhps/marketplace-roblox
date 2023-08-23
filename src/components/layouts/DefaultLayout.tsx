@@ -1,4 +1,10 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Navbar from "./Navbar/Navbar";
 import {
   Accordion,
@@ -7,12 +13,15 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Center,
   Container,
   Flex,
   GridItem,
   List,
   ListItem,
   SimpleGrid,
+  Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import {
   FiBarChart2,
@@ -24,34 +33,70 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import Footer from "./Footer/Footer";
+import { ISildeBar } from "@/types/layout";
+import { useQuery } from "@tanstack/react-query";
+import { token } from "@/utils/function";
+import { AuthApi } from "@/apis/auth";
+import { useEffect } from "react";
 
 export default function DefaultLayout() {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const dataUserQuery = useQuery({
+    queryKey: ["user"],
+    queryFn: () => AuthApi.infoUser(),
+    retry: false,
+    cacheTime: 12000,
+    enabled: !!token(), // Only fetch data user when have token ,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      toast({
+        description: "Có lỗi vui lòng đăng nhập lại!",
+      });
+      navigate("/auth/login");
+    },
+  });
+
+  useEffect(() => {
+    if (!token()) {
+      toast({
+        description: "Bạn cần đăng nhập trước khi sử dụng!",
+      });
+      navigate("/auth/login");
+    }
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <Container maxW="container.2xl" height="100%" flex={1} p={0} zIndex={2}>
-        <SimpleGrid columns={11} spacing="1rem">
-          <GridItem colSpan={2}>
-            <SildeBar />
-          </GridItem>
-          <GridItem colSpan={9}>
-            <Outlet />
-          </GridItem>
-        </SimpleGrid>
-      </Container>
-      <Footer />
+      {dataUserQuery.isLoading && (
+        <Center height="100vh">
+          <Spinner />
+        </Center>
+      )}
+      {dataUserQuery.isSuccess && (
+        <>
+          <Navbar />
+          <Container
+            maxW="container.2xl"
+            height="100%"
+            flex={1}
+            p={0}
+            zIndex={2}
+          >
+            <SimpleGrid columns={11} spacing="1rem">
+              <GridItem colSpan={2}>
+                <SildeBar />
+              </GridItem>
+              <GridItem colSpan={9}>
+                <Outlet />
+              </GridItem>
+            </SimpleGrid>
+          </Container>
+          <Footer />
+        </>
+      )}
     </>
   );
-}
-
-interface ISildeBar {
-  name: string;
-  icon: React.ReactElement;
-  link?: string;
-  children?: Array<{
-    name: string;
-    link: string;
-  }>;
 }
 
 const dataSildeBar: Array<ISildeBar> = [
@@ -121,11 +166,11 @@ const dataSildeBar: Array<ISildeBar> = [
     children: [
       {
         name: "Quản lý khách",
-        link: "/abc",
+        link: "/users/user",
       },
       {
         name: "Quản lý admins",
-        link: "/abc",
+        link: "/users/admin",
       },
     ],
   },
@@ -135,7 +180,7 @@ const dataSildeBar: Array<ISildeBar> = [
     children: [
       {
         name: "Quản lý",
-        link: "/abc",
+        link: "/top-recharge",
       },
     ],
   },
@@ -192,12 +237,12 @@ function SildeBar() {
                 )}
               </h2>
               <AccordionPanel p={0}>
-                <List pl="0.5rem">
+                <List>
                   {sildeItem.children?.map((vl, index2) => (
                     <Link key={index2} to={vl.link}>
                       <ListItem
                         py="1rem"
-                        px="1.5rem"
+                        px="2.5rem"
                         fontWeight={
                           location.pathname == vl.link ? "500" : "normal"
                         }

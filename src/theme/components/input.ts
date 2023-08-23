@@ -30,7 +30,7 @@ export const inputStyles = {
             variants: {
                 auth: () => ({
                     field: {
-                        fontWeight: 400,
+                        // fontWeight: 400,
                         borderRadius: '7px',
                         bg: '#ffffff1f',
                         border: '1px solid',
