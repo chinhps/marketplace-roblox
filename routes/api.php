@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\LogoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login']);
+    # Logout
+    Route::middleware(['decryptToken:sanctum'])->prefix('logout')->group(function () {
+        # Logout current device
+        Route::post('/',  [LogoutController::class, 'logout']);
+        # Logout all device
+        Route::post('/all',  [LogoutController::class, 'logoutAll']);
+    });
+});
+
+Route::middleware(['decryptToken:sanctum'])->group(function () {
+    # Get infor current user
+    Route::get('/user',  [AuthController::class, 'getCurrentInfo']);
 });
