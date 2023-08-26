@@ -11,8 +11,9 @@ class ShopList extends Model
 {
     use HasFactory;
     protected $table = "shop_list";
+    protected $guarded = [];
 
-    public function shopdetails(): HasOne
+    public function shopDetail(): HasOne
     {
         return $this->hasOne(ShopDetail::class, "shop_id");
     }

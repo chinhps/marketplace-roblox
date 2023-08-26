@@ -9,9 +9,10 @@ class ServiceGroup extends Model
 {
     use HasFactory;
     protected $table = "service_groups";
+    protected $guarded = [];
 
     public function serviceDetails()
     {
-        return $this->hasMany(ServiceDetail::class,'service_group_id','id');
+        return $this->hasMany(ServiceDetail::class, 'service_group_id', 'id');
     }
 }

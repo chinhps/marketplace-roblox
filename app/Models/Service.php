@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,10 +13,11 @@ class Service extends Model
 {
     use HasFactory;
     protected $table = "services";
+    protected $guarded = [];
 
-    public function game_list(): HasOne
+    public function game_list(): BelongsTo
     {
-        return $this->hasOne(GameList::class, 'id', 'game_id');
+        return $this->belongsTo(GameList::class, 'game_id');
     }
 
     public function currency(): HasOne
