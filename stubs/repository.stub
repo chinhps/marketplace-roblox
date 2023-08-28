@@ -10,4 +10,10 @@ class {{baseName}}Repository implements {{baseName}}Interface
         private Model $model = ""
     ) {
     }
+
+    public function updateOrInsert(float|null $id, array $params)
+    {
+
+    }
+
 }

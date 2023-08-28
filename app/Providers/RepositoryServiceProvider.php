@@ -11,6 +11,8 @@ use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupRepository;
 use App\Repository\Service\ServiceInterface;
+use App\Repository\Service\ServiceOdds\ServiceOddsInterface;
+use App\Repository\Service\ServiceOdds\ServiceOddsRepository;
 use App\Repository\Service\ServiceRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
@@ -29,6 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(GameListInterface::class, GameListRepository::class);
         $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
         $this->app->bind(ServiceGroupInterface::class, ServiceGroupRepository::class);
+        $this->app->bind(ServiceOddsInterface::class, ServiceOddsRepository::class);
     }
 
     /**
