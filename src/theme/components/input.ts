@@ -3,6 +3,10 @@ import { textareaTheme } from "./textarea";
 export const inputStyles = {
     components: {
         Input: {
+            defaultProps: {
+                size: 'md',
+                fontSize: "14px",
+            },
             variants: {
                 search: () => ({
                     field: {
@@ -21,6 +25,7 @@ export const inputStyles = {
                         bg: '#ffffff1f',
                         border: '1px solid',
                         color: "black",
+                        padding: "1.5rem 1rem",
                         borderColor: 'main.item',
                     },
                 }),

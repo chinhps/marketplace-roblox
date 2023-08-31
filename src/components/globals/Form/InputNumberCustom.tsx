@@ -8,18 +8,18 @@ import {
 } from "@chakra-ui/react";
 
 interface IInputNumberCustom extends NumberInputProps {
-  onChange?: (vl: string) => void;
+  handleChange: (vl: number) => void;
 }
 
 export default function InputNumberCustom({
-  onChange,
+  handleChange,
   ...props
 }: IInputNumberCustom) {
   return (
     <>
       <NumberInput
         variant="auth"
-        onChange={onChange}
+        onChange={(e) => handleChange && handleChange(Number(e))}
         size="lg"
         {...props}
         defaultValue={0}

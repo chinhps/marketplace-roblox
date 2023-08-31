@@ -99,10 +99,19 @@ export default function DefaultLayout() {
   );
 }
 
+const icons: { [key: string]: React.ReactElement } = {
+  "Trang chủ": <FiHome />,
+  Plugins: <FiServer />,
+  "Lịch sử dịch vụ": <FiRepeat />,
+  "Dịch vụ": <FiLayers />,
+  "Người dùng": <FiUsers />,
+  "Top nạp thẻ": <FiBarChart2 />,
+  "Trợ giúp": <FiPhone />,
+};
+
 const dataSildeBar: Array<ISildeBar> = [
   {
     name: "Trang chủ",
-    icon: <FiHome />,
     children: [
       {
         name: "Trang chủ",
@@ -116,7 +125,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Plugins",
-    icon: <FiServer />,
     children: [
       {
         name: "Quản lý Plugins",
@@ -126,7 +134,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Lịch sử dịch vụ",
-    icon: <FiRepeat />,
     children: [
       {
         name: "Trò chơi",
@@ -144,7 +151,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Dịch vụ",
-    icon: <FiLayers />,
     children: [
       {
         name: "Quản lý dịch vụ",
@@ -162,7 +168,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Người dùng",
-    icon: <FiUsers />,
     children: [
       {
         name: "Quản lý khách",
@@ -176,7 +181,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Top nạp thẻ",
-    icon: <FiBarChart2 />,
     children: [
       {
         name: "Quản lý",
@@ -186,7 +190,6 @@ const dataSildeBar: Array<ISildeBar> = [
   },
   {
     name: "Trợ giúp",
-    icon: <FiPhone />,
     link: "/abc",
   },
 ];
@@ -203,7 +206,7 @@ function SildeBar() {
               <h2>
                 {(sildeItem.children?.length ?? 0) > 0 ? (
                   <AccordionButton p="1rem">
-                    {sildeItem.icon}
+                    {icons[sildeItem.name]}
                     <Box
                       as="span"
                       flex="1"
@@ -222,7 +225,7 @@ function SildeBar() {
                     alignItems="center"
                     _hover={{ bg: "gray.100" }}
                   >
-                    {sildeItem.icon}
+                    {icons[sildeItem.name]}
                     <Box
                       as="span"
                       flex="1"

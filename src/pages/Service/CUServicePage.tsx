@@ -19,8 +19,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { SubmitHandler } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { IServiceType } from "@/types/service.type";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  IGiftAdd,
+  IOddsAdd,
+  IServiceMutation,
+  IServiceType,
+} from "@/types/service.type";
 import { Link } from "react-router-dom";
 import { FiPlus, FiSlack, FiUser, FiUsers } from "react-icons/fi";
 import InputTag from "@/components/globals/Form/InputTag";
@@ -28,6 +33,9 @@ import ModelBase from "@/components/globals/Model/ModelBase";
 import FileCustom from "@/components/globals/Form/FileCustom";
 import InputNumberCustom from "@/components/globals/Form/InputNumberCustom";
 import InputExcept from "@/components/globals/Form/InputExcept";
+import { useMutation } from "@tanstack/react-query";
+import { serviceApi } from "@/apis/service";
+import { objectToFormData } from "@/utils/function";
 
 const formBase: Array<IFormInput> = [
   {
@@ -47,7 +55,9 @@ const formBase: Array<IFormInput> = [
   {
     label: "Giá tiền",
     name: "price_service",
-    type: "INPUT",
+    type: "NUMBER",
+    default: "0",
+    min: 0,
     gridAreaName: "price_service",
   },
   {
@@ -78,25 +88,80 @@ const formBase: Array<IFormInput> = [
     type: "FILE",
   },
 ];
+const initialFormStateGifts: IGiftAdd = {
+  image: {} as File,
+  isRandom: false,
+  isVip: false,
+  message: "",
+  percent: 0,
+  typeGift: "NOT",
+  value: 0,
+};
+const initialFormStateOdds: IOddsAdd = {
+  isRandomAdmin: false,
+  isRandomUser: false,
+  oddsAdmin: [],
+  oddsUser: [],
+  listGift: [],
+};
 
 export default function CUServicePage() {
+  /****----------------
+   *      HOOK
+  ----------------****/
   const [typeService, setTypeService] = useState<string>("");
+  const [dataDomainExcept, setDataDomainExcept] =
+    useState<Array<string | number>>();
+  const toast = useToast();
+  const [dataOdds, setDataOdds] = useState<IOddsAdd>();
   const [dataFormState, setDataFormState] =
     useState<Array<IFormInput>>(formBase);
-  const toast = useToast();
+  const serviceMutation = useMutation({
+    mutationFn: ({ formData, data }: IServiceMutation) => {
+      return serviceApi.create({ formData, data });
+    },
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+    },
+  });
+  /****----------------
+  *      END-HOOK
+  ----------------****/
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data);
-  };
+  /****----------------
+   *      Handle
+  ----------------****/
   const handleChangeService = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTypeService(e.target.value);
     setDataFormState(formBase);
     handleImageByService(e.target.value);
   };
 
+  const onSubmit: SubmitHandler<any> = (data) => {
+    const formData = new FormData();
+    objectToFormData(formData, {
+      dataForm: data,
+      dataOdds: dataOdds,
+      dataExcept: dataDomainExcept,
+    });
+    serviceMutation.mutate({
+      formData,
+      data: JSON.stringify({
+        dataForm: data,
+        dataOdds: dataOdds,
+        dataExcept: dataDomainExcept,
+      }),
+    });
+    console.log(data, dataOdds, dataDomainExcept);
+  };
+  const handleChangeOdds = (data: IOddsAdd) => setDataOdds(data);
+  const handleChangeInputExcept = (data: (string | number)[]) =>
+    setDataDomainExcept(data);
   const handleImageByService = (type: string) => {
     let serviceForm: Array<IFormInput> = [];
-
     switch (type) {
       case IServiceType.BOX:
         serviceForm.push({
@@ -166,7 +231,9 @@ export default function CUServicePage() {
     }
     setDataFormState((vl) => [...vl, ...serviceForm]);
   };
-
+  /****----------------
+   *      END-Handle
+  ----------------****/
   return (
     <>
       <CardCollection
@@ -200,10 +267,14 @@ export default function CUServicePage() {
             <option value="RANDOM">Random tài khoản (Dạng tài khoản)</option>
           </Select>
         </FormControl>
-        <InputExcept />
+
+        <InputExcept onChange={handleChangeInputExcept} />
+
         {(typeService === IServiceType.LUCKY_BOX ||
           typeService === IServiceType.LUCKY_CARD ||
-          typeService === IServiceType.WHEEL) && <AddNewOdds />}
+          typeService === IServiceType.WHEEL) && (
+          <AddNewOdds onChange={handleChangeOdds} />
+        )}
 
         {typeService !== "" && (
           <FormBase
@@ -217,46 +288,6 @@ export default function CUServicePage() {
     </>
   );
 }
-
-interface IGiftAdd {
-  typeGift: "ROBUX" | "DIAMOND" | "QUANHUY" | "NOT";
-  message: string;
-  value: number | string | Array<number>;
-  percent: number;
-  isRandom: boolean;
-  isVip: boolean;
-}
-
-const initialFormStateGifts: IGiftAdd = {
-  isRandom: false,
-  isVip: false,
-  message: "",
-  percent: 0,
-  typeGift: "NOT",
-  value: 0,
-};
-
-interface IOddsAdd {
-  isRandomAdmin: boolean;
-  isRandomUser: boolean;
-  oddsAdmin: Array<{
-    id: number;
-    description: string;
-  }>;
-  oddsUser: Array<{
-    id: number;
-    description: string;
-  }>;
-  listGift: Array<IGiftAdd>;
-}
-
-const initialFormStateOdds: IOddsAdd = {
-  isRandomAdmin: false,
-  isRandomUser: false,
-  oddsAdmin: [],
-  oddsUser: [],
-  listGift: [],
-};
 
 function GiftAdd({
   onChange,
@@ -286,7 +317,7 @@ function GiftAdd({
 
   const handleChangeCustom = useCallback(
     (name: keyof IGiftAdd) =>
-      (value: string | boolean | Array<string | number>) => {
+      (value: string | boolean | Array<string | number> | File | number) => {
         setFormState((prev) => ({
           ...prev,
           [name]: value,
@@ -295,6 +326,12 @@ function GiftAdd({
     []
   );
 
+  const handleChangeFileImage = (data: File[]) => {
+    if (data.length > 0) {
+      handleChangeCustom("image")(data[0]);
+    }
+  };
+
   useEffect(() => {
     onChange(formState, id);
   }, [formState]);
@@ -302,7 +339,7 @@ function GiftAdd({
   return (
     <>
       <HStack spacing="1rem">
-        <FileCustom multiple={false} />
+        <FileCustom multiple={false} onChange={handleChangeFileImage} />
         <VStack flexDirection="column" flex={1}>
           <FormControl isRequired mb="1rem">
             <HStack justifyContent="space-between">
@@ -314,7 +351,6 @@ function GiftAdd({
                 <Switch onChange={handleChange("isVip")} />
               </HStack>
             </HStack>
-
             <HStack>
               <Select
                 onChange={handleChange("typeGift")}
@@ -367,13 +403,7 @@ function GiftAdd({
               {isRandom ? (
                 <InputTag limit={2} onChange={handleChangeCustom("value")} />
               ) : (
-                <Input
-                  onChange={handleChange("value")}
-                  variant="auth"
-                  fontSize="sm"
-                  fontWeight="500"
-                  size="lg"
-                />
+                <Input onChange={handleChange("value")} variant="auth" />
               )}
             </FormControl>
             <FormControl isRequired mb="1rem">
@@ -384,15 +414,12 @@ function GiftAdd({
                 }
                 onChange={handleChange("message")}
                 variant="auth"
-                fontSize="sm"
-                fontWeight="500"
-                size="lg"
               />
             </FormControl>
             <FormControl isRequired mb="1rem">
               <FormLabel>Tỷ lệ (%)</FormLabel>
               <InputNumberCustom
-                onChange={handleChangeCustom("percent")}
+                handleChange={handleChangeCustom("percent")}
                 min={0}
                 max={100}
                 precision={2}
@@ -406,11 +433,20 @@ function GiftAdd({
   );
 }
 
-function ModelAddOdds() {
+function ModelAddOdds({
+  onClose,
+  onChange,
+}: {
+  onClose: () => void;
+  onChange: (data: IOddsAdd) => void;
+}) {
   const [listGift, setListGift] = useState<Array<IGiftAdd>>([]);
-  const [formState, setFormState] = useState<IOddsAdd>(initialFormStateOdds);
+  const [formState, setFormState] = useState<IOddsAdd>(() => {
+    const temp = structuredClone(initialFormStateOdds);
+    return temp;
+  });
 
-  const handleChangeNumberGifts = (countGift: string | number) => {
+  const handleChangeNumberGifts = (countGift: number) => {
     let countGiftNew = Number(countGift);
     if (listGift.length < countGiftNew) {
       setListGift((prev) => [
@@ -444,7 +480,8 @@ function ModelAddOdds() {
   };
 
   const handleSubmit = () => {
-    console.log("formState", formState);
+    onChange(formState);
+    onClose();
   };
 
   const handleClickAddScript = (id: number, type: "ADMIN" | "USER") => {
@@ -456,7 +493,7 @@ function ModelAddOdds() {
       });
       setFormState((prev) => ({
         ...prev,
-        oddsAdmin: [...prev.oddsAdmin], // Thêm mảng mới với các phần tử cũ và phần tử mới
+        oddsAdmin: [...prev.oddsAdmin],
       }));
       return;
     }
@@ -468,7 +505,7 @@ function ModelAddOdds() {
     });
     setFormState((prev) => ({
       ...prev,
-      oddsUser: [...prev.oddsUser], // Thêm mảng mới với các phần tử cũ và phần tử mới
+      oddsUser: [...prev.oddsUser],
     }));
     return;
   };
@@ -514,7 +551,7 @@ function ModelAddOdds() {
           <FormLabel>Số lượng quà</FormLabel>
           <HStack>
             <InputNumberCustom
-              onChange={handleChangeNumberGifts}
+              handleChange={handleChangeNumberGifts}
               defaultValue={0}
               value={listGift.length}
               min={1}
@@ -553,37 +590,42 @@ function ModelAddOdds() {
   );
 }
 
-function AddNewOdds() {
+function AddNewOdds({ onChange }: { onChange: (data: IOddsAdd) => void }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  console.log(initialFormStateOdds);
-
+  const [typeOdds, setTypeOdds] = useState("");
+  const handleChangeOdds = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTypeOdds(e.target.value);
+  };
   return (
     <>
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
-        <ModelAddOdds />
+        <ModelAddOdds onClose={onClose} onChange={onChange} />
       </ModelBase>
       <FormControl isRequired mb="1rem">
         <FormLabel>Tỷ lệ</FormLabel>
         <HStack>
           <Select
+            onChange={handleChangeOdds}
             variant="auth"
             fontSize="sm"
             fontWeight="500"
             size="lg"
             placeholder="-- Chọn tỷ lệ từ trước --"
           >
-            <option value="LUCKY_BOX">--- Tạo mới ---</option>
+            <option value="CREATE_NEW"> --- Tạo mới tỷ lệ --- </option>
             <option value="LUCKY_BOX">Mở hộp may mắn</option>
             <option value="LUCKY_CARD">Lật thẻ bài</option>
           </Select>
-          <Box>
-            <IconButton
-              onClick={onOpen}
-              size="lg"
-              aria-label="Add new"
-              icon={<FiPlus />}
-            />
-          </Box>
+          {typeOdds === "CREATE_NEW" && (
+            <Box>
+              <IconButton
+                onClick={onOpen}
+                size="lg"
+                aria-label="Add new"
+                icon={<FiPlus />}
+              />
+            </Box>
+          )}
         </HStack>
       </FormControl>
     </>

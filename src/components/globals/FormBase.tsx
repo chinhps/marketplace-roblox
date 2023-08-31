@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   FormControl,
@@ -6,18 +6,14 @@ import {
   FormLabel,
   IconButton,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
   Switch,
   Textarea,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { IFormBase } from "@/types/form.type";
-import FileCustom from "./Form/FileCustom";
+import { FileCustomRHF } from "./Form/FileCustom";
+import InputNumberCustom from "./Form/InputNumberCustom";
 
 export default function FormBase({
   dataForm,
@@ -29,6 +25,7 @@ export default function FormBase({
   icon,
 }: IFormBase) {
   const {
+    control,
     handleSubmit,
     register,
     setValue,
@@ -70,24 +67,27 @@ export default function FormBase({
             >
               {!hiddenLable && <FormLabel>{form.label}</FormLabel>}
               {form.type === "FILE" ? (
-                <FileCustom />
+                <Controller
+                  render={({ field: { onChange, value } }) => (
+                    <FileCustomRHF onChange={onChange} value={value} />
+                  )}
+                  control={control}
+                  name={form.name}
+                />
               ) : form.type === "SWITCH" ? (
                 <Switch
                   fontSize="sm"
                   fontWeight="500"
                   size="lg"
                   {...register(form.name, {
-                    value: form.default ?? null,
+                    value: form.default ?? false,
                     ...(form.validate ?? null),
                   })}
                 />
               ) : form.type === "INPUT" ? (
                 <Input
                   variant="auth"
-                  fontSize="sm"
-                  fontWeight="500"
                   disabled={form.disable}
-                  size="lg"
                   {...register(form.name, {
                     value: form.default ?? null,
                     ...(form.validate ?? null),
@@ -107,23 +107,20 @@ export default function FormBase({
                   placeholder={form.label}
                 />
               ) : form.type === "NUMBER" ? (
-                <NumberInput
-                  variant="auth"
-                  size="lg"
-                  max={form.max ?? undefined}
-                  min={form.min ?? 1}
-                >
-                  <NumberInputField
-                    {...register(form.name, {
-                      value: form.default ?? null,
-                      ...(form.validate ?? null),
-                    })}
+                <>
+                  <Controller
+                    render={({ field: { onChange, value } }) => (
+                      <InputNumberCustom
+                        handleChange={onChange}
+                        value={value}
+                      />
+                    )}
+                    defaultValue={form.default}
+                    control={control}
+                    name={form.name}
+                    // rules={form.validate ?? null}
                   />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
+                </>
               ) : form.type === "SELECT" ? (
                 <Select
                   variant="auth"

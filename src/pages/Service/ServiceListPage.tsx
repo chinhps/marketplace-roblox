@@ -22,7 +22,6 @@ import {
 import { FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import OddsList from "./Odds/OddsList";
-import GiftList from "./Gift/GiftList";
 import ServiceGroupList from "./ServiceGroup/ServiceGroupList";
 import { ServiceDetailTableList } from "./ServiceDetail/ServiceDetailList";
 
@@ -57,9 +56,8 @@ export default function ServiceListPage() {
           <TabList>
             <Tab>Danh sách Dịch vụ</Tab>
             <Tab>Tất cả game đang hiển thị</Tab>
-            <Tab>Danh sách tỷ lệ</Tab>
-            <Tab>Danh sách quà</Tab>
             <Tab>Danh sách nhóm dịch vụ</Tab>
+            <Tab>Danh sách tỷ lệ</Tab>
           </TabList>
 
           <TabIndicator mt="-1.5px" height="2px" borderRadius="1px" />
@@ -71,13 +69,10 @@ export default function ServiceListPage() {
               <ServiceDetailTableList />
             </TabPanel>
             <TabPanel>
-              <OddsList />
-            </TabPanel>
-            <TabPanel>
-              <GiftList />
-            </TabPanel>
-            <TabPanel>
               <ServiceGroupList />
+            </TabPanel>
+            <TabPanel>
+              <OddsList />
             </TabPanel>
           </TabPanels>
         </Tabs>

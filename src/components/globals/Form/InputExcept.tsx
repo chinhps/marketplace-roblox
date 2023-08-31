@@ -2,7 +2,11 @@ import { Button, FormControl, FormLabel, HStack } from "@chakra-ui/react";
 import InputTag from "./InputTag";
 import { useState } from "react";
 
-export default function InputExcept() {
+export default function InputExcept({
+  onChange,
+}: {
+  onChange: (value: (string | number)[]) => void;
+}) {
   const [except, setExcept] = useState<"ON" | "OFF">("ON");
   return (
     <>
@@ -23,7 +27,7 @@ export default function InputExcept() {
             Chuyển chế độ
           </Button>
         </HStack>
-        <InputTag />
+        <InputTag onChange={onChange} />
       </FormControl>
     </>
   );

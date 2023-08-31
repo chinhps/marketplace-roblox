@@ -49,7 +49,6 @@ export default function InputTag({
       <HStack
         border="1px solid"
         px={3}
-        py={1}
         borderRadius="5px"
         minH="48px"
         bg={isDisable ? "gray.200" : ""}
