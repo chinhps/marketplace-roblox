@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceDetailController;
+use App\Http\Controllers\Service\ServiceForAllController;
 use App\Http\Controllers\Service\ServiceGroupController;
 use App\Http\Controllers\Service\ServiceOddsController;
 use App\Http\Controllers\Shop\ShopController;
@@ -63,6 +64,9 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('/{id}', [ServiceOddsController::class, 'getId']);
             Route::delete('/{id}', [ServiceOddsController::class, 'delete']);
             Route::post('/upsert', [ServiceOddsController::class, 'upsert']);
+        });
+        Route::prefix('services-for-all')->group(function () {
+            Route::post('/upsert', [ServiceForAllController::class, 'upsert']);
         });
     });
 });
