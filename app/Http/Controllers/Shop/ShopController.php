@@ -31,6 +31,9 @@ class ShopController extends Controller
         $validated = $request->validated();
 
         # UPLOAD IMAGE
+        $logoUrl = uploadImageQueue($validated['logo_url']);
+        $faviconUrl = uploadImageQueue($validated['favicon_url']);
+        $backgroundUrl = uploadImageQueue($validated['background_url']);
 
         return $this->shopRepository->updateOrInsert($validated['id'], [
             "stt" => 1,
@@ -41,9 +44,9 @@ class ShopController extends Controller
             "cash_new_user" => $validated['cash_new_user'],
             "information" => json_encode([
                 "keyword" => $validated['keyword'],
-                "logo_url" => "abc",
-                "favicon_url" => "adsd",
-                "background_url" => "dfgdfg",
+                "logo_url" => $logoUrl,
+                "favicon_url" => $faviconUrl,
+                "background_url" => $backgroundUrl,
             ])
         ]);
     }

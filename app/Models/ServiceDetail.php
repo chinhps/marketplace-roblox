@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -11,29 +12,30 @@ class ServiceDetail extends Model
 {
     use HasFactory;
     protected $table = "service_details";
+    protected $guarded = [];
 
     public function shop_list(): BelongsToMany
     {
         return $this->belongsToMany(ShopList::class, 'service_details_except_shop', 'service_detail_id', 'shop_id');
     }
 
-    public function serviceGroup(): HasOne
+    public function serviceGroup(): BelongsTo
     {
-        return $this->hasOne(ServiceGroup::class, 'id', 'service_group_id');
+        return $this->belongsTo(ServiceGroup::class, 'service_group_id');
     }
 
-    public function service(): HasOne
+    public function service(): BelongsTo
     {
-        return $this->hasOne(Service::class, 'id', 'service_id');
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
-    public function serviceImage(): HasOne
+    public function serviceImage(): BelongsTo
     {
-        return $this->hasOne(ServiceImage::class, 'id', 'service_image_id');
+        return $this->belongsTo(ServiceImage::class, 'service_image_id');
     }
 
-    public function serviceOdds(): HasOne
+    public function serviceOdds(): BelongsTo
     {
-        return $this->hasOne(ServiceOdds::class, 'id', 'service_odds_id');
+        return $this->belongsTo(ServiceOdds::class, 'service_odds_id');
     }
 }

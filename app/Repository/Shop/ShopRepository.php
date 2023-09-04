@@ -22,6 +22,11 @@ class ShopRepository implements ShopInterface
         return $this->model->with('shopDetail')->find($id);
     }
 
+    public function getByListDomain(array $domains)
+    {
+        return $this->model->whereIn('domain', $domains)->get();
+    }
+
     public function updateOrInsert(float|null $id, array $params, array $paramsDetail)
     {
         if (!$id) return $this->model->create($params)->shopDetail()->create($paramsDetail);

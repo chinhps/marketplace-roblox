@@ -41,12 +41,13 @@ class ServiceGroupController extends Controller
         $validated = $request->validated();
 
         # UPLOAD IMAGE
+        $image = uploadImageQueue($validated['image']);
 
         return $this->serviceGroupRepository->updateOrInsert($validated['id'], [
             "prioritize" => $validated['prioritize'],
             "name" => $validated['name'],
             "active" => $validated['active'],
-            "image" => "https://i.imgur.com/RGyMGhs.png",
+            "image" => $image,
         ]);
     }
 }

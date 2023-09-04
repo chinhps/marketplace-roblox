@@ -16,4 +16,8 @@ class GameListRepository implements GameListInterface
     {
         return $this->model->find($id);
     }
+    public function getByGameKey(string $key)
+    {
+        return $this->model->where('game_key', $key)->first();
+    }
 }

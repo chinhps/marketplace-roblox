@@ -24,7 +24,8 @@ class ServiceForAllCreateRequest extends BaseRequest
         $data = $this->all();
         $modifiedData = $this->mergeArrays(json_decode($data['dataDefault'], true), $data);
         $this->replace($modifiedData);
-        return [
+        // dd($modifiedData);
+        $rules = [
             'dataForm.name_service_image' => 'required|string',
             'dataForm.note_service' => 'required|string',
             'dataForm.price_service' => 'required|numeric',
@@ -35,30 +36,51 @@ class ServiceForAllCreateRequest extends BaseRequest
             'dataForm.image_1.*' => 'nullable|file|image',
             'dataForm.image_2.*' => 'nullable|file|image',
             'dataForm.image_3.*' => 'nullable|file|image',
+            'dataForm.image_4.*' => 'nullable|file|image',
+            'dataForm.image_5.*' => 'nullable|file|image',
             // ==========================
-
-            'dataOdds.isRandomAdmin' => 'required|boolean',
-            'dataOdds.isRandomUser' => 'required|boolean',
-
-            'dataOdds.oddsAdmin.*' => 'required|array', // Change to *.* to support nested arrays
-            'dataOdds.oddsAdmin.*.id' => 'required|numeric',
-            'dataOdds.oddsAdmin.*.description' => 'required|string',
-            'dataOdds.oddsUser.*' => 'required|array', // Change to *.* to support nested arrays
-            'dataOdds.oddsUser.*.id' => 'required|numeric',
-            'dataOdds.oddsUser.*.description' => 'required|string',
-
-            'dataOdds.listGift.*' => 'required|array', // Change to *.* to support nested arrays
-            'dataOdds.listGift.*.image' => 'required|file|image',
-            'dataOdds.listGift.*.isRandom' => 'required|boolean',
-            'dataOdds.listGift.*.isVip' => 'required|boolean',
-            'dataOdds.listGift.*.message' => 'required|string',
-            'dataOdds.listGift.*.percent' => 'required|numeric',
-            'dataOdds.listGift.*.typeGift' => 'required|string',
-            'dataOdds.listGift.*.value' => 'required|numeric',
-
+            'dataOdds' => 'nullable',
             // ==========================
             'dataExcept.*' => 'string',
+            'except' => 'boolean',
+            'typeService' => 'required|string',
         ];
+
+        if ($this->input("idTypeOdds") !== 0) {
+            $rules = [
+                ...$rules,
+                "idTypeOdds" => 'required|numeric|exists:service_odds,id'
+            ];
+        } else {
+            $rules = [
+                ...$rules,
+                "idTypeOdds" => 'required|numeric'
+            ];
+        }
+
+        if (!is_null($this->input("dataOdds"))) {
+            $rules = [
+                ...$rules,
+                'dataOdds.isRandomAdmin' => 'required|boolean',
+                'dataOdds.isRandomUser' => 'required|boolean',
+                'dataOdds.oddsAdmin.*' => 'required|array', // Change to *.* to support nested arrays
+                'dataOdds.oddsAdmin.*.id' => 'required|numeric',
+                'dataOdds.oddsAdmin.*.description' => 'required|string',
+                'dataOdds.oddsUser.*' => 'required|array', // Change to *.* to support nested arrays
+                'dataOdds.oddsUser.*.id' => 'required|numeric',
+                'dataOdds.oddsUser.*.description' => 'required|string',
+                'dataOdds.listGift.*' => 'required|array', // Change to *.* to support nested arrays
+                'dataOdds.listGift.*.image' => 'required|file|image',
+                'dataOdds.listGift.*.isRandom' => 'required|boolean',
+                'dataOdds.listGift.*.isVip' => 'required|boolean',
+                'dataOdds.listGift.*.message' => 'required|string',
+                'dataOdds.listGift.*.percent' => 'required|numeric',
+                'dataOdds.listGift.*.typeGift' => 'required|string',
+                'dataOdds.listGift.*.value' => 'required',
+            ];
+        }
+
+        return $rules;
     }
 
     public function mergeArrays($arrayA, $arrayB)
@@ -68,7 +90,9 @@ class ServiceForAllCreateRequest extends BaseRequest
                 if (is_array($valueB) && is_array($arrayA[$key])) {
                     $arrayA[$key] = $this->mergeArrays($arrayA[$key], $valueB);
                 } else {
-                    $arrayA[$key] = $valueB;
+                    if (gettype($arrayA[$key]) !== "boolean" && gettype($arrayA[$key]) !== "integer" && gettype($arrayA[$key]) !== "NULL") {
+                        $arrayA[$key] = $valueB;
+                    }
                 }
             } else {
                 $arrayA[$key] = $valueB;

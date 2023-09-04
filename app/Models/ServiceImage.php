@@ -9,4 +9,5 @@ class ServiceImage extends Model
 {
     use HasFactory;
     protected $table = "service_images";
+    protected $guarded = [];
 }

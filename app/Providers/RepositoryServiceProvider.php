@@ -8,8 +8,12 @@ use App\Repository\Game\GameList\GameListInterface;
 use App\Repository\Game\GameList\GameListRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
+use App\Repository\Service\ServiceGift\ServiceGiftInterface;
+use App\Repository\Service\ServiceGift\ServiceGiftRepository;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupRepository;
+use App\Repository\Service\ServiceImage\ServiceImageInterface;
+use App\Repository\Service\ServiceImage\ServiceImageRepository;
 use App\Repository\Service\ServiceInterface;
 use App\Repository\Service\ServiceOdds\ServiceOddsInterface;
 use App\Repository\Service\ServiceOdds\ServiceOddsRepository;
@@ -32,6 +36,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceDetailInterface::class, ServiceDetailRepository::class);
         $this->app->bind(ServiceGroupInterface::class, ServiceGroupRepository::class);
         $this->app->bind(ServiceOddsInterface::class, ServiceOddsRepository::class);
+        $this->app->bind(ServiceImageInterface::class, ServiceImageRepository::class);
+        $this->app->bind(ServiceGiftInterface::class, ServiceGiftRepository::class);
     }
 
     /**

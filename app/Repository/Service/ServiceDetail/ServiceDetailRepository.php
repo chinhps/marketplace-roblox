@@ -2,7 +2,11 @@
 
 namespace App\Repository\Service\ServiceDetail;
 
+use App\Models\Service;
 use App\Models\ServiceDetail;
+use App\Models\ServiceGroup;
+use App\Models\ServiceImage;
+use App\Models\ServiceOdds;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceDetailRepository implements ServiceDetailInterface
@@ -20,5 +24,27 @@ class ServiceDetailRepository implements ServiceDetailInterface
     public function delete(float $id)
     {
         return $this->model->find($id)->delete();
+    }
+
+    public function updateOrInsert(
+        float|null $id,
+        array $params,
+        array $domainsId,
+        Service $service,
+        ServiceGroup $serviceGroup,
+        ServiceImage $serviceImage,
+        ?ServiceOdds $serviceOdds
+    ) {
+        $serviceDetail = new ServiceDetail();
+        $serviceDetail->fill($params);
+
+        $serviceDetail->service()->associate($service);
+        $serviceDetail->serviceGroup()->associate($serviceGroup);
+        $serviceDetail->serviceImage()->associate($serviceImage);
+        $serviceDetail->serviceOdds()->associate($serviceOdds);
+        $serviceDetail->save();
+        $serviceDetail->shop_list()->attach($domainsId);
+
+        return $serviceDetail;
     }
 }

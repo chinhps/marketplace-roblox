@@ -16,4 +16,9 @@ class GameCurrencyRepository implements GameCurrencyInterface
     {
         return $this->model->find($id);
     }
+
+    public function getByKey(string $key)
+    {
+        return $this->model->where('currency_key', $key)->first();
+    }
 }
