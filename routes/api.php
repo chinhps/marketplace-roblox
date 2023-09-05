@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Histories\PurchaseHistoryController;
+use App\Http\Controllers\Histories\RechargeHistoryController;
+use App\Http\Controllers\Histories\WithdrawHistoryController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceDetailController;
 use App\Http\Controllers\Service\ServiceForAllController;
@@ -8,6 +12,7 @@ use App\Http\Controllers\Service\ServiceOddsController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +72,34 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('services-for-all')->group(function () {
             Route::post('/upsert', [ServiceForAllController::class, 'upsert']);
+        });
+        Route::prefix('admins')->group(function () {
+            Route::get('/', [AdminController::class, 'list']);
+            Route::get('/{id}', [AdminController::class, 'getId']);
+            Route::delete('/{id}', [AdminController::class, 'delete']);
+            Route::post('/upsert', [AdminController::class, 'upsert']);
+        });
+    });
+    Route::middleware(['role:admin,support'])->group(function () {
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserController::class, 'list']);
+            Route::get('/{id}', [UserController::class, 'getId']);
+        });
+    });
+    Route::middleware(['role:admin,support,koc'])->group(function () {
+        Route::prefix('histories')->group(function () {
+            Route::prefix('purchases')->group(function () {
+                Route::get('/', [PurchaseHistoryController::class, 'list']);
+                Route::put('/{id}', [PurchaseHistoryController::class, 'updateRefund']);
+            });
+            Route::prefix('recharges')->group(function () {
+                Route::get('/', [RechargeHistoryController::class, 'list']);
+                Route::put('/{id}', [RechargeHistoryController::class, 'updateRefund']);
+            });
+            Route::prefix('withdraw')->group(function () {
+                Route::get('/', [WithdrawHistoryController::class, 'list']);
+                Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);
+            });
         });
     });
 });

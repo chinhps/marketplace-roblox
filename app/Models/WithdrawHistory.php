@@ -9,4 +9,7 @@ class WithdrawHistory extends Model
 {
     use HasFactory;
     protected $table = "withdraw_histories";
+    protected $fillable = [
+        "status"
+    ];
 }

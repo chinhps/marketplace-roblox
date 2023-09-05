@@ -10,6 +10,9 @@ class PurchaseHistory extends Model
 {
     use HasFactory;
     protected $table = "purchase_histories";
+    protected $fillable = [
+        "refund"
+    ];
 
     public function user(): BelongsTo
     {

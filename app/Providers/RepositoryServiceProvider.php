@@ -2,10 +2,18 @@
 
 namespace App\Providers;
 
+use App\Repository\Admin\AdminInterface;
+use App\Repository\Admin\AdminRepository;
 use App\Repository\Game\GameCurrency\GameCurrencyInterface;
 use App\Repository\Game\GameCurrency\GameCurrencyRepository;
 use App\Repository\Game\GameList\GameListInterface;
 use App\Repository\Game\GameList\GameListRepository;
+use App\Repository\Histories\PurchaseHistory\PurchaseHistoryInterface;
+use App\Repository\Histories\PurchaseHistory\PurchaseHistoryRepository;
+use App\Repository\Histories\RechargeHistory\RechargeHistoryInterface;
+use App\Repository\Histories\RechargeHistory\RechargeHistoryRepository;
+use App\Repository\Histories\WithdrawHistory\WithdrawHistoryInterface;
+use App\Repository\Histories\WithdrawHistory\WithdrawHistoryRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGift\ServiceGiftInterface;
@@ -20,6 +28,8 @@ use App\Repository\Service\ServiceOdds\ServiceOddsRepository;
 use App\Repository\Service\ServiceRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
+use App\Repository\User\UserInterface;
+use App\Repository\User\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -38,6 +48,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceOddsInterface::class, ServiceOddsRepository::class);
         $this->app->bind(ServiceImageInterface::class, ServiceImageRepository::class);
         $this->app->bind(ServiceGiftInterface::class, ServiceGiftRepository::class);
+        $this->app->bind(UserInterface::class, UserRepository::class);
+        $this->app->bind(AdminInterface::class, AdminRepository::class);
+        $this->app->bind(PurchaseHistoryInterface::class, PurchaseHistoryRepository::class);
+        $this->app->bind(RechargeHistoryInterface::class, RechargeHistoryRepository::class);
+        $this->app->bind(WithdrawHistoryInterface::class, WithdrawHistoryRepository::class);
     }
 
     /**

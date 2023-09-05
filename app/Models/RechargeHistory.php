@@ -10,6 +10,9 @@ class RechargeHistory extends Model
 {
     use HasFactory;
     protected $table = "recharge_histories";
+    protected $fillable = [
+        'refund'
+    ];
 
     public function recharge(): BelongsTo
     {
