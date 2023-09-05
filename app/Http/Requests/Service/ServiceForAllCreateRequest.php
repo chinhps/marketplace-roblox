@@ -28,8 +28,7 @@ class ServiceForAllCreateRequest extends BaseRequest
         $rules = [
             'dataForm.name_service_image' => 'required|string',
             'dataForm.note_service' => 'required|string',
-            'dataForm.price_service' => 'required|numeric',
-            'dataForm.sale_service' => 'required|numeric',
+            'dataForm.sale_service' => 'required|numeric|min:0',
             'dataForm.active_service' => 'required|boolean',
             'dataForm.notification_service' => 'required|string',
             'dataForm.thumb_service_image.*' => 'required|file|image',
@@ -45,6 +44,31 @@ class ServiceForAllCreateRequest extends BaseRequest
             'except' => 'boolean',
             'typeService' => 'required|string',
         ];
+
+        if (
+            $this->input("typeService") !== "ACCOUNT" ||
+            $this->input("typeService") !== "CATEGORY"  ||
+            $this->input("typeService") !== "LINKTO"
+        ) {
+            $rules = [
+                ...$rules,
+                'dataForm.price_service' => 'required|numeric|min:0',
+            ];
+        }
+
+        if ($this->input("typeService") === "LINKTO") {
+            $rules = [
+                ...$rules,
+                "dataForm.link_to" => 'required|string'
+            ];
+        }
+
+        if ($this->input("typeService") === "BOX") {
+            $rules = [
+                ...$rules,
+                "dataForm.currency" => 'required|numeric|exists:game_currencies,id'
+            ];
+        }
 
         if ($this->input("idTypeOdds") !== 0) {
             $rules = [

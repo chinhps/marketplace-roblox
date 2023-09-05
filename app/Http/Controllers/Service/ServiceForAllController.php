@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceForAllCreateRequest;
 use App\Jobs\UploadFileAPI;
@@ -65,27 +66,52 @@ class ServiceForAllController extends Controller
         $serviceImage = $this->serviceImageRepository->updateOrInsert(null,  $dataServiceImage);
 
         # CREATE SERVICE
+
+        /**
+         * CUSTOM SERVER
+         */
+        if ($validated['typeService'] === "BOX") {
+            $gameCurrencyService = $this->gameCurrencyRepository->get($validated['dataForm']['currency']);
+        }
+
+        if ($validated['typeService'] === "LINKTO") {
+            $information = [
+                "link_to" => $validated['dataForm']['link_to']
+            ];
+        }
+
+        if (
+            $validated['typeService'] !== "ACCOUNT" ||
+            $validated['typeService'] !== "CATEGORY"  ||
+            $validated['typeService'] !== "LINKTO"
+        ) {
+            $priceService = $validated["dataForm"]['price_service'];
+        }
+        /**
+         * END CUSTOM SERVER
+         */
+
         $dataService = [
             "note" => $validated["dataForm"]['note_service'],
-            "price" => $validated["dataForm"]['price_service'],
+            "price" => $priceService ?? 9999999,
             "excluding" => "OFF",
             "notification" => $validated["dataForm"]['notification_service'],
             "active" => $validated["dataForm"]['active_service'],
             "sale" => $validated["dataForm"]["sale_service"],
-            "information" => '{ "hastag": "percent80" }',
+            "information" => json_encode($information ?? ['hastag' => "percent50"]),
             "service_key" => Str::random(15),
         ];
         $service = $this->servicelRepository->updateOrInsert(
             null,
             $dataService,
-            gameCurrency: null,
+            gameCurrency: $gameCurrencyService ?? null,
             gameList: $this->gameListRepository->getByGameKey($validated['typeService'])
         );
 
         /**
          * @var array
          */
-        $domainsId = $this->shopRepository->getByListDomain($validated['dataExcept'])->pluck('id')->toArray();
+        $domainsId = $this->shopRepository->getByListDomain($validated['dataExcept'] ?? [])->pluck('id')->toArray();
 
         if (!is_null($validated['dataOdds'])) {
             # CREATE ODDS
@@ -133,6 +159,10 @@ class ServiceForAllController extends Controller
             ]);
         }
 
+        if ($validated['idTypeOdds'] !== 0) {
+            $serviceOdds = $this->serviceOddsRepository->get($validated['idTypeOdds']);
+        }
+
         # CREATE SERVICE DETAIL
         $this->serviceDetailRepository->updateOrInsert(
             null,
@@ -148,6 +178,6 @@ class ServiceForAllController extends Controller
             serviceOdds: isset($serviceOdds) ? $serviceOdds : null
         );
 
-        dd($validated);
+        return BaseResponse::msg("Tạo mới thành công! Tỷ lệ, Bộ ảnh, Dịch vụ");
     }
 }
