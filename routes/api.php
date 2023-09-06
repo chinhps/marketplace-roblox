@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Event\EventController;
 use App\Http\Controllers\Histories\EventHistoryController;
 use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
@@ -93,6 +94,12 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('/', [UserController::class, 'list']);
             Route::get('/{id}', [UserController::class, 'getId']);
             Route::post('/create-transaction/{id}', [TransactionController::class, 'createTransaction']);
+        });
+        Route::prefix('events')->group(function () {
+            Route::get('/', [EventController::class, 'list']);
+            Route::get('/{id}', [EventController::class, 'getId']);
+            Route::delete('/{id}', [EventController::class, 'delete']);
+            Route::post('/upsert', [EventController::class, 'upsert']);
         });
     });
     Route::middleware(['role:admin,support,koc'])->group(function () {

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repository\Admin\AdminInterface;
 use App\Repository\Admin\AdminRepository;
+use App\Repository\Event\EventInterface;
+use App\Repository\Event\EventRepository;
 use App\Repository\Game\GameCurrency\GameCurrencyInterface;
 use App\Repository\Game\GameCurrency\GameCurrencyRepository;
 use App\Repository\Game\GameList\GameListInterface;
@@ -62,6 +64,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceHistoryInterface::class, ServiceHistoryRepository::class);
         $this->app->bind(EventHistoryInterface::class, EventHistoryRepository::class);
         $this->app->bind(TransactionInterface::class, TransactionRepository::class);
+        $this->app->bind(EventInterface::class, EventRepository::class);
     }
 
     /**

@@ -9,4 +9,5 @@ class EventList extends Model
 {
     use HasFactory;
     protected $table = "event_list";
+    protected $guarded = [];
 }
