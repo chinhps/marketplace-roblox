@@ -10,6 +10,7 @@ class TopRechargeVirtual extends Model
 {
     use HasFactory;
     protected $table = "top_recharge_virtual";
+    protected $guarded = [];
 
     public function shop(): BelongsTo
     {

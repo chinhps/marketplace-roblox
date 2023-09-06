@@ -13,6 +13,8 @@ use App\Http\Controllers\Service\ServiceForAllController;
 use App\Http\Controllers\Service\ServiceGroupController;
 use App\Http\Controllers\Service\ServiceOddsController;
 use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\TopRecharge\TopRechargeController;
+use App\Http\Controllers\TopRecharge\TopRechargeVirtualController;
 use App\Http\Controllers\Transactions\TransactionController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
@@ -100,6 +102,17 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('/{id}', [EventController::class, 'getId']);
             Route::delete('/{id}', [EventController::class, 'delete']);
             Route::post('/upsert', [EventController::class, 'upsert']);
+        });
+
+        Route::prefix('top-recharge')->group(function () {
+            Route::get('/', [TopRechargeController::class, 'list']);
+            Route::delete('/{id}', [TopRechargeController::class, 'delete']);
+        });
+        Route::prefix('top-recharge-virtual')->group(function () {
+            Route::get('/', [TopRechargeVirtualController::class, 'list']);
+            Route::get('/{id}', [TopRechargeVirtualController::class, 'getId']);
+            Route::delete('/{id}', [TopRechargeVirtualController::class, 'delete']);
+            Route::post('/upsert', [TopRechargeVirtualController::class, 'upsert']);
         });
     });
     Route::middleware(['role:admin,support,koc'])->group(function () {

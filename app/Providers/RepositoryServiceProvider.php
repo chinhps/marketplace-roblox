@@ -34,6 +34,10 @@ use App\Repository\Service\ServiceOdds\ServiceOddsRepository;
 use App\Repository\Service\ServiceRepository;
 use App\Repository\Shop\ShopInterface;
 use App\Repository\Shop\ShopRepository;
+use App\Repository\TopRecharge\TopRechargeInterface;
+use App\Repository\TopRecharge\TopRechargeRepository;
+use App\Repository\TopRecharge\TopRechargeVirtual\TopRechargeVirtualInterface;
+use App\Repository\TopRecharge\TopRechargeVirtual\TopRechargeVirtualRepository;
 use App\Repository\Transaction\TransactionInterface;
 use App\Repository\Transaction\TransactionRepository;
 use App\Repository\User\UserInterface;
@@ -65,6 +69,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EventHistoryInterface::class, EventHistoryRepository::class);
         $this->app->bind(TransactionInterface::class, TransactionRepository::class);
         $this->app->bind(EventInterface::class, EventRepository::class);
+        $this->app->bind(TopRechargeInterface::class, TopRechargeRepository::class);
+        $this->app->bind(TopRechargeVirtualInterface::class, TopRechargeVirtualRepository::class);
     }
 
     /**
