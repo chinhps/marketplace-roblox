@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Event\EventController;
 use App\Http\Controllers\Histories\EventHistoryController;
@@ -56,6 +57,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('services')->group(function () {
             Route::get('/', [ServiceController::class, 'list']);
+            Route::get('/all-list', [ServiceController::class, 'listAll']);
             Route::get('/{id}', [ServiceController::class, 'getId']);
             Route::delete('/{id}', [ServiceController::class, 'delete']);
             Route::post('/update', [ServiceController::class, 'update']);
@@ -113,6 +115,14 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('/{id}', [TopRechargeVirtualController::class, 'getId']);
             Route::delete('/{id}', [TopRechargeVirtualController::class, 'delete']);
             Route::post('/upsert', [TopRechargeVirtualController::class, 'upsert']);
+        });
+    });
+    Route::middleware(['role:admin,support,ctv'])->group(function () {
+        Route::prefix('accounts')->group(function () {
+            Route::get('/', [AccountController::class, 'list']);
+            Route::get('/{id}', [AccountController::class, 'getId']);
+            Route::delete('/{id}', [AccountController::class, 'delete']);
+            Route::post('/upsert', [AccountController::class, 'upsert']);
         });
     });
     Route::middleware(['role:admin,support,koc'])->group(function () {

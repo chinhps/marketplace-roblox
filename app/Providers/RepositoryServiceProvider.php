@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repository\Account\AccountInterface;
+use App\Repository\Account\AccountRepository;
 use App\Repository\Admin\AdminInterface;
 use App\Repository\Admin\AdminRepository;
 use App\Repository\Event\EventInterface;
@@ -71,6 +73,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EventInterface::class, EventRepository::class);
         $this->app->bind(TopRechargeInterface::class, TopRechargeRepository::class);
         $this->app->bind(TopRechargeVirtualInterface::class, TopRechargeVirtualRepository::class);
+        $this->app->bind(AccountInterface::class, AccountRepository::class);
     }
 
     /**

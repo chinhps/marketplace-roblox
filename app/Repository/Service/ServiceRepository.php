@@ -5,6 +5,7 @@ namespace App\Repository\Service;
 use App\Models\GameCurrency;
 use App\Models\GameList;
 use App\Models\Service;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceRepository implements ServiceInterface
@@ -14,9 +15,18 @@ class ServiceRepository implements ServiceInterface
     ) {
     }
 
-    public function list($limit = 15)
+    public function list($limit = 15, array $where = [])
     {
-        return $this->model->with(['currency', 'serviceCouter'])->withCount('serviceDetails')->paginate($limit);
+        $query = $this->model->with(['currency', 'serviceCouter'])->withCount('serviceDetails');
+        return $query->where($where)->paginate($limit);
+    }
+
+    public function listServiceByGameList(string $gameKey)
+    {
+        $query = $this->model->whereHas('game_list', function (Builder $query) use ($gameKey) {
+            $query->where('game_key', $gameKey);
+        });
+        return $query->get();
     }
 
     public function get(float $id)

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Service;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceCreateRequest;
+use App\Http\Resources\Service\ServiceListByGameResource;
 use App\Http\Resources\Service\ServiceListResource;
 use App\Repository\Game\GameCurrency\GameCurrencyInterface;
 use App\Repository\Game\GameList\GameListInterface;
 use App\Repository\Service\ServiceInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ServiceController extends Controller
@@ -24,6 +26,12 @@ class ServiceController extends Controller
     public function list()
     {
         return ServiceListResource::collection($this->serviceRepository->list());
+    }
+
+    public function listAll(Request $request)
+    {
+        $gameKey = $request->input('game_key');
+        return ServiceListByGameResource::collection($this->serviceRepository->listServiceByGameList($gameKey));
     }
 
     public function getId($id)

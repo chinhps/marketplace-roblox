@@ -24,7 +24,7 @@ class ServiceForAllCreateRequest extends BaseRequest
         $data = $this->all();
         $modifiedData = $this->mergeArrays(json_decode($data['dataDefault'], true), $data);
         $this->replace($modifiedData);
-        // dd($modifiedData);
+        
         $rules = [
             'dataForm.name_service_image' => 'required|string',
             'dataForm.note_service' => 'required|string',

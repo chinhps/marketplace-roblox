@@ -7,7 +7,8 @@ use App\Models\GameList;
 
 interface ServiceInterface
 {
-    public function list($limit = 15);
+    public function list($limit = 15, array $where = []);
+    public function listServiceByGameList(string $gameKey);
     public function get(float $id);
     public function delete(float $id);
     /**
