@@ -109,13 +109,16 @@ export default function CUServicePage() {
   /****----------------
    *      HOOK
   ----------------****/
-  const [typeService, setTypeService] = useState<string>("");
+  const toast = useToast();
   const [dataDomainExcept, setDataDomainExcept] =
     useState<Array<string | number>>();
-  const toast = useToast();
-  const [dataOdds, setDataOdds] = useState<IOddsAdd>();
   const [dataFormState, setDataFormState] =
     useState<Array<IFormInput>>(formBase);
+  const [typeService, setTypeService] = useState<string>("");
+  const [dataOdds, setDataOdds] = useState<IOddsAdd>();
+  const [except, setExcept] = useState<boolean>(false);
+  const [idTypeOdds, setIdTypeOdds] = useState<number>(0);
+
   const serviceMutation = useMutation({
     mutationFn: ({ formData, data }: IServiceMutation) => {
       return serviceApi.create({ formData, data });
@@ -144,15 +147,21 @@ export default function CUServicePage() {
     const formData = new FormData();
     objectToFormData(formData, {
       dataForm: data,
-      dataOdds: dataOdds,
+      dataOdds: dataOdds ?? null,
+      typeService: typeService,
       dataExcept: dataDomainExcept,
+      idTypeOdds: idTypeOdds,
+      except: except,
     });
     serviceMutation.mutate({
       formData,
       data: JSON.stringify({
         dataForm: data,
-        dataOdds: dataOdds,
+        dataOdds: dataOdds ?? null,
+        typeService: typeService,
         dataExcept: dataDomainExcept,
+        idTypeOdds: idTypeOdds,
+        except: except,
       }),
     });
     console.log(data, dataOdds, dataDomainExcept);
@@ -171,11 +180,11 @@ export default function CUServicePage() {
           selects: [
             {
               label: "Kim cương",
-              value: "DIAMOND",
+              value: "1",
             },
             {
               label: "Robux",
-              value: "ROBUX",
+              value: "3",
             },
           ],
         });
@@ -268,12 +277,20 @@ export default function CUServicePage() {
           </Select>
         </FormControl>
 
-        <InputExcept onChange={handleChangeInputExcept} />
+        <InputExcept
+          except={except}
+          setExcept={setExcept}
+          onChange={handleChangeInputExcept}
+        />
 
         {(typeService === IServiceType.LUCKY_BOX ||
           typeService === IServiceType.LUCKY_CARD ||
           typeService === IServiceType.WHEEL) && (
-          <AddNewOdds onChange={handleChangeOdds} />
+          <AddNewOdds
+            onChange={handleChangeOdds}
+            idTypeOdds={idTypeOdds}
+            setIdTypeOdds={setIdTypeOdds}
+          />
         )}
 
         {typeService !== "" && (
@@ -590,12 +607,17 @@ function ModelAddOdds({
   );
 }
 
-function AddNewOdds({ onChange }: { onChange: (data: IOddsAdd) => void }) {
+function AddNewOdds({
+  onChange,
+  idTypeOdds,
+  setIdTypeOdds,
+}: {
+  onChange: (data: IOddsAdd) => void;
+  idTypeOdds: number;
+  setIdTypeOdds: (data: number) => void;
+}) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [typeOdds, setTypeOdds] = useState("");
-  const handleChangeOdds = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTypeOdds(e.target.value);
-  };
+
   return (
     <>
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
@@ -605,18 +627,18 @@ function AddNewOdds({ onChange }: { onChange: (data: IOddsAdd) => void }) {
         <FormLabel>Tỷ lệ</FormLabel>
         <HStack>
           <Select
-            onChange={handleChangeOdds}
+            onChange={(e) => setIdTypeOdds(Number(e.target.value))}
             variant="auth"
             fontSize="sm"
             fontWeight="500"
             size="lg"
             placeholder="-- Chọn tỷ lệ từ trước --"
           >
-            <option value="CREATE_NEW"> --- Tạo mới tỷ lệ --- </option>
-            <option value="LUCKY_BOX">Mở hộp may mắn</option>
-            <option value="LUCKY_CARD">Lật thẻ bài</option>
+            <option value="0"> --- Tạo mới tỷ lệ --- </option>
+            <option value="10">Tỷ lệ của vòng quay thương hiệu</option>
+            <option value="11">Tỷ lệ vòng quay giáng sinh</option>
           </Select>
-          {typeOdds === "CREATE_NEW" && (
+          {idTypeOdds === 0 && (
             <Box>
               <IconButton
                 onClick={onOpen}

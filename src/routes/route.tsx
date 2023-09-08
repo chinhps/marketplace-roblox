@@ -6,6 +6,7 @@ import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
 import HomePage from "@/pages/HomePage";
 import AccoutListPage from "@/pages/Service/Account/AccoutListPage";
+import CUAccoutPage from "@/pages/Service/Account/CUAccoutPage";
 import CUServicePage from "@/pages/Service/CUServicePage";
 import RandomListPage from "@/pages/Service/Random/RandomListPage";
 import ServiceDetailList from "@/pages/Service/ServiceDetail/ServiceDetailList";
@@ -74,7 +75,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "accounts",
-        element: <AccoutListPage />,
+        children: [
+          {
+            path: "",
+            element: <AccoutListPage />,
+          },
+          {
+            path: "create",
+            element: <CUAccoutPage />,
+          },
+        ],
       },
       {
         path: "account-random",

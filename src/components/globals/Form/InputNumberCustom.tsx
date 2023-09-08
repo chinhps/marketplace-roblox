@@ -19,7 +19,7 @@ export default function InputNumberCustom({
     <>
       <NumberInput
         variant="auth"
-        onChange={(e) => handleChange && handleChange(Number(e))}
+        onChange={(e) => handleChange && handleChange(Number(e) ?? 0)}
         size="lg"
         {...props}
         defaultValue={0}

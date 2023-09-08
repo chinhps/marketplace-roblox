@@ -1,19 +1,21 @@
 import { Button, FormControl, FormLabel, HStack } from "@chakra-ui/react";
 import InputTag from "./InputTag";
-import { useState } from "react";
 
 export default function InputExcept({
   onChange,
+  except,
+  setExcept,
 }: {
   onChange: (value: (string | number)[]) => void;
+  except: boolean;
+  setExcept: (status: (prev: boolean) => boolean) => void;
 }) {
-  const [except, setExcept] = useState<"ON" | "OFF">("ON");
   return (
     <>
       <FormControl isRequired mb="1rem">
         <HStack>
           <FormLabel>
-            {except === "ON"
+            {except
               ? "Hiển thị tất cả nhưng các tên miền sau không được hiển thị"
               : "Chỉ các tên miền sau được hiển thị"}
           </FormLabel>
@@ -22,7 +24,7 @@ export default function InputExcept({
             size="sm"
             colorScheme="blue"
             mb={3}
-            onClick={() => setExcept((prev) => (prev === "OFF" ? "ON" : "OFF"))}
+            onClick={() => setExcept((prev) => !prev)}
           >
             Chuyển chế độ
           </Button>

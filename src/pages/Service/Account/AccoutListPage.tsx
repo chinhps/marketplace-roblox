@@ -2,7 +2,8 @@ import ActionList from "@/components/globals/ActionList";
 import CardCollection from "@/components/globals/CardCollection";
 import TableCustom from "@/components/globals/TableCustom";
 import { numberFormat } from "@/utils/function";
-import { Badge, Image, Td, Text, Tr } from "@chakra-ui/react";
+import { Badge, Button, Td, Text, Tr } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const detail_public = [
   {
@@ -37,7 +38,17 @@ const detail_private = [
 export default function AccoutListPage() {
   return (
     <>
-      <CardCollection title="Quản lý tài khoản" fontSize="25px">
+      <CardCollection
+        title="Quản lý tài khoản"
+        fontSize="25px"
+        button={
+          <Link to="./create">
+            <Button colorScheme="red" variant="outline">
+              Đăng tài khoản
+            </Button>
+          </Link>
+        }
+      >
         <Text>Quản lý tài khoản</Text>
         <TableCustom
           thead={[

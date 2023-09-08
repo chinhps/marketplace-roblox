@@ -92,7 +92,7 @@ export default function FormBase({
                     value: form.default ?? null,
                     ...(form.validate ?? null),
                   })}
-                  placeholder={form.label}
+                  placeholder={form.placeholder ?? form.label}
                 />
               ) : form.type === "TEXTAREA" ? (
                 <Textarea
@@ -113,6 +113,8 @@ export default function FormBase({
                       <InputNumberCustom
                         handleChange={onChange}
                         value={value}
+                        min={form.min}
+                        max={form.max}
                       />
                     )}
                     defaultValue={form.default}
