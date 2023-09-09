@@ -12,7 +12,7 @@ export interface IServiceGameList {
   public_form: Array<IFormInput>;
 }
 
-export interface IServiceGameCreate {
+export interface IServiceGameRandomCreate {
   idServiceGame: number;
-  data: object;
+  listAccount: string;
 }

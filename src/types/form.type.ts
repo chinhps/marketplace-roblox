@@ -21,6 +21,7 @@ export interface IFormInput {
   disable?: boolean;
   max?: number;
   min?: number;
+  multiple?: boolean;
   gridAreaName?: string;
   validate?: { required: string };
   selects?: Array<{

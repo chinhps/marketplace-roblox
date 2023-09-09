@@ -69,7 +69,7 @@ export default function FormBase({
               {form.type === "FILE" ? (
                 <Controller
                   render={({ field: { onChange, value } }) => (
-                    <FileCustomRHF onChange={onChange} value={value} />
+                    <FileCustomRHF onChange={onChange} value={value} multiple={form?.multiple} />
                   )}
                   control={control}
                   name={form.name}
@@ -104,7 +104,7 @@ export default function FormBase({
                     value: form.default ?? null,
                     ...(form.validate ?? null),
                   })}
-                  placeholder={form.label}
+                  placeholder={form.placeholder ?? form.label}
                 />
               ) : form.type === "NUMBER" ? (
                 <>

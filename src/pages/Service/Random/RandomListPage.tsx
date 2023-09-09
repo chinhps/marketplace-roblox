@@ -2,12 +2,23 @@ import ActionList from "@/components/globals/ActionList";
 import CardCollection from "@/components/globals/CardCollection";
 import TableCustom from "@/components/globals/TableCustom";
 import { numberFormat } from "@/utils/function";
-import { Badge, Td, Text, Tr } from "@chakra-ui/react";
+import { Badge, Button, Td, Text, Tr } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function RandomListPage() {
   return (
     <>
-      <CardCollection title="Quản lý Random" fontSize="25px">
+      <CardCollection
+        title="Quản lý Random"
+        fontSize="25px"
+        button={
+          <Link to="./create">
+            <Button colorScheme="red" variant="outline">
+              Đăng tài khoản
+            </Button>
+          </Link>
+        }
+      >
         <Text>Quản lý Random</Text>
         <TableCustom
           thead={[

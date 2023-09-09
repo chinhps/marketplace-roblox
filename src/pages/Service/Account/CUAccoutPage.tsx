@@ -12,11 +12,10 @@ import {
 import React, { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
 import accountApi from "@/apis/account";
-import { IServiceGameCreate } from "@/types/response/service.type";
+import { objectToFormData } from "@/utils/function";
 
 const initialFormState: Array<IFormInput> = [
   {
@@ -29,10 +28,32 @@ const initialFormState: Array<IFormInput> = [
     min: 0,
   },
   {
+    label: "Thông tin thêm",
+    name: "note",
+    type: "TEXTAREA",
+    gridAreaName: "d",
+  },
+  {
     label: "Kích hoạt",
     name: "active",
     type: "SWITCH",
     gridAreaName: "c",
+  },
+];
+
+const initialFormImagesState: Array<IFormInput> = [
+  {
+    label: "Hình ảnh hiển thị",
+    name: "thumb",
+    type: "FILE",
+    gridAreaName: "image1",
+  },
+  {
+    label: "Hình ảnh chi tiết",
+    name: "images",
+    type: "FILE",
+    multiple: true,
+    gridAreaName: "image2",
   },
 ];
 
@@ -45,13 +66,12 @@ export default function CUAccoutPage() {
     structuredClone(initialFormState)
   );
   const [idServiceGame, setIdServiceGame] = useState<number>();
-
   const serviceGameListMutation = useMutation({
-    mutationFn: ({ idServiceGame, data }: IServiceGameCreate) =>
-      accountApi.createAccount({ idServiceGame, data }),
+    mutationFn: (formDataObject: FormData) =>
+      accountApi.createAccount(formDataObject),
   });
   const serviceGameListQuery = useQuery({
-    queryKey: ["serviceGameList"],
+    queryKey: ["serviceGameList", "ACCOUNT"],
     queryFn: () => serviceApi.serviceGameList("ACCOUNT"),
     retry: false,
     cacheTime: 12000,
@@ -74,12 +94,15 @@ export default function CUAccoutPage() {
       ...prev,
       ...(searchDataFormByQuery?.public_form ?? []),
       ...(searchDataFormByQuery?.private_form ?? []),
+      ...initialFormImagesState,
     ]);
   };
 
   const onSubmit: SubmitHandler<any> = (data) => {
     console.log(data, formData);
-    idServiceGame && serviceGameListMutation.mutate({ idServiceGame, data });
+    const formDataObject = new FormData();
+    objectToFormData(formDataObject, { id, idServiceGame, data });
+    idServiceGame && serviceGameListMutation.mutate(formDataObject);
   };
   /****----------------
    *      END-Handle
@@ -138,12 +161,14 @@ function CustomStyle({ children }: { children: React.ReactNode }) {
         templateAreas={`
             "a a"
             "b b"
+            "d d"
             "c c"
             "private1 public1"
             "private2 public2"
             "private3 public3"
             "private4 public4"
             "private5 public5"
+            "image1 image2"
             "button button"
           `}
       >
