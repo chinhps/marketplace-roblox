@@ -122,7 +122,8 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::get('/', [AccountController::class, 'list']);
             Route::get('/{id}', [AccountController::class, 'getId']);
             Route::delete('/{id}', [AccountController::class, 'delete']);
-            Route::post('/upsert', [AccountController::class, 'upsert']);
+            Route::post('/upsert', [AccountController::class, 'upsertAccount']);
+            Route::post('/create-random', [AccountController::class, 'upsertRandom']);
         });
     });
     Route::middleware(['role:admin,support,koc'])->group(function () {

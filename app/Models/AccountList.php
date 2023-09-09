@@ -10,6 +10,7 @@ class AccountList extends Model
 {
     use HasFactory;
     protected $table = "account_list";
+    protected $guarded = [];
 
     public function service(): BelongsTo
     {

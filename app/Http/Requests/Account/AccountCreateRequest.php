@@ -28,14 +28,23 @@ class AccountCreateRequest extends BaseRequest
      */
     public function rules(): array
     {
+        $data = $this->all();
+        $data['data']['active'] = filter_var($this->input("data.active"), FILTER_VALIDATE_BOOLEAN);
+        $data['data']['price'] = (int)$this->input("data.price");
+        $this->replace($data);
+
         $commonRules = [
+            "id" => "nullable|exists:account_list,id",
             "idServiceGame" => "exists:services,id",
-            "price" => "required|min:0",
-            "active" => "boolean",
+            "data.price" => "required|numeric|min:0",
+            "data.note" => "required",
+            "data.active" => "boolean",
+            "data.thumb.*" => "required|file|image",
+            "data.images.*" => "required|file|image",
         ];
 
         $idServiceGame = $this->input("idServiceGame");
-        $service = $this->serviceRepository->get($idServiceGame);
+        $service = $this->serviceRepository->get((int)$idServiceGame);
 
         $additionalRules = [];
 
@@ -57,7 +66,7 @@ class AccountCreateRequest extends BaseRequest
         $rules = [];
         foreach ($inputArray as $input) {
             if (isset($input['name'])) {
-                $rules[$input['name']] = "required";
+                $rules['data.' . $input['name']] = "required";
             }
         }
         return $rules;

@@ -6,14 +6,12 @@ if (!function_exists('uploadImageQueue')) {
     function uploadImageQueue($image)
     {
         $name = generateRandomFileName();
-
         # UPLOAD IMAGE QUEUE
         UploadFileAPI::dispatch(
             $image->store('uploads_temp'),
             $name,
             $image->getClientOriginalName()
         );
-
         return env('API_SERVER_IMAGE_STORAGE') . '/' . $name . '.' . $image->getClientOriginalExtension();
     };
 }
