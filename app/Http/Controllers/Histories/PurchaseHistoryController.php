@@ -23,10 +23,14 @@ class PurchaseHistoryController extends Controller
 
     public function updateRefund($id, PurchaseUpdateRequest $request)
     {
-        $validated = $request->validated();
-        $this->purchaseHistoryRepository->update($id, [
-            "refund" => $validated['refund'] ? "YES" : "NO"
-        ]);
-        return BaseResponse::msg("Đã chuyển đổi thành công!");
+        try {
+            $validated = $request->validated();
+            $this->purchaseHistoryRepository->update($id, [
+                "refund" => $validated['refund'] ? "YES" : "NO"
+            ]);
+            return BaseResponse::msg("Đã chuyển đổi thành công!");
+        } catch (\Exception $e) {
+            return BaseResponse::msg($e->getMessage(), 500);
+        }
     }
 }

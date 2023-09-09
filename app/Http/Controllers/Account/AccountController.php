@@ -29,7 +29,11 @@ class AccountController extends Controller
 
     public function getId($id)
     {
-        return new AccountListResource($this->accountRepository->get($id));
+        try {
+            return new AccountListResource($this->accountRepository->get($id));
+        } catch (\Exception $e) {
+            return BaseResponse::msg($e->getMessage(), 500);
+        }
     }
 
     public function delete($id)

@@ -18,4 +18,9 @@ class RechargeHistory extends Model
     {
         return $this->belongsTo(RechargeList::class, 'recharge_id');
     }
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(ShopList::class, 'shop_id');
+    }
 }

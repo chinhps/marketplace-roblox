@@ -126,25 +126,33 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::post('/create-random', [AccountController::class, 'upsertRandom']);
         });
     });
-    Route::middleware(['role:admin,support,koc'])->group(function () {
+    Route::middleware(['role:admin,support,koc,ctv'])->group(function () {
         Route::prefix('histories')->group(function () {
+
             Route::prefix('purchases')->group(function () {
                 Route::get('/', [PurchaseHistoryController::class, 'list']);
-                Route::put('/{id}', [PurchaseHistoryController::class, 'updateRefund']);
+                Route::put('/{id}', [PurchaseHistoryController::class, 'updateRefund'])
+                    ->middleware(['role:admin,support']);
             });
-            Route::prefix('recharges')->group(function () {
-                Route::get('/', [RechargeHistoryController::class, 'list']);
-                Route::put('/{id}', [RechargeHistoryController::class, 'updateRefund']);
-            });
-            Route::prefix('services')->group(function () {
-                Route::get('/', [ServiceHistoryController::class, 'list']);
-            });
-            Route::prefix('events')->group(function () {
-                Route::get('/', [EventHistoryController::class, 'list']);
-            });
-            Route::middleware(['role:admin,support'])->prefix('withdraw')->group(function () {
-                Route::get('/', [WithdrawHistoryController::class, 'list']);
-                Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);
+
+            Route::middleware(['role:admin,support,koc'])->group(function () {
+                Route::prefix('recharges')->group(function () {
+                    Route::get('/', [RechargeHistoryController::class, 'list']);
+                    Route::put('/{id}', [RechargeHistoryController::class, 'updateRefund'])
+                        ->middleware(['role:admin,support']);
+                });
+                Route::prefix('services')->group(function () {
+                    Route::get('/', [ServiceHistoryController::class, 'list']);
+                });
+                Route::middleware(['role:admin,support'])->group(function () {
+                    Route::prefix('events')->group(function () {
+                        Route::get('/', [EventHistoryController::class, 'list']);
+                    });
+                    Route::prefix('withdraw')->group(function () {
+                        Route::get('/', [WithdrawHistoryController::class, 'list']);
+                        Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);
+                    });
+                });
             });
         });
     });

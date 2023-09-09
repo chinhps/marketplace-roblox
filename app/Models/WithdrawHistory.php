@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WithdrawHistory extends Model
 {
@@ -12,4 +13,9 @@ class WithdrawHistory extends Model
     protected $fillable = [
         "status"
     ];
+
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(ShopList::class, 'shop_id');
+    }
 }
