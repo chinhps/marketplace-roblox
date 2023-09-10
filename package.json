@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.10.1",
+    "react-paginate": "^8.2.0",
     "react-router-dom": "^6.14.2",
     "sass": "^1.64.2"
   },

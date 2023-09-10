@@ -101,22 +101,28 @@ export function FileCustomRHF({
   multiple,
   value,
 }: {
-  onChange?: (data: File[]) => void;
+  onChange: (data: (File | string)[]) => void;
   multiple?: boolean;
-  value: string | null;
+  value: string[] | null;
 }) {
-  const [fileList, setFileList] = useState<File[]>([]);
+  const [fileList, setFileList] = useState<(File | string)[]>([]);
 
   const handleFileDrop = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files?.length > 0) {
-      setFileList((old) => [...old, ...files]);
+      setFileList((old) => {
+        const newData = [...old, ...files];
+        onChange(newData);
+        return newData;
+      });
     }
   };
 
   useEffect(() => {
-    onChange && onChange(fileList);
-  }, [fileList]);
+    if (value && typeof value === "object") {
+      setFileList([...value]);
+    }
+  }, [value]);
 
   return (
     <>
@@ -146,7 +152,10 @@ export function FileCustomRHF({
                 w="100%"
                 height="100%"
                 objectFit="cover"
-                src={URL.createObjectURL(file)}
+                src={
+                  ""
+                  // typeof file === "string" ? file : URL.createObjectURL(file)
+                }
                 alt="sdfds"
               />
             </Box>
@@ -157,7 +166,7 @@ export function FileCustomRHF({
               fontWeight="500"
               width="100%"
             >
-              {file.name}
+              {typeof file === "string" ? file : file.name}
             </Text>
           </Center>
         ))}

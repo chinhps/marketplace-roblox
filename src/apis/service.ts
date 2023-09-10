@@ -6,7 +6,7 @@ import axiosClient from "@/utils/axiosClient";
 export const serviceApi = {
   create: ({ formData, data }: IServiceMutation) => {
     formData.append("dataDefault", data ?? "");
-    const url = "/api/services-for-all/upsert";
+    const url = "/services-for-all/upsert";
     return axiosClient.post(url, formData, {
       headers: {
         "content-type": "multipart/form-data",
@@ -14,7 +14,7 @@ export const serviceApi = {
     });
   },
   serviceGameList: (game_key: string) => {
-    const url = "/api/services/all-list";
+    const url = "/services/all-list";
     return axiosClient.get<IBaseResponseDetail<Array<IServiceGameList>>>(url, {
       params: {
         game_key,

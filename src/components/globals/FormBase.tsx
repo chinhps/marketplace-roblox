@@ -37,9 +37,9 @@ export default function FormBase({
       Object.entries(dataDefault).forEach(([key, value]) => {
         if (value) {
           setValue(key, value);
-        }
+        }        
       });
-  }, []);
+  }, [dataDefault]);
 
   function Test({ children }: { children: React.ReactNode }) {
     return (

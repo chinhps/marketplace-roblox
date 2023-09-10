@@ -29,3 +29,8 @@ export interface IFormInput {
     value: string;
   }>;
 }
+
+export interface IQueryForm {
+  page: number;
+  filter: object;
+}

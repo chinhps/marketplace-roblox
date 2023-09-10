@@ -1,25 +1,123 @@
+import shopApi from "@/apis/shop";
 import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
-import { Box, Button, Flex, Grid, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { SubmitHandler } from "react-hook-form";
-import { Link, useParams } from "react-router-dom";
+import { IFormInput } from "@/types/form.type";
+import { objectToFormData } from "@/utils/function";
+import { Button, Grid, Text, useToast } from "@chakra-ui/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+const initialForm: Array<IFormInput> = [
+  {
+    label: "Tên miền(Domain)",
+    name: "domain",
+    type: "INPUT",
+    isRequired: true,
+    gridAreaName: "a",
+  },
+  {
+    label: "Tiêu đề shop(Title)",
+    name: "shop_title",
+    type: "INPUT",
+    isRequired: true,
+    gridAreaName: "b",
+  },
+  {
+    label: "Tiền dành cho người dùng mới",
+    name: "cash_new_user",
+    type: "NUMBER",
+    default: "0",
+    isRequired: true,
+    gridAreaName: "c",
+    min: 0,
+    max: 50000,
+  },
+  {
+    label: "Keyword SEO Google",
+    name: "keyword",
+    type: "TEXTAREA",
+    isRequired: true,
+    gridAreaName: "d",
+  },
+  {
+    label: "Logo(Chỉ 1 ảnh)",
+    name: "logo_url",
+    type: "FILE",
+    isRequired: true,
+    gridAreaName: "item1",
+  },
+  {
+    label: "Ảnh nền(Chỉ 1 ảnh)",
+    name: "background_url",
+    type: "FILE",
+    isRequired: true,
+    gridAreaName: "item2",
+  },
+  {
+    label: "Favicon(Chỉ 1 ảnh)",
+    name: "favicon_url",
+    type: "FILE",
+    isRequired: true,
+    gridAreaName: "item3",
+  },
+];
 
 export default function CUShopPage() {
+  /****----------------
+   *      HOOK
+  ----------------****/
   const { id } = useParams();
-  const [isCreate, setIsCreate] = useState(true);
-  useEffect(() => {
-    if (id) {
-      setIsCreate(false);
-    }
-  }, []);
+  const toast = useToast();
+  const [formValue, setFormValue] = useState({});
+  const navigate = useNavigate();
+  const shopMutation = useMutation({
+    mutationFn: (dataForm: FormData) => shopApi.create(dataForm),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+      navigate("../");
+    },
+  });
+  useQuery({
+    queryKey: ["shop-detail", id],
+    queryFn: () => shopApi.get(Number(id)),
+    cacheTime: 5 * 1000,
+    enabled: !!id,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: ({ data }) => {
+      setFormValue({
+        domain: data.data.domain,
+        shop_title: data.data.shop_detail.shop_title,
+        cash_new_user: data.data.shop_detail.cash_new_user,
+        keyword: data.data.shop_detail.information.keyword,
+        favicon_url: [data.data.shop_detail.information.favicon_url],
+        background_url: [data.data.shop_detail.information.background_url],
+        logo_url: [data.data.shop_detail.information.logo_url],
+      });
+    },
+  });
 
-  const onSubmit: SubmitHandler<any> = () => {};
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const formData = new FormData();
+    objectToFormData(formData, {
+      id: id ?? "",
+      ...data,
+    });
+    shopMutation.mutate(formData);
+  };
 
   return (
     <>
       <CardCollection
-        title={isCreate ? "Tạo mới shop" : `Chỉnh sửa shop #${id}`}
+        title={id ? `Chỉnh sửa shop #${id}` : "Tạo mới shop"}
         fontSize="25px"
         button={
           <Link to="../">
@@ -30,57 +128,11 @@ export default function CUShopPage() {
         }
       >
         <Text>Thông báo cho quản trị viên trước khi thực hiện</Text>
-
         <FormBase
-          dataForm={[
-            {
-              label: "Tên miền(Domain)",
-              name: "domain",
-              type: "INPUT",
-              gridAreaName: "a",
-            },
-            {
-              label: "Tiêu đề shop(Title)",
-              name: "title",
-              type: "INPUT",
-              gridAreaName: "b",
-            },
-            {
-              label: "Tiền dành cho người dùng mới",
-              name: "priceForNewUser",
-              type: "NUMBER",
-              default: "0",
-              gridAreaName: "c",
-              min: 0,
-              max: 50000,
-            },
-            {
-              label: "Keyword SEO Google",
-              name: "keyword",
-              type: "TEXTAREA",
-              gridAreaName: "d",
-            },
-            {
-              label: "Logo(Chỉ 1 ảnh)",
-              name: "logo",
-              type: "FILE",
-              gridAreaName: "item1",
-            },
-            {
-              label: "Ảnh nền(Chỉ 1 ảnh)",
-              name: "background",
-              type: "FILE",
-              gridAreaName: "item2",
-            },
-            {
-              label: "Favicon(Chỉ 1 ảnh)",
-              name: "favicon",
-              type: "FILE",
-              gridAreaName: "item3",
-            },
-          ]}
+          dataForm={initialForm}
           CustomComponent={CustomStyle}
-          textBtn={isCreate ? "Thêm mới" : "Cập nhật"}
+          dataDefault={formValue}
+          textBtn={id ? "Cập nhật" : "Thêm mới"}
           onSubmit={onSubmit}
         />
       </CardCollection>

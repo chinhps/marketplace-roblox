@@ -9,7 +9,7 @@ import axiosClient from "@/utils/axiosClient"
 
 export const AuthApi = {
     login: ({ username, password, remember }: ILoginInput) => {
-        const url = "/api/auth/login"
+        const url = "/auth/login"
         return axiosClient.post<ILoginResponse>(url, {
             username,
             password,
@@ -17,11 +17,11 @@ export const AuthApi = {
         });
     },
     infoUser: () => {
-        const url = "/api/user";
+        const url = "/user";
         return axiosClient.get<IInfoUserResponse>(url);
     },
     logout: ({ typeLogout }: ILogoutInput) => {
-        let url = "/api/auth/logout";
+        let url = "/auth/logout";
         if (typeLogout === "ALL") url += "/all";
         return axiosClient.post<ILogoutResponse>(url);
     }

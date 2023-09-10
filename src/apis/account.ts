@@ -3,7 +3,7 @@ import axiosClient from "@/utils/axiosClient";
 
 const accountApi = {
   createAccount: (formDataObject: FormData) => {
-    const url = "/api/accounts/upsert";
+    const url = "/accounts/upsert";
     return axiosClient.post(url, formDataObject, {
       headers: {
         "content-type": "multipart/form-data",
@@ -11,7 +11,7 @@ const accountApi = {
     });
   },
   createRandom: (data: IServiceGameRandomCreate) => {
-    const url = "/api/accounts/create-random";
+    const url = "/accounts/create-random";
     return axiosClient.post(url, { ...data });
   },
 };
