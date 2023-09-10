@@ -15,10 +15,11 @@ class ServiceRepository implements ServiceInterface
     ) {
     }
 
-    public function list($limit = 15, array $where = [])
+    public function list($limit = 15, array $filter = [])
     {
         $query = $this->model->with(['currency', 'serviceCouter'])->withCount('serviceDetails');
-        return $query->where($where)->paginate($limit);
+        $query = queryRepository($query, $filter);
+        return $query->paginate($limit);
     }
 
     public function listServiceByGameList(string $gameKey)

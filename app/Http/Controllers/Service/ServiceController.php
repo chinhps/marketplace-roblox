@@ -23,9 +23,29 @@ class ServiceController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return ServiceListResource::collection($this->serviceRepository->list());
+        $active = $request->input('active');
+        $id = $request->input('id');
+        $noteService = $request->input('note_service');
+        $sort = $request->input('sort');
+
+        $filter = [];
+
+        if ($active) {
+            $filter['query'][] = ['active', '=', $active == 1 ? "ON" : "OFF"];
+        }
+        if ($id) {
+            $filter['query'][] = ['id', $id];
+        }
+        if ($noteService) {
+            $filter['query'][] = ['note', 'like', "%$noteService%"];
+        }
+        if ($sort) {
+            $filter['sort'][] = ['id', $sort == 1 ? 'asc' : 'desc'];
+        }
+
+        return ServiceListResource::collection($this->serviceRepository->list(10, $filter));
     }
 
     public function listAll(Request $request)

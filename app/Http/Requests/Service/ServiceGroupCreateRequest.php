@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Service;
 
 use App\Http\Requests\BaseRequest;
+use App\Rules\UrlOrFileImage;
 
 class ServiceGroupCreateRequest extends BaseRequest
 {
@@ -26,7 +27,7 @@ class ServiceGroupCreateRequest extends BaseRequest
             "prioritize" => "required|numeric",
             "name" => "required|string",
             "active" => "required|in:ON,OFF",
-            "image" => "file|image",
+            "image.*" => ["required", new UrlOrFileImage],
         ];
     }
 }

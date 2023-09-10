@@ -41,13 +41,18 @@ class ServiceGroupController extends Controller
         $validated = $request->validated();
 
         # UPLOAD IMAGE
-        $image = uploadImageQueue($validated['image']);
+        $image = uploadImageQueue($validated['image'][0]);
 
-        return $this->serviceGroupRepository->updateOrInsert($validated['id'], [
+        $this->serviceGroupRepository->updateOrInsert($validated['id'], [
             "prioritize" => $validated['prioritize'],
             "name" => $validated['name'],
             "active" => $validated['active'],
             "image" => $image,
         ]);
+        $msg = "Đã tạo thành công";
+        if ($validated['id']) {
+            $msg = "Cập nhật thành công!";
+        }
+        return BaseResponse::msg("$msg");
     }
 }
