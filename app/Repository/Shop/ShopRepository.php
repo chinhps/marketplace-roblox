@@ -12,9 +12,21 @@ class ShopRepository implements ShopInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
-        return $this->model->with('shopDetail')->paginate($limit);
+        $shopList = $this->model->with('shopDetail');
+        if (isset($filter['query'])) {
+            $shopList->where($filter['query']);
+        }
+        if (isset($filter['sort'])) {
+            foreach ($filter['sort'] as $valueSort) {
+                $shopList->orderBy($valueSort[0], $valueSort[1]);
+            }
+        }
+        if (!isset($filter['sort'])) {
+            $shopList->orderBy('id', 'desc');
+        }
+        return $shopList->paginate($limit);
     }
 
     public function get(float $id)

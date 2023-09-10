@@ -5,6 +5,7 @@ use App\Jobs\UploadFileAPI;
 if (!function_exists('uploadImageQueue')) {
     function uploadImageQueue($image)
     {
+        if (is_string($image)) return $image;
         $name = generateRandomFileName();
         # UPLOAD IMAGE QUEUE
         UploadFileAPI::dispatch(

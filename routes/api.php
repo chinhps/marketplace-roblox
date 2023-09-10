@@ -52,8 +52,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         Route::prefix('shop-list')->group(function () {
             Route::get('/', [ShopController::class, 'list']);
             Route::get('/{id}', [ShopController::class, 'getId']);
-            Route::post('/create', [ShopController::class, 'upsert']);
-            Route::put('/update', [ShopController::class, 'upsert']);
+            Route::post('/upsert', [ShopController::class, 'upsert']);
         });
         Route::prefix('services')->group(function () {
             Route::get('/', [ServiceController::class, 'list']);

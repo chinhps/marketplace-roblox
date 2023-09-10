@@ -14,6 +14,18 @@ class ShopListResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "stt" => $this->stt,
+            "domain" => $this->domain,
+            "shop" => $this->shop,
+            "created_at" =>  $this->created_at,
+            "shop_detail" => [
+                "id" => $this->shopDetail->id,
+                "shop_title" => $this->shopDetail->shop_title,
+                "cash_new_user" => $this->shopDetail->cash_new_user,
+                "information" => json_decode($this->shopDetail->information),
+            ]
+        ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Shop;
 
 use App\Http\Requests\BaseRequest;
+use App\Rules\UrlOrFileImage;
 
 class ShopCreateRequest extends BaseRequest
 {
@@ -27,9 +28,9 @@ class ShopCreateRequest extends BaseRequest
             "shop_title" => "required|string",
             "cash_new_user" => "required|string|numeric|min:0",
             "keyword" => "required|string",
-            "logo_url" => "required|file|image",
-            "favicon_url" => "required|file|image",
-            "background_url" => "required|file|image",
+            "logo_url.*" => ["required", new UrlOrFileImage],
+            "favicon_url.*" => ["required", new UrlOrFileImage],
+            "background_url.*" => ['required', new UrlOrFileImage],
         ];
     }
 }

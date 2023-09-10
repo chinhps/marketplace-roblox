@@ -10,10 +10,10 @@ trait ValidateRulesTrait
     {
         return [
             "rules" => [
-                "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain]
+                // "domain" => ["bail", "required", "string", "exists:shop_list,domain", new Domain]
             ],
             "messages" => [
-                'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin'
+                // 'domain.*' => 'Dữ liệu gửi lên đang gặp vấn đề! Liên hệ admin'
             ]
         ];
     }

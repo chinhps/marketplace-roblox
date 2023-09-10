@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\ShopCreateRequest;
 use App\Http\Resources\Shop\ShopListResource;
@@ -16,9 +17,25 @@ class ShopController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return ShopListResource::collection($this->shopRepository->list());
+        $domain = $request->input('domain');
+        $price = $request->input('price');
+        $sort = $request->input('sort');
+
+        $filter = [];
+
+        if ($domain) {
+            $filter['query'][] = ['domain', 'like', "%$domain%"];
+        }
+        if ($price) {
+            $filter['sort'][] = ['id', $price == 1 ? 'asc' : 'desc'];
+        }
+        if ($sort) {
+            $filter['sort'][] = ['stt', $sort == 1 ? 'asc' : 'desc'];
+        }
+
+        return ShopListResource::collection($this->shopRepository->list(10, $filter));
     }
 
     public function getId($id)
@@ -29,13 +46,12 @@ class ShopController extends Controller
     public function upsert(ShopCreateRequest $request)
     {
         $validated = $request->validated();
-
         # UPLOAD IMAGE
-        $logoUrl = uploadImageQueue($validated['logo_url']);
-        $faviconUrl = uploadImageQueue($validated['favicon_url']);
-        $backgroundUrl = uploadImageQueue($validated['background_url']);
+        $logoUrl = uploadImageQueue($validated['logo_url'][0]);
+        $faviconUrl = uploadImageQueue($validated['favicon_url'][0]);
+        $backgroundUrl = uploadImageQueue($validated['background_url'][0]);
 
-        return $this->shopRepository->updateOrInsert($validated['id'], [
+        $this->shopRepository->updateOrInsert($validated['id'], [
             "stt" => 1,
             "domain" => $validated['domain'],
             "shop" => $validated['domain']
@@ -49,5 +65,10 @@ class ShopController extends Controller
                 "background_url" => $backgroundUrl,
             ])
         ]);
+        $msg = "Đã tạo thành công";
+        if ($validated['id']) {
+            $msg = "Cập nhật thành công!";
+        }
+        return BaseResponse::msg("$msg! Domain: {$validated['domain']}");
     }
 }
