@@ -7,10 +7,12 @@ export default function ActionList({
   linkUpdate,
   onClickExits,
   actions,
+  isLoading,
 }: {
   linkUpdate?: string;
   onClickExits?: () => void;
-  actions: Array<"EDIT" | "DELETE">;
+  actions?: Array<"EDIT" | "DELETE">;
+  isLoading?: boolean;
 }) {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,15 +22,18 @@ export default function ActionList({
         <ModelConfirm
           isOpen={isOpen}
           onClose={onClose}
-          isLoading={false}
+          isLoading={isLoading ?? false}
           TextData={"Bạn có chắc muốn thực hiện không?"}
-          handleConfirm={onClickExits}
+          handleConfirm={() => {
+            onClickExits();
+            onClose();
+          }}
           children={null}
         />
       )}
 
       <HStack>
-        {actions.map((action) => {
+        {actions?.map((action) => {
           if (action === "EDIT") {
             return (
               <IconButton

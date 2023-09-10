@@ -4,7 +4,8 @@ import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
 import Paginate from "@/components/globals/Paginate";
 import TableCustom from "@/components/globals/TableCustom";
-import { IFormInput } from "@/types/form.type";
+import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
+import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
 import { Button, Flex, Image, Td, Text, Tr, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -99,15 +100,7 @@ export default function ShopListPage() {
   );
 }
 
-function FormSearch({
-  setFilter,
-  filter,
-  setPage,
-}: {
-  setFilter: (data: object) => void;
-  filter: object;
-  setPage: (page: number) => void;
-}) {
+function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
   const dataForm: Array<IFormInput> = [
     {
       label: "Tìm kiếm bằng tên miền",
@@ -158,25 +151,11 @@ function FormSearch({
         dataForm={dataForm}
         onSubmit={onSubmit}
         textBtn="Tìm kiếm"
-        CustomComponent={CustomStyle}
+        CustomComponent={CustomStyleFilter}
         hiddenLable={true}
         icon={<FiSearch />}
         dataDefault={filter}
       />
-    </>
-  );
-}
-
-function CustomStyle({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Flex
-        mt="1rem"
-        flexDirection={{ base: "column", lg: "row" }}
-        gap={{ base: 0, lg: 3 }}
-      >
-        {children}
-      </Flex>
     </>
   );
 }

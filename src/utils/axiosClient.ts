@@ -45,7 +45,8 @@ axiosClient.interceptors.response.use(
       status === 402 ||
       status === 422 ||
       status === 403 ||
-      status === 400
+      status === 400 ||
+      status === 500
     ) {
       toast({
         status: "warning",

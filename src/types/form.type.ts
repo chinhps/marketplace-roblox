@@ -34,3 +34,9 @@ export interface IQueryForm {
   page: number;
   filter: object;
 }
+
+export interface IFormSearchProps {
+  setFilter: (data: object) => void;
+  filter: object;
+  setPage: (page: number) => void;
+}

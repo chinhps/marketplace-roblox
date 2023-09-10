@@ -11,6 +11,7 @@ import CUServicePage from "@/pages/Service/CUServicePage";
 import CURandomPage from "@/pages/Service/Random/CURandomPage";
 import RandomListPage from "@/pages/Service/Random/RandomListPage";
 import ServiceDetailList from "@/pages/Service/ServiceDetail/ServiceDetailList";
+import CUServiceGroup from "@/pages/Service/ServiceGroup/CUServiceGroup";
 import ServiceListPage from "@/pages/Service/ServiceListPage";
 import CUShopPage from "@/pages/Shop/CUShopPage";
 import ShopListPage from "@/pages/Shop/ShopListPage";
@@ -103,6 +104,19 @@ export const router = createBrowserRouter([
       {
         path: "service-detail/:id",
         element: <ServiceDetailList />,
+      },
+      {
+        path: "groups",
+        children: [
+          {
+            path: "create",
+            element: <CUServiceGroup />,
+          },
+          {
+            path: "update/:id",
+            element: <CUServiceGroup />,
+          },
+        ],
       },
       {
         path: "create",

@@ -153,8 +153,7 @@ export function FileCustomRHF({
                 height="100%"
                 objectFit="cover"
                 src={
-                  ""
-                  // typeof file === "string" ? file : URL.createObjectURL(file)
+                  typeof file === "string" ? file : URL.createObjectURL(file)
                 }
                 alt="sdfds"
               />

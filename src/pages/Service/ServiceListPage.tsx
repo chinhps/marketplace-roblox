@@ -18,12 +18,21 @@ import {
   Td,
   Text,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import OddsList from "./Odds/OddsList";
 import ServiceGroupList from "./ServiceGroup/ServiceGroupList";
 import { ServiceDetailTableList } from "./ServiceDetail/ServiceDetailList";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { serviceApi } from "@/apis/service";
+import Paginate from "@/components/globals/Paginate";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import FormBase from "@/components/globals/FormBase";
+import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
+import { IFormInput, IFormSearchProps } from "@/types/form.type";
 
 export default function ServiceListPage() {
   return (
@@ -40,11 +49,8 @@ export default function ServiceListPage() {
               <MenuItem as={Link} to="./create/service">
                 Dịch vụ
               </MenuItem>
-              <MenuItem as={Link} to="../">
+              <MenuItem as={Link} to="./groups/create">
                 Nhóm dịch vụ
-              </MenuItem>
-              <MenuItem as={Link} to="../">
-                Tỷ lệ
               </MenuItem>
             </MenuList>
           </Menu>
@@ -82,20 +88,45 @@ export default function ServiceListPage() {
 }
 
 function TableList() {
-  const data: {
-    [key: string]: string;
-  } = {
-    hastag: "percent80",
-    chinh: "dzvc",
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const [page, setPage] = useState<number>(1);
+  const [filter, setFilter] = useState({});
+  const toast = useToast();
+  const serviceListQuery = useQuery({
+    queryKey: ["service-list", filter, page],
+    queryFn: () => serviceApi.list({ page, filter }),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const serviceDeleteMutation = useMutation({
+    mutationFn: (id: number) => serviceApi.delete(id),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+    },
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+
+  const handleDeleteService = (id: number) => {
+    serviceDeleteMutation.mutate(id);
   };
+
   return (
     <>
+      <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+
       <TableCustom
         thead={[
           "ID",
           "Note",
           "Giá tiền",
-          "Sale",
           "Thông tin",
           "Kích hoạt",
           "Loại quà",
@@ -103,39 +134,120 @@ function TableList() {
           "Thao tác",
         ]}
       >
-        {new Array(7).fill(0).map((vl, index) => (
-          <Tr key={index}>
-            <Td>#{index + 1}</Td>
+        {serviceListQuery.data?.data.data.map((vl) => (
+          <Tr key={vl.id}>
+            <Td>#{vl.id}</Td>
             <Td>
               <Link to="./service-detail/123">
-                <Text color="blue.600">Nikko Pfannerstill</Text>
+                <Text color="blue.600">{vl.note}</Text>
               </Link>
             </Td>
-            <Td>{numberFormat(350000)}</Td>
             <Td>
-              <Badge colorScheme="purple">{50}%</Badge>
+              <Badge colorScheme="purple">Sale: {vl.sale}%</Badge>
+              <Text>{numberFormat(vl.price)}</Text>
             </Td>
+
             <Td>
-              {Object.keys(data).map((vl, index) => (
+              {Object.keys(vl.information).map((vl2, index) => (
                 <Text key={index}>
-                  {vl}: {data[vl]}
+                  {vl2}: {vl.information[vl2]}
                 </Text>
               ))}
               <Badge colorScheme="cyan">
-                Lượt sử dụng: {numberFormat(10000, false)}
+                Lượt sử dụng:{" "}
+                {numberFormat(vl.service_couter?.value ?? 0, false)}
               </Badge>
             </Td>
             <Td>
-              <Badge colorScheme="green">Kích hoạt</Badge>
+              {vl.active === "ON" ? (
+                <Badge colorScheme="green">Kích hoạt</Badge>
+              ) : (
+                <Badge colorScheme="red">Không hoạt động</Badge>
+              )}
             </Td>
-            <Td>Kim cương</Td>
-            <Td>34</Td>
+            <Td>{vl.currency?.currency_name ?? "Không có"}</Td>
+            <Td>{vl.service_details_count}</Td>
             <Td>
-              <ActionList />
+              <ActionList
+                actions={[
+                  // "EDIT",
+                  "DELETE",
+                ]}
+                onClickExits={() => handleDeleteService(vl.id)}
+              />
             </Td>
           </Tr>
         ))}
       </TableCustom>
+      <Paginate
+        paginate={serviceListQuery.data?.data.paginate}
+        action={setPage}
+      />
+    </>
+  );
+}
+
+function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
+  const dataForm: Array<IFormInput> = [
+    {
+      label: "#ID",
+      name: "id",
+      type: "INPUT",
+    },
+    {
+      label: "Note service",
+      name: "note_service",
+      type: "INPUT",
+    },
+    {
+      label: "Lọc theo kích hoạt",
+      name: "active",
+      type: "SELECT",
+      selects: [
+        {
+          label: `Kích hoạt`,
+          value: "1",
+        },
+        {
+          label: `Không hoạt động`,
+          value: "2",
+        },
+      ],
+    },
+    {
+      label: "Sắp xếp theo ID",
+      name: "sort",
+      type: "SELECT",
+      selects: [
+        {
+          label: `Thấp đến cao`,
+          value: "1",
+        },
+        {
+          label: `Cao đến thấp`,
+          value: "2",
+        },
+      ],
+    },
+  ];
+
+  // Handle
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setPage(1);
+    setFilter(data);
+  };
+
+  return (
+    <>
+      <FormBase
+        dataForm={dataForm}
+        onSubmit={onSubmit}
+        textBtn="Tìm kiếm"
+        CustomComponent={CustomStyleFilter}
+        hiddenLable={true}
+        icon={<FiSearch />}
+        dataDefault={filter}
+      />
     </>
   );
 }

@@ -10,9 +10,15 @@ import {
   Td,
   Text,
   Tr,
+  VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { serviceApi } from "@/apis/service";
+import Paginate from "@/components/globals/Paginate";
 
 export default function ServiceDetailList() {
   return (
@@ -33,6 +39,34 @@ export default function ServiceDetailList() {
 }
 
 export function ServiceDetailTableList() {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const [page, setPage] = useState<number>(1);
+  const [filter, setFilter] = useState({});
+  const toast = useToast();
+  const serviceDetailListQuery = useQuery({
+    queryKey: ["service-detail-list", filter, page],
+    queryFn: () => serviceApi.listDetail({ page, filter }),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const serviceDetailDeleteMutation = useMutation({
+    mutationFn: (id: number) => serviceApi.deleteDetail(id),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+    },
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+  const handleDeleteService = (id: number) => {
+    serviceDetailDeleteMutation.mutate(id);
+  };
   return (
     <>
       <Text mt=".5rem">
@@ -49,53 +83,80 @@ export function ServiceDetailTableList() {
           "Hành động",
         ]}
       >
-        {new Array(7).fill(0).map((vl, index) => (
-          <Tr key={index}>
-            <Td>1</Td>
+        {serviceDetailListQuery.data?.data.data.map((vl) => (
+          <Tr key={vl.id}>
+            <Td>#{vl.id}</Td>
             <Td>
               <Image
                 w="100px"
                 h="50px"
                 objectFit="cover"
-                src="https://i.imgur.com/Owoq65A.png"
+                src={vl.service_image?.thumb ?? ""}
                 alt="alsd"
               />
             </Td>
             <Td>
-              <Text>Ưu tiên: 3</Text>
-              <Text>Tên nhóm: Mr. Jamel Abbott IV</Text>
-              <Text w="200px" className="break-word">
-                Tên: Dolores quia nesciunt dolores quia rem.
+              <Text>Ưu tiên: {vl.prioritize}</Text>
+              <Text>Tên nhóm: {vl.service_group?.name}</Text>
+              <Text w="300px" className="break-word">
+                Tên: {vl.service_image?.name}
               </Text>
               <Text>
-                <Badge colorScheme="green">
-                  Slug: id-quia-ipsum-iusto-enim
+                <Badge
+                  colorScheme="green"
+                  w="auto"
+                  maxW="300px"
+                  className="break-word"
+                >
+                  Slug: {vl.slug}
                 </Badge>
               </Text>
             </Td>
             <Td>
-              <Text w="200px" className="break-word">
-                Admin: [abc,dasd,asdas,asdas,asd,asdasdsdf]
-              </Text>
-              <Text className="break-word">
-                User: [abc,dasd,asdas,asdas,asd,asdasdsdf]
-              </Text>
+              {vl.service_odds ? (
+                <>
+                  <Text w="200px" className="break-word">
+                    ADMIN ({vl.service_odds.odds_admin_type}):
+                  </Text>
+                  <Badge colorScheme="green">
+                    {vl.service_odds.odds_admin}
+                  </Badge>
+                  <Text className="break-word">
+                    USER ({vl.service_odds.odds_user_type}):
+                  </Text>
+                  <Badge colorScheme="green">{vl.service_odds.odds_user}</Badge>
+                </>
+              ) : (
+                "Không tồn tại"
+              )}
             </Td>
             <Td>
-              <Badge colorScheme="orange">Tất cả ngoại trừ</Badge>
-              <SimpleGrid columns={3} gap={1} mt={1}>
-                <Tag>abc.com</Tag>
-                <Tag>abc.com</Tag>
-                <Tag>abc.com</Tag>
-                <Tag>abc.com</Tag>
-              </SimpleGrid>
+              <VStack spacing={1}>
+                <Badge colorScheme="orange">
+                  {vl.excluding === "ON"
+                    ? "Tất cả ngoại trừ"
+                    : "Chỉ các domain sau"}
+                </Badge>
+                {vl.shop_list?.map((shopItem, index) => (
+                  <Tag key={index} w="auto">
+                    {shopItem.domain}
+                  </Tag>
+                ))}
+              </VStack>
             </Td>
             <Td>
-              <ActionList />
+              <ActionList
+                actions={["DELETE"]}
+                onClickExits={() => handleDeleteService(vl.id)}
+              />
             </Td>
           </Tr>
         ))}
       </TableCustom>
+      <Paginate
+        paginate={serviceDetailListQuery.data?.data.paginate}
+        action={setPage}
+      />
     </>
   );
 }

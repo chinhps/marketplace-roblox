@@ -265,3 +265,18 @@ function SildeBar() {
     </>
   );
 }
+
+
+export function CustomStyleFilter({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Flex
+        mt="1rem"
+        flexDirection={{ base: "column", lg: "row" }}
+        gap={{ base: 0, lg: 3 }}
+      >
+        {children}
+      </Flex>
+    </>
+  );
+}
