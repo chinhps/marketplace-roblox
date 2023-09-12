@@ -7,21 +7,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Histories\PurchaseUpdateRequest;
 use App\Http\Resources\Histories\PurchaseHistoryListResource;
 use App\Repository\Histories\PurchaseHistory\PurchaseHistoryInterface;
-use App\Repository\Shop\ShopInterface;
 use Illuminate\Http\Request;
 
 class PurchaseHistoryController extends Controller
 {
     public function __construct(
         private PurchaseHistoryInterface $purchaseHistoryRepository,
-        private ShopInterface $shopRepository
     ) {
     }
 
     public function list(Request $request)
     {
         $domain = $request->input('domain');
-        $user_id = $request->input('user_id');
+        $name = $request->input('name');
         $admin_id = $request->input('admin_id');
         $account_id = $request->input('account_id');
         $refund = $request->input('refund');
@@ -29,15 +27,10 @@ class PurchaseHistoryController extends Controller
         $filter = [];
 
         if ($domain) {
-            $shop = $this->shopRepository->list(1, [
-                "query" => [
-                    ['domain', 'like', "%$domain%"]
-                ]
-            ]);
-            $filter['query'][] = ['shop_id', $shop->id ?? null];
+            $filter['shop_filter'] = $domain;
         }
-        if ($user_id) {
-            $filter['query'][] = ['user_id', $user_id];
+        if ($name) {
+            $filter['user_filter'] = $name;
         }
         if ($admin_id) {
             $filter['query'][] = ['admin_id', $admin_id];
