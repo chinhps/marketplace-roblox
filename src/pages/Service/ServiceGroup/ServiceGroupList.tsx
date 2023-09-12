@@ -2,7 +2,7 @@ import { serviceGroupApi } from "@/apis/service";
 import ActionList from "@/components/globals/ActionList";
 import Paginate from "@/components/globals/Paginate";
 import TableCustom from "@/components/globals/TableCustom";
-import { Badge, Image, Td, Text, Tr, useToast } from "@chakra-ui/react";
+import { Badge, Image, Td, Tr, useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 

@@ -35,7 +35,7 @@ export default function ModelConfirm({
         {...props}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="white.100">
           <ModalHeader>Thông báo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{TextData}</ModalBody>

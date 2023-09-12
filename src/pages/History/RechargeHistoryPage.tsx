@@ -24,7 +24,7 @@ import { PurchaseResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
 
-export default function PurchaseHistoryPage() {
+export default function RechargeHistoryPage() {
   /****----------------
    *      HOOK
   ----------------****/
@@ -42,13 +42,13 @@ export default function PurchaseHistoryPage() {
   ----------------****/
   return (
     <>
-      <CardCollection title="Lịch sử mua tài khoản" fontSize="25px">
+      <CardCollection title="Lịch sử nạp thẻ" fontSize="25px">
         <Text>
-          Lịch sử mua tài khoản. Chỉ có Admin và Support mới có thể thay đổi
-          trạng thái! CTV không nhận được tiền nếu bị HOÀN TIỀN
+          Lịch sử nạp thẻ. Chỉ có Admin và Support mới có thể thay đổi trạng
+          thái! Chỉ thẻ thất bại mới có thể hoàn tiền và chỉ được 1 lần duy nhất
         </Text>
         <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
-        <TableListPurchaseHistory
+        <TableListRechargeHistory
           data={purchaseHistoriesQuery.data?.data.data ?? []}
         />
         <Paginate
@@ -60,7 +60,7 @@ export default function PurchaseHistoryPage() {
   );
 }
 
-export function TableListPurchaseHistory({
+export function TableListRechargeHistory({
   data,
 }: {
   data: PurchaseResponse[];

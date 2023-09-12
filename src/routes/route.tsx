@@ -3,6 +3,7 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import LoginPage from "@/pages/Auth/LoginPage";
 import BuyServiceHistoryPage from "@/pages/History/BuyServiceHistoryPage";
 import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
+import RechargeHistoryPage from "@/pages/History/RechargeHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
 import HomePage from "@/pages/HomePage";
 import AccoutListPage from "@/pages/Service/Account/AccoutListPage";
@@ -17,6 +18,7 @@ import CUShopPage from "@/pages/Shop/CUShopPage";
 import ShopListPage from "@/pages/Shop/ShopListPage";
 import TopRechargeListPage from "@/pages/TopRecharge/TopRechargeListPage";
 import AdminListPage from "@/pages/User/AdminListPage";
+import UserDetailPage from "@/pages/User/Detail/UserDetailPage";
 import UserListPage from "@/pages/User/UserListPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -60,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: "purchases",
         element: <PurchaseHistoryPage />,
+      },
+      {
+        path: "recharges",
+        element: <RechargeHistoryPage />,
       },
       {
         path: "buy-services",
@@ -135,7 +141,16 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "user",
-        element: <UserListPage />,
+        children: [
+          {
+            path: "",
+            element: <UserListPage />,
+          },
+          {
+            path: ":id",
+            element: <UserDetailPage />,
+          },
+        ],
       },
       {
         path: "admin",

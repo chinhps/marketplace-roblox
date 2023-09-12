@@ -2,17 +2,20 @@ import { HStack, IconButton, useDisclosure } from "@chakra-ui/react";
 import { FiEdit, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ModelConfirm from "./Model/ModelConfirm";
+import React from "react";
 
 export default function ActionList({
   linkUpdate,
   onClickExits,
   actions,
   isLoading,
+  icon,
 }: {
   linkUpdate?: string;
   onClickExits?: () => void;
-  actions?: Array<"EDIT" | "DELETE">;
+  actions?: Array<"EDIT" | "DELETE" | "CUSTOM">;
   isLoading?: boolean;
+  icon?: React.ReactElement;
 }) {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,6 +58,18 @@ export default function ActionList({
                 variant="outline"
                 onClick={onOpen}
                 icon={<FiX />}
+              />
+            );
+          }
+          if (action === "CUSTOM") {
+            return (
+              <IconButton
+                key={action}
+                aria-label="refund"
+                colorScheme="pink"
+                variant="outline"
+                onClick={onOpen}
+                icon={icon}
               />
             );
           }

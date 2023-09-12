@@ -35,8 +35,8 @@ function PaginatedItems({
           nextLinkClassName="hd"
           activeClassName="active"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={2}
-          marginPagesDisplayed={1}
+          pageRangeDisplayed={3}
+          marginPagesDisplayed={3}
           pageCount={paginate?.last_page ?? 0}
           previousLabel={<Icon as={FiChevronLeft} />}
           renderOnZeroPageCount={null}

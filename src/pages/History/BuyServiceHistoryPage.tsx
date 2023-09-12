@@ -2,6 +2,7 @@ import ActionList from "@/components/globals/ActionList";
 import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
 import TableCustom from "@/components/globals/TableCustom";
+import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput } from "@/types/form.type";
 import {
   Badge,
@@ -21,7 +22,7 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import { SubmitHandler } from "react-hook-form";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
 
 export default function BuyServiceHistoryPage() {
@@ -118,12 +119,6 @@ function TableList() {
   );
 }
 
-type InputsFormSearch = {
-  id: number;
-  price: string;
-  sort: string;
-};
-
 function FormSearch() {
   const dataForm: Array<IFormInput> = [
     {
@@ -169,7 +164,7 @@ function FormSearch() {
   ];
 
   // Handle
-  const onSubmit: SubmitHandler<InputsFormSearch> = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     // setPage(1);
     // setFilter(data);
     // updateQueryParameters(data);
@@ -181,25 +176,11 @@ function FormSearch() {
         dataForm={dataForm}
         onSubmit={onSubmit}
         textBtn="Tìm kiếm"
-        CustomComponent={CustomStyle}
+        CustomComponent={CustomStyleFilter}
         hiddenLable={true}
         icon={<FiSearch />}
         // dataDefault={filter}
       />
-    </>
-  );
-}
-
-function CustomStyle({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Flex
-        mt="1rem"
-        flexDirection={{ base: "column", lg: "row" }}
-        gap={{ base: 0, lg: 3 }}
-      >
-        {children}
-      </Flex>
     </>
   );
 }

@@ -16,3 +16,9 @@ export interface IPaginate {
   last_page: number;
   total: number;
 }
+
+export interface IDetail2P {
+  key: string;
+  name: string;
+  value: string | number;
+}

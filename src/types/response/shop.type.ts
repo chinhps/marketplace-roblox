@@ -4,6 +4,9 @@ export interface IShopList {
   domain: string;
   shop: string;
   created_at: string;
+}
+
+export interface IShopDetailList extends IShopList {
   shop_detail: {
     id: number;
     shop_title: string;

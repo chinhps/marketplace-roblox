@@ -144,6 +144,10 @@ const dataSildeBar: Array<ISildeBar> = [
         link: "/history/purchases",
       },
       {
+        name: "Nạp thẻ",
+        link: "/history/recharges",
+      },
+      {
         name: "Rút / Thuê / ...",
         link: "/history/buy-services",
       },
@@ -265,7 +269,6 @@ function SildeBar() {
     </>
   );
 }
-
 
 export function CustomStyleFilter({ children }: { children: React.ReactNode }) {
   return (
