@@ -11,7 +11,7 @@ export default function ServiceGroupList() {
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
+  const [filter, _] = useState({});
   const toast = useToast();
   const serviceGroupListQuery = useQuery({
     queryKey: ["service-group-list", filter, page],

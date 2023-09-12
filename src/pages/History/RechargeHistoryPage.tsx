@@ -16,11 +16,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { FiCornerDownLeft, FiCornerUpRight, FiSearch } from "react-icons/fi";
+import { FiCornerUpRight, FiSearch } from "react-icons/fi";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { purchaseApi } from "@/apis/history";
-import { PurchaseResponse } from "@/types/response/history.type";
+import { rechargeApi } from "@/apis/history";
+import { RechargeResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
 
@@ -30,12 +30,12 @@ export default function RechargeHistoryPage() {
   ----------------****/
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState({});
-  const purchaseHistoriesQuery = useQuery({
-    queryKey: ["purchase-list", filter, page],
-    queryFn: () => purchaseApi.list({ page, filter }),
-    cacheTime: 5 * 1000,
+  const rechargeHistoriesQuery = useQuery({
+    queryKey: ["recharge-list", filter, page],
+    queryFn: () => rechargeApi.list({ page, filter }),
+    cacheTime: 2 * 1000,
     retry: false,
-    refetchOnWindowFocus: false,
+    // refetchOnWindowFocus: false,
   });
   /****----------------
    *      END-HOOK
@@ -49,10 +49,10 @@ export default function RechargeHistoryPage() {
         </Text>
         <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         <TableListRechargeHistory
-          data={purchaseHistoriesQuery.data?.data.data ?? []}
+          data={rechargeHistoriesQuery.data?.data.data ?? []}
         />
         <Paginate
-          paginate={purchaseHistoriesQuery.data?.data.paginate}
+          paginate={rechargeHistoriesQuery.data?.data.paginate}
           action={setPage}
         />
       </CardCollection>
@@ -63,7 +63,7 @@ export default function RechargeHistoryPage() {
 export function TableListRechargeHistory({
   data,
 }: {
-  data: PurchaseResponse[];
+  data: RechargeResponse[];
 }) {
   /****----------------
    *      HOOK
@@ -71,7 +71,7 @@ export function TableListRechargeHistory({
   const toast = useToast();
   const purcahseRefundMutation = useMutation({
     mutationFn: ({ id, refund }: { id: number; refund: boolean }) =>
-      purchaseApi.updateRefund(id, refund),
+      rechargeApi.updateRefund(id, refund),
     onSuccess: ({ data }) => {
       toast({
         status: "success",
@@ -82,10 +82,10 @@ export function TableListRechargeHistory({
   /****----------------
    *      END-HOOK
   ----------------****/
-  const handleUpdateRefund = (id: number, refund: "YES" | "NO") => {
+  const handleUpdateRefund = (id: number, refund: "yes" | "no") => {
     purcahseRefundMutation.mutate({
       id,
-      refund: refund === "YES" ? false : true,
+      refund: refund === "yes" ? false : true,
     });
   };
 
@@ -95,10 +95,9 @@ export function TableListRechargeHistory({
         thead={[
           "ID",
           "Tên người dùng",
-          "Tài khoản",
-          "Thông tin(Private)",
+          "Nạp thẻ",
+          "Thông tin nạp",
           "Thời gian",
-          "Hoàn tiền",
           "Thao tác",
         ]}
       >
@@ -117,45 +116,61 @@ export function TableListRechargeHistory({
                   <Text>
                     Domain: <Badge colorScheme="green">{vl.shop?.domain}</Badge>
                   </Text>
-                  <Text>ID User: {vl.user?.provider_id}</Text>
+                  <Text>ID Provider: {vl.user?.provider_id}</Text>
+                  <Text>User ID: {vl.user?.id}</Text>
                   <Text>Tên: {vl.user?.name}</Text>
-                  <Text>ADMIN: {vl.admin?.name}</Text>
                 </VStack>
               </Flex>
             </Td>
             <Td>
-              <Text>ACC: #{vl.account_id}</Text>
+              <Text>Mệnh giá: {numberFormat(vl.price)}</Text>
               <Text>
-                <Badge colorScheme="green">{numberFormat(vl.price)}</Badge>
+                Trạng thái:{" "}
+                <Badge
+                  colorScheme={
+                    vl.status === "SUCCESS"
+                      ? "green"
+                      : vl.status === "PENDING"
+                      ? "gray"
+                      : "red"
+                  }
+                >
+                  {vl.status}
+                </Badge>
+              </Text>
+              <Text>
+                Loại:{" "}
+                <Badge colorScheme="orange">{vl.recharge?.recharge_name}</Badge>
               </Text>
             </Td>
             <Td>
-              {vl.detail_public.map((detail, index) => (
+              {vl.detail.map((detail, index) => (
                 <Text key={index}>
                   {detail.name}: {detail.value}
                 </Text>
               ))}
             </Td>
-            <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
             <Td>
-              {vl.refund === "YES" ? (
+              {vl.refund === "yes" ? (
                 <Badge colorScheme="red">Hoàn tiền</Badge>
               ) : (
                 <Badge colorScheme="green">Bình thường</Badge>
               )}
+              <Text>
+                Nạp: {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+              </Text>
+              <Text>
+                Duyệt: {moment(vl.updated_at).format("DD/MM/yyyy hh:mm")}
+              </Text>
             </Td>
             <Td>
-              <ActionList
-                actions={["CUSTOM"]}
-                icon={
-                  vl.refund === "YES" ? (
-                    <FiCornerDownLeft />
-                  ) : (
-                    <FiCornerUpRight />
-                  )
-                }
-                onClickExits={() => handleUpdateRefund(vl.id, vl.refund)}
-              />
+              {vl.status === "ERROR" && vl.refund === "no" && (
+                <ActionList
+                  actions={["CUSTOM"]}
+                  icon={<FiCornerUpRight />}
+                  onClickExits={() => handleUpdateRefund(vl.id, vl.refund)}
+                />
+              )}
             </Td>
           </Tr>
         ))}
@@ -172,22 +187,36 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
-      label: "#User ID",
-      name: "user_id",
+      label: "Tên người dùng",
+      name: "name",
       type: "INPUT",
     },
     {
-      label: "#Admin ID",
-      name: "admin_id",
+      label: "Serial | Mã thẻ",
+      name: "serialCode",
       type: "INPUT",
     },
     {
-      label: "#ID ACCOUNT",
-      name: "account_id",
-      type: "INPUT",
+      label: "Lọc trạng thái",
+      name: "status",
+      type: "SELECT",
+      selects: [
+        {
+          label: `Thành công`,
+          value: "SUCCESS",
+        },
+        {
+          label: `Thất bại`,
+          value: "ERROR",
+        },
+        {
+          label: `Đang chờ`,
+          value: "PENDING",
+        },
+      ],
     },
     {
-      label: "Trạng thái",
+      label: "Lọc hoàn tiền",
       name: "refund",
       type: "SELECT",
       selects: [
@@ -196,7 +225,7 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
           value: "1",
         },
         {
-          label: `Hoàn thành`,
+          label: `Bình thường`,
           value: "2",
         },
       ],

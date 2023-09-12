@@ -5,7 +5,7 @@ import { createStandaloneToast } from "@chakra-ui/react";
 // import CryptoJS from 'crypto-js';
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_APP_API + '/api',
+  baseURL: import.meta.env.VITE_APP_API + "/api",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "content-type": "application/json",
@@ -42,6 +42,7 @@ axiosClient.interceptors.response.use(
     }
     if (
       status === 404 ||
+      status === 406 ||
       status === 402 ||
       status === 422 ||
       status === 403 ||
