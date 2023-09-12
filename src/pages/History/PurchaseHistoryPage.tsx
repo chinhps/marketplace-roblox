@@ -172,8 +172,8 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
-      label: "#User ID",
-      name: "user_id",
+      label: "Tên khách",
+      name: "name",
       type: "INPUT",
     },
     {
