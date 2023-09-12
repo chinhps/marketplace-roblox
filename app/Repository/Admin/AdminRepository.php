@@ -14,9 +14,16 @@ class AdminRepository implements AdminInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
-        return $this->model->paginate($limit);
+        $builder = $this->model->with('shop');
+        $builder = queryRepository($builder, $filter);
+
+        return $builder->withSum(['purchaseHistories' => function ($query) {
+            $query->where('refund', 'NO');
+        }], 'price')->withCount(['accounts' => function ($query) {
+            $query->where('status', 'SOLD')->where('active', 'YES');
+        }])->paginate($limit);
     }
 
     public function get(float $id)

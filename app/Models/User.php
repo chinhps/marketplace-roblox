@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'provider_id',
         'price_temporary',
         'diamond_temporary',
+        'robux_temporary',
         'block',
         'active',
         'login_type'
@@ -41,6 +43,11 @@ class User extends Authenticatable
     public function shop()
     {
         return $this->belongsTo(ShopList::class, 'shop_id');
+    }
+
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class, 'user_id');
     }
 
     public function rechargeHistories(): HasMany

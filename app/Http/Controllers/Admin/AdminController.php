@@ -21,9 +21,25 @@ class AdminController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return AdminResource::collection($this->adminRepository->list(15));
+        $name = $request->input('name');
+        $id = $request->input('id');
+        $user_id = $request->input('user_id');
+
+        $filter = [];
+
+        if ($name) {
+            $filter['query'][] = ['name', 'like', "%$name%"];
+        }
+        if ($id) {
+            $filter['query'][] = ['id', $id];
+        }
+        if ($user_id) {
+            $filter['query'][] = ['user_id', $user_id];
+        }
+
+        return AdminResource::collection($this->adminRepository->list(10, $filter));
     }
 
     public function getId($id)

@@ -12,23 +12,33 @@ class UserRepository implements UserInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
-        return $this->model->with('shop')->paginate($limit);
+        $builder = $this->model->with('shop');
+        $builder = queryRepository($builder, $filter);
+        return $builder->paginate($limit);
     }
 
     public function get(float $id)
     {
         return $this->model->with([
-            'rechargeHistories',
-            'withdrawHistories',
-            'purchaseHistories',
-            'serviceHistories',
-            'eventHistories',
-            'transactionsPrice',
-            'transactionsDiamond',
-            'transactionsRobux'
-        ])->find($id);
+            'shop',
+            'admin' => function ($query) {
+                $query->where('admin_type', 'KOC');
+            },
+            // 'rechargeHistories',
+            // 'withdrawHistories',
+            // 'purchaseHistories',
+            // 'serviceHistories',
+            // 'eventHistories',
+            // 'transactionsPrice',
+            // 'transactionsDiamond',
+            // 'transactionsRobux'
+        ])
+            ->withSum('transactionsPrice', 'price')
+            ->withSum('transactionsDiamond', 'diamond')
+            ->withSum('transactionsRobux', 'robux')
+            ->find($id);
     }
 
     public function updateOrInsert(float|null $id, array $params)

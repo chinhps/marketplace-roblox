@@ -16,7 +16,7 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
         $user = Auth::user();
         $data = $this->model->whereHas('admin', function (Builder $query) use ($user) {
@@ -30,6 +30,8 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
                 $query->where('id', $user->shop->id);
             });
         }
+        $data = $data->with(['admin', 'shop', 'user']);
+        $data = queryRepository($data, $filter);
         return $data->paginate($limit);
     }
 

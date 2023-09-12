@@ -15,6 +15,21 @@ class AdminResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "admin_type" => $this->admin_type,
+            "name" => $this->name,
+            "username" => $this->username,
+            "block" => $this->block,
+            "active" => $this->active,
+            "created_at" => $this->created_at,
+            "user_id" => $this->user_id,
+            "purchase_histories_sum_price" => $this->purchase_histories_sum_price,
+            "accounts_count" => $this->accounts_count,
+            "shop" => $this->shop ? [
+                "id" =>  $this->shop->id,
+                "domain" =>  $this->shop->domain,
+            ] : null
+        ];
     }
 }

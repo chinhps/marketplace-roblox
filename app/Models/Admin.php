@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -36,5 +37,15 @@ class Admin extends Authenticatable
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function purchaseHistories(): HasMany
+    {
+        return $this->hasMany(PurchaseHistory::class, 'admin_id');
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(AccountList::class, 'admin_id');
     }
 }

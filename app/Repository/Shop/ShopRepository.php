@@ -16,6 +16,7 @@ class ShopRepository implements ShopInterface
     {
         $shopList = $this->model->with('shopDetail');
         $shopList = queryRepository($shopList, $filter);
+        if ($limit == 1) return $shopList->first();
         return $shopList->paginate($limit);
     }
 
