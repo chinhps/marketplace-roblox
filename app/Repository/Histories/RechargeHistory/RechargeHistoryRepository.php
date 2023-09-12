@@ -15,7 +15,7 @@ class RechargeHistoryRepository implements RechargeHistoryInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
         $user = Auth::user();
         if (Gate::allows('admin', $user)) {
@@ -26,7 +26,14 @@ class RechargeHistoryRepository implements RechargeHistoryInterface
                 $query->where('id', $user->shop->id);
             });
         }
+        $data = $data->with(['recharge', 'user', 'shop']);
+        $data = queryRepository($data, $filter);
         return $data->paginate($limit);
+    }
+
+    public function get(float $id)
+    {
+        return $this->model->with('user')->find($id);
     }
 
     public function update(float $id, array $params)

@@ -14,6 +14,22 @@ class RechargeHistoryListResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "user_id" => $this->user_id,
+            "shop_id" => $this->shop_id,
+            "recharge_id" => $this->recharge_id,
+            "detail" => json_decode($this->detail, true),
+            "refund" => $this->refund,
+            "price" => $this->price,
+            "task_number" => $this->task_number,
+            "status" => $this->status,
+            "ip" => $this->ip,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
+            "recharge" => $this->recharge,
+            "user" => $this->user,
+            "shop" => $this->shop,
+        ];
     }
 }

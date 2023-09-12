@@ -49,26 +49,29 @@ class TransactionRepository implements TransactionInterface
     /**********
      * CREATE *
      **********/
-    public function createPrice(float $value, string $note)
+    public function createPrice(User $user, float $value, string $note)
     {
         return (new Transaction(
             model: new TransactionPrice,
+            user: $user,
             custom: ['price' =>  $value],
             note: $note
         ))->create();
     }
-    public function createDiamond(float $value, string $note)
+    public function createDiamond(User $user, float $value, string $note)
     {
         return (new Transaction(
             model: new TransactionDiamond,
+            user: $user,
             custom: ['diamond' =>  $value],
             note: $note
         ))->create();
     }
-    public function creaeteRobux(float $value, string $note)
+    public function creaeteRobux(User $user, float $value, string $note)
     {
         return (new Transaction(
             model: new TransactionRobux,
+            user: $user,
             custom: ['robux' =>  $value],
             note: $note
         ))->create();
@@ -77,20 +80,19 @@ class TransactionRepository implements TransactionInterface
 
 class Transaction
 {
-    private $userId;
-
     public function __construct(
         private Model $model,
+        private User $user,
         private $note = null,
         private array $custom = []
     ) {
-        $this->userId = Auth::user()->id;
     }
 
     public function create()
     {
+
         return $this->model->create([
-            'user_id' => $this->userId,
+            'user_id' => $this->user->id,
             'note' => $this->note,
             ...$this->custom
         ]);

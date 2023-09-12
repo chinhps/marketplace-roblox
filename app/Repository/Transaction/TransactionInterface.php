@@ -10,9 +10,9 @@ interface TransactionInterface
     public function listDiamond(float $limit = 15);
     public function listRobux(float $limit = 15);
 
-    public function createPrice(float $value, string $note);
-    public function createDiamond(float $value, string $note);
-    public function creaeteRobux(float $value, string $note);
+    public function createPrice(User $user, float $value, string $note);
+    public function createDiamond(User $user, float $value, string $note);
+    public function creaeteRobux(User $user, float $value, string $note);
     public function getPrice(User $user);
     public function getDiamond(User $user);
     public function getRobux(User $user);
