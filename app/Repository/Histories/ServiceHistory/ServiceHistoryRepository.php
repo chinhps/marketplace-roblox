@@ -15,7 +15,7 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
         $user = Auth::user();
         if (Gate::allows('admin', $user)) {
@@ -26,7 +26,9 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
                 $query->where('id', $user->shop->id);
             });
         }
-        return $data->with(['service', 'user', 'shop'])->paginate($limit);
+        $data = $data->with(['service', 'user', 'shop']);
+        $data = queryRepository($data, $filter);
+        return $data->paginate($limit);
     }
 
     public function updateOrInsert(float|null $id, array $params)

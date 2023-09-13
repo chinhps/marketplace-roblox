@@ -23,6 +23,11 @@ if (!function_exists('queryRepository')) {
                 $subquery->where('domain', 'like', '%' . $filter['shop_filter'] . '%');
             });
         }
+        if (isset($filter['service_filter'])) {
+            $model->whereHas('service', function ($subquery) use ($filter) {
+                $subquery->where('note', 'like', '%' . $filter['service_filter'] . '%');
+            });
+        }
         if (!isset($filter['sort'])) {
             $model->orderBy('id', 'desc');
         }

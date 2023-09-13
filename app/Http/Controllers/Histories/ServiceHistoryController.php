@@ -14,8 +14,28 @@ class ServiceHistoryController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return ServiceHistoryListResource::collection($this->serviceHistoryRepository->list(15));
+        $domain = $request->input('domain');
+        $name = $request->input('name');
+        $serviceName = $request->input('service_name');
+        $giftName = $request->input('gift_name');
+
+        $filter = [];
+
+        if ($domain) {
+            $filter['shop_filter'] = $domain;
+        }
+        if ($serviceName) {
+            $filter['service_filter'] = $serviceName;
+        }
+        if ($name) {
+            $filter['user_filter'] = $name;
+        }
+        if ($giftName) {
+            $filter['query'][] = ['detail', 'like', "%$giftName%"];
+        }
+
+        return ServiceHistoryListResource::collection($this->serviceHistoryRepository->list(15, $filter));
     }
 }
