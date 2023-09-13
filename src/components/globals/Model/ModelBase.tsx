@@ -31,7 +31,7 @@ export default function ModelBase({
         {...props}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="white.100">
           <ModalHeader>Thông tin</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>

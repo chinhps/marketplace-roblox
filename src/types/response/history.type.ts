@@ -39,3 +39,40 @@ export interface RechargeResponse {
   user: UserResponse | null;
   shop: IShopList | null;
 }
+
+export interface ServiceHistoryResponse {
+  id: number;
+  user_id: number;
+  service_id: number;
+  shop_id: number;
+  quantity: number;
+  price: number;
+  detail: {
+    default: string;
+    details: IServiceHistoryDetail[];
+  };
+  created_at: string;
+  service: {
+    id: number;
+    note: number;
+  };
+  user: {
+    id: number;
+    shop_id: number;
+    provider_id: string;
+    name: string;
+  };
+  shop: {
+    id: number;
+    stt: number;
+    domain: string;
+    shop: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface IServiceHistoryDetail {
+  name: string;
+  service_gift_id: number;
+}

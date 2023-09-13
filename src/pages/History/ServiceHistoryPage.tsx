@@ -2,96 +2,138 @@ import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
 import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
-import { IFormInput } from "@/types/form.type";
+import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
-import { Badge, Flex, Image, Td, Text, Tr, VStack } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Td,
+  Text,
+  Tr,
+  VStack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { serviceHistoryApi } from "@/apis/history";
+import {
+  IServiceHistoryDetail,
+  ServiceHistoryResponse,
+} from "@/types/response/history.type";
+import Paginate from "@/components/globals/Paginate";
+import moment from "moment";
+import ModelBase from "@/components/globals/Model/ModelBase";
 
 export default function ServiceHistoryPage() {
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const [page, setPage] = useState<number>(1);
+  const [filter, setFilter] = useState({});
+  const serviceHistoriesQuery = useQuery({
+    queryKey: ["service-history-list", filter, page],
+    queryFn: () => serviceHistoryApi.list({ page, filter }),
+    cacheTime: 2 * 1000,
+    retry: false,
+    // refetchOnWindowFocus: false,
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
   return (
     <>
       <CardCollection title="Lịch sử trò chơi" fontSize="25px">
-        <Text>Lịch sử trò chơi</Text>
-        <FormSearch />
-        <TableListServiceHistory />
+        <Text>Lịch sử trò chơi, Xem thêm để xem các quà trúng được.</Text>
+        <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        <TableListServiceHistory
+          data={serviceHistoriesQuery.data?.data.data ?? []}
+        />
+        <Paginate
+          paginate={serviceHistoriesQuery.data?.data.paginate}
+          action={setPage}
+        />
       </CardCollection>
     </>
   );
 }
 
-export function TableListServiceHistory() {
-  const data = {
-    default: "Tổng lượt quay: x7 | Tổng phần thưởng nhận được: 78",
-    details: [
-      {
-        name: "Chúc mừng bạn đã trúng: 5",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 10",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 10",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 8",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 6",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 5",
-        service_gift_id: 1,
-      },
-      {
-        name: "Chúc mừng bạn đã trúng: 6",
-        service_gift_id: 1,
-      },
-    ],
-  };
+export function TableListServiceHistory({
+  data,
+}: {
+  data: ServiceHistoryResponse[];
+}) {
+  const [details, setDetails] = useState<Array<IServiceHistoryDetail>>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
+      <ModelBase
+        isOpen={isOpen}
+        onClose={onClose}
+        children={
+          <>
+            {details.map((detail, index) => (
+              <Box key={index} mb="1rem">
+                <Text>Tên: {detail.name}</Text>
+                <Text>ID Gift: {detail.service_gift_id}</Text>
+              </Box>
+            ))}
+          </>
+        }
+      />
       <TableCustom
         thead={["ID", "Tên người dùng", "Thông tin", "Giá trị", "Thời gian"]}
       >
-        {new Array(7).fill(0).map((vl, index) => (
-          <Tr key={index}>
-            <Td>1</Td>
+        {data.map((vl) => (
+          <Tr key={vl.id}>
+            <Td>#{vl.id}</Td>
             <Td>
               <Flex alignItems="center" gap="1rem">
                 <Image
                   width="30px"
                   rounded="50%"
-                  src="https://ui-avatars.com/api/?name=chinh"
+                  src={"https://ui-avatars.com/api/?name=" + vl.user.name}
                   alt="hihi"
                 />
                 <VStack alignItems="flex-start" gap={0} fontWeight="normal">
-                  <Text>Domain: chinh.dev</Text>
-                  <Text>UID: 12312312312312</Text>
-                  <Text>Phạm Hoàng Chính</Text>
+                  <Text>Domain: {vl.shop.domain}</Text>
+                  <Text>Provider ID: {vl.user.provider_id}</Text>
+                  <Text>Tên: {vl.user.name}</Text>
                 </VStack>
               </Flex>
             </Td>
             <Td>
               <VStack alignItems="flex-start">
                 <Badge colorScheme="purple">
-                  Tên dịch vụ: Giovanna Macejkovic
+                  Tên dịch vụ: {vl.service.note}
                 </Badge>
-                <Badge>Thông tin: {data.default}</Badge>
-                <Badge colorScheme="orange">Số lượng: 10</Badge>
+                <Badge>Thông tin: {vl.detail.default}</Badge>
+                <HStack>
+                  <Badge colorScheme="orange">Số lượng: {vl.quantity}</Badge>
+                  <Button
+                    size="sm"
+                    colorScheme="facebook"
+                    onClick={() => {
+                      setDetails(vl.detail.details);
+                      onOpen();
+                    }}
+                  >
+                    Xem thêm
+                  </Button>
+                </HStack>
               </VStack>
             </Td>
             <Td>
-              <Badge colorScheme="green">{numberFormat(100000)}</Badge>
+              <Badge colorScheme="green">{numberFormat(vl.price)}</Badge>
             </Td>
             <Td>
-              <Text>12/12/2023</Text>
-              <Text>10:30:30</Text>
+              <Text>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Text>
             </Td>
           </Tr>
         ))}
@@ -100,7 +142,7 @@ export function TableListServiceHistory() {
   );
 }
 
-function FormSearch() {
+function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
   const dataForm: Array<IFormInput> = [
     {
       label: "Tên miền",
@@ -108,27 +150,26 @@ function FormSearch() {
       type: "INPUT",
     },
     {
-      label: "#UID",
-      name: "uid",
+      label: "Tên người dùng",
+      name: "name",
       type: "INPUT",
     },
     {
       label: "Tên dịch vụ",
-      name: "id_account",
+      name: "service_name",
       type: "INPUT",
     },
     {
       label: "Tên quà nhận được",
-      name: "id_account",
+      name: "gift_name",
       type: "INPUT",
     },
   ];
 
   // Handle
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // setPage(1);
-    // setFilter(data);
-    // updateQueryParameters(data);
+    setPage(1);
+    setFilter(data);
   };
 
   return (
@@ -140,7 +181,7 @@ function FormSearch() {
         CustomComponent={CustomStyleFilter}
         hiddenLable={true}
         icon={<FiSearch />}
-        // dataDefault={filter}
+        dataDefault={filter}
       />
     </>
   );

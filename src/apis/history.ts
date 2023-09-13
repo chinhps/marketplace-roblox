@@ -6,6 +6,7 @@ import {
 import {
   PurchaseResponse,
   RechargeResponse,
+  ServiceHistoryResponse,
 } from "@/types/response/history.type";
 import axiosClient from "@/utils/axiosClient";
 
@@ -41,6 +42,18 @@ export const rechargeApi = {
     const url = "/histories/recharges/" + id;
     return axiosClient.put<IResponseWithMessage>(url, {
       refund: refund,
+    });
+  },
+};
+
+export const serviceHistoryApi = {
+  list: ({ page, filter }: IQueryForm) => {
+    const url = "/histories/services";
+    return axiosClient.get<IBaseResponse<ServiceHistoryResponse>>(url, {
+      params: {
+        page,
+        ...filter,
+      },
     });
   },
 };
