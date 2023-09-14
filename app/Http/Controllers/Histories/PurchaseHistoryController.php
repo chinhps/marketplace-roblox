@@ -21,11 +21,15 @@ class PurchaseHistoryController extends Controller
         $domain = $request->input('domain');
         $name = $request->input('name');
         $admin_id = $request->input('admin_id');
+        $userId = $request->input('user_id');
         $account_id = $request->input('account_id');
         $refund = $request->input('refund');
 
         $filter = [];
 
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
         if ($domain) {
             $filter['shop_filter'] = $domain;
         }

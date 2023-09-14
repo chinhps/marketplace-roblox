@@ -28,9 +28,14 @@ class RechargeHistoryController extends Controller
         $serialCode = $request->input('serialCode');
         $refund = $request->input('refund');
         $status = $request->input('status');
+        $userId = $request->input('user_id');
+
 
         $filter = [];
 
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
         if ($domain) {
             $filter['shop_filter'] = $domain;
         }

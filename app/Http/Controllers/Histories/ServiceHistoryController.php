@@ -20,9 +20,13 @@ class ServiceHistoryController extends Controller
         $name = $request->input('name');
         $serviceName = $request->input('service_name');
         $giftName = $request->input('gift_name');
+        $userId = $request->input('user_id');
 
         $filter = [];
 
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
         if ($domain) {
             $filter['shop_filter'] = $domain;
         }
