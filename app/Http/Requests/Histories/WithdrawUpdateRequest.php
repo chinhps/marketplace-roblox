@@ -22,7 +22,7 @@ class WithdrawUpdateRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            "status" => "required|numeric|in:0,1,2,3,4"
+            "status" => "required|boolean"
         ];
     }
 }

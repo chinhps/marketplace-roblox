@@ -18,4 +18,9 @@ class WithdrawHistory extends Model
     {
         return $this->belongsTo(ShopList::class, 'shop_id');
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
