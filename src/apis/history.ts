@@ -7,6 +7,7 @@ import {
   PurchaseResponse,
   RechargeResponse,
   ServiceHistoryResponse,
+  WithdrawHistoryResponse,
 } from "@/types/response/history.type";
 import axiosClient from "@/utils/axiosClient";
 
@@ -54,6 +55,24 @@ export const serviceHistoryApi = {
         page,
         ...filter,
       },
+    });
+  },
+};
+
+export const withdrawHistoryApi = {
+  list: ({ page, filter }: IQueryForm) => {
+    const url = "/histories/withdraw";
+    return axiosClient.get<IBaseResponse<WithdrawHistoryResponse>>(url, {
+      params: {
+        page,
+        ...filter,
+      },
+    });
+  },
+  updateStatus: (id: number, status: boolean) => {
+    const url = "/histories/withdraw/" + id;
+    return axiosClient.put<IResponseWithMessage>(url, {
+      status,
     });
   },
 };

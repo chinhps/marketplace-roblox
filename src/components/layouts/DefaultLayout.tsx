@@ -149,7 +149,7 @@ const dataSildeBar: Array<ISildeBar> = [
       },
       {
         name: "Rút / Thuê / ...",
-        link: "/history/buy-services",
+        link: "/history/withdraw",
       },
     ],
   },

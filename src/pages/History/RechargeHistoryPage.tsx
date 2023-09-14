@@ -5,24 +5,16 @@ import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
-import {
-  Badge,
-  Flex,
-  Image,
-  Td,
-  Text,
-  Tr,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
+import { Badge, Td, Text, Tr, useToast } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiCornerUpRight, FiSearch } from "react-icons/fi";
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { rechargeApi } from "@/apis/history";
 import { RechargeResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
+import UserInfo from "@/components/globals/UserInfo";
 
 export default function RechargeHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
@@ -37,7 +29,7 @@ export default function RechargeHistoryPage({ idUser }: { idUser?: number }) {
     queryFn: () => rechargeApi.list({ page, filter }),
     cacheTime: 2 * 1000,
     retry: false,
-    // refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false,
   });
   /****----------------
    *      END-HOOK
@@ -57,6 +49,7 @@ export default function RechargeHistoryPage({ idUser }: { idUser?: number }) {
           <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         ) : null}
         <TableListRechargeHistory
+          query={rechargeHistoriesQuery}
           data={rechargeHistoriesQuery.data?.data.data ?? []}
         />
         <Paginate
@@ -69,8 +62,10 @@ export default function RechargeHistoryPage({ idUser }: { idUser?: number }) {
 }
 
 export function TableListRechargeHistory({
+  query,
   data,
 }: {
+  query: UseQueryResult;
   data: RechargeResponse[];
 }) {
   /****----------------
@@ -85,6 +80,7 @@ export function TableListRechargeHistory({
         status: "success",
         description: data.msg,
       });
+      query.refetch();
     },
   });
   /****----------------
@@ -113,22 +109,7 @@ export function TableListRechargeHistory({
           <Tr key={vl.id}>
             <Td>#{vl.id}</Td>
             <Td>
-              <Flex alignItems="center" gap="1rem">
-                <Image
-                  width="30px"
-                  rounded="50%"
-                  src={"https://ui-avatars.com/api/?name=" + vl.user?.name}
-                  alt="hihi"
-                />
-                <VStack alignItems="flex-start" gap={0} fontWeight="normal">
-                  <Text>
-                    Domain: <Badge colorScheme="green">{vl.shop?.domain}</Badge>
-                  </Text>
-                  <Text>ID Provider: {vl.user?.provider_id}</Text>
-                  <Text>User ID: {vl.user?.id}</Text>
-                  <Text>Tên: {vl.user?.name}</Text>
-                </VStack>
-              </Flex>
+              <UserInfo shop={vl.shop} user={vl.user} />
             </Td>
             <Td>
               <Text>Mệnh giá: {numberFormat(vl.price)}</Text>

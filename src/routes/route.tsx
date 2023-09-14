@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/layouts/Authentication/AuthLayout";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import LoginPage from "@/pages/Auth/LoginPage";
-import BuyServiceHistoryPage from "@/pages/History/BuyServiceHistoryPage";
+import WithdrawHistoryPage from "@/pages/History/WithdrawHistoryPage";
 import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
 import RechargeHistoryPage from "@/pages/History/RechargeHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
@@ -68,8 +68,8 @@ export const router = createBrowserRouter([
         element: <RechargeHistoryPage />,
       },
       {
-        path: "buy-services",
-        element: <BuyServiceHistoryPage />,
+        path: "withdraw",
+        element: <WithdrawHistoryPage />,
       },
     ],
   },

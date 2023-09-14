@@ -29,6 +29,6 @@ interface AdminResponse {
   username: string;
   block: "off" | "on";
   active: "on" | "off";
-  created_at: "2023-07-31T12:58:54.000000Z";
+  created_at: string;
   user_id: number | null;
 }

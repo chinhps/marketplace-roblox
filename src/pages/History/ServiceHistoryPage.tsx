@@ -8,9 +8,7 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   HStack,
-  Image,
   Td,
   Text,
   Tr,
@@ -29,6 +27,7 @@ import {
 import Paginate from "@/components/globals/Paginate";
 import moment from "moment";
 import ModelBase from "@/components/globals/Model/ModelBase";
+import UserInfo from "@/components/globals/UserInfo";
 
 export default function ServiceHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
@@ -43,7 +42,7 @@ export default function ServiceHistoryPage({ idUser }: { idUser?: number }) {
     queryFn: () => serviceHistoryApi.list({ page, filter }),
     cacheTime: 2 * 1000,
     retry: false,
-    // refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false,
   });
   /****----------------
    *      END-HOOK
@@ -102,19 +101,7 @@ export function TableListServiceHistory({
           <Tr key={vl.id}>
             <Td>#{vl.id}</Td>
             <Td>
-              <Flex alignItems="center" gap="1rem">
-                <Image
-                  width="30px"
-                  rounded="50%"
-                  src={"https://ui-avatars.com/api/?name=" + vl.user.name}
-                  alt="hihi"
-                />
-                <VStack alignItems="flex-start" gap={0} fontWeight="normal">
-                  <Text>Domain: {vl.shop.domain}</Text>
-                  <Text>Provider ID: {vl.user.provider_id}</Text>
-                  <Text>Tên: {vl.user.name}</Text>
-                </VStack>
-              </Flex>
+              <UserInfo shop={vl.shop} user={vl.user} />
             </Td>
             <Td>
               <VStack alignItems="flex-start">

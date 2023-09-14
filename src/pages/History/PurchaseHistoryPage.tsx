@@ -5,24 +5,16 @@ import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
-import {
-  Badge,
-  Flex,
-  Image,
-  Td,
-  Text,
-  Tr,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
+import { Badge, Td, Text, Tr, useToast } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiCornerDownLeft, FiCornerUpRight, FiSearch } from "react-icons/fi";
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { purchaseApi } from "@/apis/history";
 import { PurchaseResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
+import UserInfo from "@/components/globals/UserInfo";
 
 export default function PurchaseHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
@@ -53,10 +45,12 @@ export default function PurchaseHistoryPage({ idUser }: { idUser?: number }) {
           Lịch sử mua tài khoản. Chỉ có Admin và Support mới có thể thay đổi
           trạng thái! CTV không nhận được tiền nếu bị HOÀN TIỀN
         </Text>
+        <Text>Thay đổi trạng thái không tự động hoàn tiền cho khách!</Text>
         {!idUser ? (
           <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         ) : null}
         <TableListPurchaseHistory
+          query={purchaseHistoriesQuery}
           data={purchaseHistoriesQuery.data?.data.data ?? []}
         />
         <Paginate
@@ -69,8 +63,10 @@ export default function PurchaseHistoryPage({ idUser }: { idUser?: number }) {
 }
 
 export function TableListPurchaseHistory({
+  query,
   data,
 }: {
+  query: UseQueryResult;
   data: PurchaseResponse[];
 }) {
   /****----------------
@@ -85,6 +81,7 @@ export function TableListPurchaseHistory({
         status: "success",
         description: data.msg,
       });
+      query.refetch();
     },
   });
   /****----------------
@@ -114,22 +111,7 @@ export function TableListPurchaseHistory({
           <Tr key={vl.id}>
             <Td>#{vl.id}</Td>
             <Td>
-              <Flex alignItems="center" gap="1rem">
-                <Image
-                  width="30px"
-                  rounded="50%"
-                  src={"https://ui-avatars.com/api/?name=" + vl.user?.name}
-                  alt="hihi"
-                />
-                <VStack alignItems="flex-start" gap={0} fontWeight="normal">
-                  <Text>
-                    Domain: <Badge colorScheme="green">{vl.shop?.domain}</Badge>
-                  </Text>
-                  <Text>ID User: {vl.user?.provider_id}</Text>
-                  <Text>Tên: {vl.user?.name}</Text>
-                  <Text>ADMIN: {vl.admin?.name}</Text>
-                </VStack>
-              </Flex>
+              <UserInfo shop={vl.shop} user={vl.user} />
             </Td>
             <Td>
               <Text>ACC: #{vl.account_id}</Text>

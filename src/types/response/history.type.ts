@@ -56,23 +56,40 @@ export interface ServiceHistoryResponse {
     id: number;
     note: number;
   };
-  user: {
-    id: number;
-    shop_id: number;
-    provider_id: string;
-    name: string;
-  };
-  shop: {
-    id: number;
-    stt: number;
-    domain: string;
-    shop: string;
-    created_at: string;
-    updated_at: string;
-  };
+  user: UserResponse | null;
+  shop: IShopList;
 }
 
 export interface IServiceHistoryDetail {
   name: string;
   service_gift_id: number;
+}
+
+export interface WithdrawHistoryResponse {
+  id: number;
+  user_id: number;
+  shop_id: number;
+  task_number: string;
+  withdraw_type: WithdrawType;
+  value: number;
+  cost: number;
+  status: WithdrawStatus;
+  detail: IDetail2P[];
+  created_at: string;
+  updated_at: string;
+  user: UserResponse | null;
+  shop: IShopList | null;
+}
+
+export enum WithdrawStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  CANCEL = "CANCEL",
+  PROCESSING = "PROCESSING",
+}
+
+export enum WithdrawType {
+  ROBUX = "ROBUX",
+  DIAMOND = "DIAMOND",
+  BUY_ROBUX = "BUY_ROBUX",
 }

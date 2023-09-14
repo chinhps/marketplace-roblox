@@ -20,10 +20,12 @@ export const logout = () => {
 
 export function colorStatus(status: string) {
   switch (status) {
-    case "3":
+    case "SUCCESS":
       return "green";
-    case "1":
+    case "CANCEL":
       return "red";
+    case "PROCESSING":
+      return "blue";
     default:
       return "gray";
   }
@@ -31,10 +33,12 @@ export function colorStatus(status: string) {
 
 export function nameStatus(status: string) {
   switch (status) {
-    case "3":
+    case "SUCCESS":
       return "Đã duyệt";
-    case "1":
+    case "CANCEL":
       return "Đã hủy";
+    case "PROCESSING":
+      return "Đang thực hiện";
     default:
       return "Chờ duyệt";
   }
