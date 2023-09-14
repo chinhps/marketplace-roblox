@@ -6,6 +6,7 @@ import {
   Badge,
   Button,
   Center,
+  Divider,
   GridItem,
   HStack,
   Heading,
@@ -19,8 +20,9 @@ import { useQuery } from "@tanstack/react-query";
 import { FiBarChart, FiTrendingDown, FiTrendingUp } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
-import { TableListPurchaseHistory } from "@/pages/History/PurchaseHistoryPage";
-import { TableListServiceHistory } from "@/pages/History/ServiceHistoryPage";
+import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
+import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
+import RechargeHistoryPage from "@/pages/History/RechargeHistoryPage";
 
 export default function UserDetailPage() {
   /****----------------
@@ -118,14 +120,12 @@ export default function UserDetailPage() {
             <CreateTransactionUser data={userDetailQuery.data?.data.data} />
           </GridItem>
         </SimpleGrid>
-        <Heading as="h2" size="md" mb="1rem" mt="2rem">
-          Lịch sử mua tài khoản
-        </Heading>
-        <TableListPurchaseHistory />
-        <Heading as="h2" size="md" mb="1rem" mt="2rem">
-          Lịch sử trò chơi
-        </Heading>
-        <TableListServiceHistory />
+        <Divider my="2rem" />
+        {id ? <PurchaseHistoryPage idUser={Number(id)} /> : null}
+        <Divider my="2rem" />
+        {id ? <RechargeHistoryPage idUser={Number(id)} /> : null}
+        <Divider my="2rem" />
+        {id ? <ServiceHistoryPage idUser={Number(id)} /> : null}
       </CardCollection>
     </>
   );

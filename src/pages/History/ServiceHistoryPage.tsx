@@ -30,12 +30,14 @@ import Paginate from "@/components/globals/Paginate";
 import moment from "moment";
 import ModelBase from "@/components/globals/Model/ModelBase";
 
-export default function ServiceHistoryPage() {
+export default function ServiceHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState(() => {
+    return idUser ? { user_id: idUser } : {};
+  });
   const serviceHistoriesQuery = useQuery({
     queryKey: ["service-history-list", filter, page],
     queryFn: () => serviceHistoryApi.list({ page, filter }),
@@ -48,9 +50,15 @@ export default function ServiceHistoryPage() {
   ----------------****/
   return (
     <>
-      <CardCollection title="Lịch sử trò chơi" fontSize="25px">
+      <CardCollection
+        padding={idUser ? "0" : undefined}
+        title="Lịch sử trò chơi"
+        fontSize="25px"
+      >
         <Text>Lịch sử trò chơi, Xem thêm để xem các quà trúng được.</Text>
-        <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        {!idUser ? (
+          <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        ) : null}
         <TableListServiceHistory
           data={serviceHistoriesQuery.data?.data.data ?? []}
         />

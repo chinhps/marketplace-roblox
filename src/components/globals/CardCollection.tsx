@@ -5,15 +5,17 @@ export default function CardCollection({
   title,
   fontSize,
   button,
+  padding = "1.5rem",
 }: {
   children: React.ReactElement | React.ReactNode | string;
   title: string;
   fontSize?: string | undefined;
   button?: React.ReactElement;
+  padding?: string;
 }) {
   return (
     <>
-      <Box bg="main.item2" rounded="md" p="1.5rem" w="100%" height="100%">
+      <Box bg="main.item2" rounded="md" p={padding} w="100%" height="100%">
         <Flex justifyContent="space-between">
           <Heading
             fontSize={fontSize ?? "18px"}

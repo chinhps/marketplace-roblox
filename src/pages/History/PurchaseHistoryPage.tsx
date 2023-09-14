@@ -24,14 +24,16 @@ import { PurchaseResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
 
-export default function PurchaseHistoryPage() {
+export default function PurchaseHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState(() => {
+    return idUser ? { user_id: idUser } : {};
+  });
   const purchaseHistoriesQuery = useQuery({
-    queryKey: ["purchase-list", filter, page],
+    queryKey: ["purchase-list", filter, page, idUser],
     queryFn: () => purchaseApi.list({ page, filter }),
     cacheTime: 5 * 1000,
     retry: false,
@@ -42,12 +44,18 @@ export default function PurchaseHistoryPage() {
   ----------------****/
   return (
     <>
-      <CardCollection title="Lịch sử mua tài khoản" fontSize="25px">
+      <CardCollection
+        padding={idUser ? "0" : undefined}
+        title="Lịch sử mua tài khoản"
+        fontSize="25px"
+      >
         <Text>
           Lịch sử mua tài khoản. Chỉ có Admin và Support mới có thể thay đổi
           trạng thái! CTV không nhận được tiền nếu bị HOÀN TIỀN
         </Text>
-        <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        {!idUser ? (
+          <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        ) : null}
         <TableListPurchaseHistory
           data={purchaseHistoriesQuery.data?.data.data ?? []}
         />

@@ -24,14 +24,16 @@ import { RechargeResponse } from "@/types/response/history.type";
 import moment from "moment";
 import Paginate from "@/components/globals/Paginate";
 
-export default function RechargeHistoryPage() {
+export default function RechargeHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState(() => {
+    return idUser ? { user_id: idUser } : {};
+  });
   const rechargeHistoriesQuery = useQuery({
-    queryKey: ["recharge-list", filter, page],
+    queryKey: ["recharge-list", filter, page, idUser],
     queryFn: () => rechargeApi.list({ page, filter }),
     cacheTime: 2 * 1000,
     retry: false,
@@ -42,12 +44,18 @@ export default function RechargeHistoryPage() {
   ----------------****/
   return (
     <>
-      <CardCollection title="Lịch sử nạp thẻ" fontSize="25px">
+      <CardCollection
+        padding={idUser ? "0" : undefined}
+        title="Lịch sử nạp thẻ"
+        fontSize="25px"
+      >
         <Text>
           Lịch sử nạp thẻ. Chỉ có Admin và Support mới có thể thay đổi trạng
           thái! Chỉ thẻ thất bại mới có thể hoàn tiền và chỉ được 1 lần duy nhất
         </Text>
-        <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        {!idUser ? (
+          <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
+        ) : null}
         <TableListRechargeHistory
           data={rechargeHistoriesQuery.data?.data.data ?? []}
         />
