@@ -28,6 +28,16 @@ if (!function_exists('queryRepository')) {
                 $subquery->where('note', 'like', '%' . $filter['service_filter'] . '%');
             });
         }
+        if (isset($filter['gameListByService_fillter'])) {
+            $model->whereHas('service.game_list', function ($subquery) use ($filter) {
+                $subquery->where('game_key', 'like', '%' . $filter['gameListByService_fillter'] . '%');
+            });
+        }
+        if (isset($filter['admin_filter'])) {
+            $model->whereHas('admin', function ($subquery) use ($filter) {
+                $subquery->where('name', 'like', '%' . $filter['admin_filter'] . '%');
+            });
+        }
         if (!isset($filter['sort'])) {
             $model->orderBy('id', 'desc');
         }

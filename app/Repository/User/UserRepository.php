@@ -26,19 +26,17 @@ class UserRepository implements UserInterface
             'admin' => function ($query) {
                 $query->where('admin_type', 'KOC');
             },
-            // 'rechargeHistories',
-            // 'withdrawHistories',
-            // 'purchaseHistories',
-            // 'serviceHistories',
-            // 'eventHistories',
-            // 'transactionsPrice',
-            // 'transactionsDiamond',
-            // 'transactionsRobux'
         ])
             ->withSum('transactionsPrice', 'price')
             ->withSum('transactionsDiamond', 'diamond')
             ->withSum('transactionsRobux', 'robux')
             ->find($id);
+    }
+
+    public function update(float $id, array $params)
+    {
+        $user = $this->model->find($id);
+        return $user->update($params);
     }
 
     public function updateOrInsert(float|null $id, array $params)

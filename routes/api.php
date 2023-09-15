@@ -86,17 +86,18 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::delete('/{id}', [AdminController::class, 'delete']);
             Route::post('/upsert', [AdminController::class, 'upsert']);
         });
+    });
+    Route::middleware(['role:admin,support'])->group(function () {
         Route::prefix('transactions')->group(function () {
+            Route::post('/', [TransactionController::class, 'createTransaction']);
             Route::get('/price', [TransactionController::class, 'priceList']);
             Route::get('/robux', [TransactionController::class, 'robuxList']);
             Route::get('/diamond', [TransactionController::class, 'diamondList']);
         });
-    });
-    Route::middleware(['role:admin,support'])->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'list']);
             Route::get('/{id}', [UserController::class, 'getId']);
-            Route::post('/create-transaction/{id}', [TransactionController::class, 'createTransaction']);
+            Route::put('/{id}', [UserController::class, 'blockUser']);
         });
         Route::prefix('events')->group(function () {
             Route::get('/', [EventController::class, 'list']);

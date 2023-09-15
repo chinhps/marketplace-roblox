@@ -18,15 +18,16 @@ class AccountRepository implements AccountInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
         $user = Auth::user();
         $data = $this->model->whereHas('admin', function (Builder $query) use ($user) {
             $query->where('id', $user->id);
-        });
+        })->with(['service', 'admin']);
         if (Gate::allows('admin', $user)) {
-            $data = $this->model;
+            $data = $this->model->with(['service', 'admin']);
         }
+        $data = queryRepository($data, $filter);
         return $data->paginate($limit);
     }
 

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\User\UserResource;
 use App\Repository\User\UserInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -42,5 +45,22 @@ class UserController extends Controller
     public function getId($id)
     {
         return new UserResource($this->userRepository->get($id));
+    }
+
+    public function blockUser($id, UserUpdateRequest $request)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+        try {
+            $this->userRepository->update($id, [
+                'block' => $validated['block'] ? "on" : "off"
+            ]);
+            DB::commit();
+            return BaseResponse::msg("Cập nhật thành công");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return BaseResponse::msg("Có lỗi khi cập nhật user!", 500);
+        }
     }
 }

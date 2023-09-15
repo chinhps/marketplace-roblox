@@ -26,9 +26,14 @@ class WithdrawHistoryController extends Controller
         $detail = $request->input('detail');
         $withdrawType = $request->input('withdraw_type');
         $status = $request->input('status');
+        $userId = $request->input('user_id');
+
 
         $filter = [];
 
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
         if ($domain) {
             $filter['shop_filter'] = $domain;
         }
@@ -72,7 +77,7 @@ class WithdrawHistoryController extends Controller
                 return BaseResponse::msg("Robux: Chuyển sang trạng thái -> " . $newStatus);
             }
 
-            if ($withdrawCurrent->withdraw_type === "DIAMOND") {
+            if ($withdrawCurrent->withdraw_type === "DIAMOND" || $withdrawCurrent->status === "PROCESSING") {
                 $newStatus = $validated['status'] ? "SUCCESS" : "CANCEL";
                 $this->updateWithdrawStatus($id, $newStatus);
 
@@ -82,7 +87,7 @@ class WithdrawHistoryController extends Controller
                 }
 
                 DB::commit();
-                return BaseResponse::msg("Diamond: Chuyển sang trạng thái -> " . $newStatus);
+                return BaseResponse::msg("{$withdrawCurrent->withdraw_type}: Chuyển sang trạng thái -> " . $newStatus);
             }
         } catch (\Exception $e) {
             DB::rollBack();

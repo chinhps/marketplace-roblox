@@ -22,9 +22,36 @@ class AccountController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return AccountListResource::collection($this->accountRepository->list(15));
+        $gameKey = $request->input('game_key');
+        $sortPrice = $request->input('sortPrice');
+        $status = $request->input('status');
+        $id = $request->input('id');
+        $serviceNote = $request->input('service_note');
+        $adminName = $request->input('admin_name');
+
+        $filter = [];
+
+        if ($gameKey) {
+            $filter['gameListByService_fillter'] = $gameKey;
+        }
+        if ($serviceNote) {
+            $filter['service_filter'] = $serviceNote;
+        }
+        if ($adminName) {
+            $filter['admin_filter'] = $adminName;
+        }
+        if ($id) {
+            $filter['query'][] = ['id', $id];
+        }
+        if ($status) {
+            $filter['query'][] = ['status', $status == 1 ? "SOLD" : "NOTSELL"];
+        }
+        if ($sortPrice) {
+            $filter['sort'][] = ['price', $sortPrice == 1 ? 'asc' : 'desc'];
+        }
+        return AccountListResource::collection($this->accountRepository->list(15, $filter));
     }
 
     public function getId($id)
@@ -71,13 +98,12 @@ class AccountController extends Controller
                     "images" => null,
                 ], admin: Auth::user(), service: $service);
             }
+            DB::commit();
+            return BaseResponse::msg("Đã thêm mới thành công, SL:" . count($listAccount));
         } catch (\Exception $e) {
             DB::rollBack();
             return BaseResponse::msg("Có lỗi đã xảy ra vui lòng kiểm tra lại! Không lưu bất kì tài khoản nào", 500);
         }
-
-        DB::commit();
-        return $listAccount;
     }
 
     public function upsertAccount(AccountCreateRequest $request)
@@ -96,19 +122,27 @@ class AccountController extends Controller
             $imagesDetail[] = uploadImageQueue($image);
         }
 
-        $account = $this->accountRepository->updateOrInsert($validated['id'] ?? null, [
-            "prioritize" => 1,
-            "detail_public" => json_encode($publicForm),
-            "detail_private" => json_encode($privateForm),
-            "price" => $validated['data']['price'],
-            "active" => $validated['data']['active'] ? "YES" : "NO",
-            "status" => "NOTSELL",
-            "note" => $validated['data']['note'],
-            "thumb" => $imageThumb,
-            "images" => json_encode($imagesDetail)
-        ], admin: Auth::user(), service: $service);
+        DB::beginTransaction();
 
-        return $account;
+        try {
+            $this->accountRepository->updateOrInsert($validated['id'] ?? null, [
+                "prioritize" => 1,
+                "detail_public" => json_encode($publicForm),
+                "detail_private" => json_encode($privateForm),
+                "price" => $validated['data']['price'],
+                "active" => $validated['data']['active'] ? "YES" : "NO",
+                "status" => "NOTSELL",
+                "note" => $validated['data']['note'],
+                "thumb" => $imageThumb,
+                "images" => json_encode($imagesDetail)
+            ], admin: Auth::user(), service: $service);
+
+            DB::commit();
+            return BaseResponse::msg("Đã thêm tài khoản mới thành công");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return BaseResponse::msg("Có lỗi đã xảy ra vui lòng kiểm tra lại!", 500);
+        }
     }
 
     private function convertDataRandom(array $array, string $accountItem)
