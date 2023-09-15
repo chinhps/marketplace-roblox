@@ -16,7 +16,7 @@ import {
   RechargeHistoryPage,
   RechargePage,
   RegisterPage,
-  RobuxHistoryPage,
+  WithdrawHistory,
   ViewAccountPage,
   WithdrawRobuxPage,
 } from "@/pages";
@@ -159,7 +159,7 @@ export const router = createBrowserRouter([
                 element: (
                   <TitleSeo
                     title="Lịch sử rút/mua Robux"
-                    ComponentPage={RobuxHistoryPage}
+                    ComponentPage={WithdrawHistory}
                   />
                 ),
               },

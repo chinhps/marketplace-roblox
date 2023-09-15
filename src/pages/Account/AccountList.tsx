@@ -187,12 +187,12 @@ function FormSearch({
       ],
     },
     {
-      label: "Sắp sếp theo",
+      label: "Sắp xếp theo",
       name: "sort",
       type: "SELECT",
       selects: [
         {
-          label: "Sắp sếp theo",
+          label: "Sắp xếp theo",
           value: "",
         },
         {

@@ -29,8 +29,8 @@ export interface IWithdrawHistory {
     id: number,
     refund: boolean,
     value: number,
-    status: string,
-    withdraw_type: string,
+    status: 'PENDING' | 'SUCCESS' | 'CANCEL' | 'PROCESSING',
+    withdraw_type: "ROBUX" | "DIAMOND",
     detail: Array<{
         key: string,
         name: string,

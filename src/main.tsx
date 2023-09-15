@@ -21,16 +21,16 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
 
   <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <Default>
-        <CacheProvider value={emotionCache}>
-          <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <Default>
+          <CacheProvider value={emotionCache}>
             <RouterProvider router={router} />
             <ReactQueryDevtools initialIsOpen={false} />
-          </ChakraProvider>
-        </CacheProvider>
-      </Default>
-    </QueryClientProvider>
+          </CacheProvider>
+        </Default>
+      </QueryClientProvider>
+    </ChakraProvider>
   </HelmetProvider>
   // </React.StrictMode>
 );

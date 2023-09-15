@@ -82,17 +82,7 @@ function MenuCustom({ data }: { data: IInfoUserResponse }) {
         >
           | {numberFormat(data.data.price)}
         </MenuButton>
-        <MenuList
-          overflow="hidden"
-          paddingBottom={0}
-          borderColor="main.item3"
-          boxShadow="md"
-          style={
-            { "--menu-bg": "var(--bg-item-main-color)" } as React.CSSProperties
-          }
-          p="10px"
-          minW="270px"
-        >
+        <MenuList overflow="hidden" paddingBottom={0} boxShadow="md">
           <MenuItem onClick={handleCopy} as={Flex} gap={5}>
             <Img w="50px" src="/icon.jpeg" alt="icon avatar by chinh.dev" />
             <List>
@@ -110,7 +100,7 @@ function MenuCustom({ data }: { data: IInfoUserResponse }) {
           </MenuItem>
           <MenuDivider />
           {listOption.map((vl) => (
-            <MenuGroup key={vl.lable} title={vl.lable} color="ocean.200">
+            <MenuGroup key={vl.lable} title={vl.lable}>
               {vl.children.map((vl2) => (
                 <ReactLink key={vl2.lable} to={vl2.link}>
                   <MenuItem fontSize="15px" icon={<FiChevronRight />}>
@@ -123,6 +113,7 @@ function MenuCustom({ data }: { data: IInfoUserResponse }) {
           <MenuItem
             commandSpacing={0}
             as={Button}
+            mt="1rem"
             bg="main.item3"
             onClick={onOpen}
           >

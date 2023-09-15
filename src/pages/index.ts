@@ -9,7 +9,7 @@ import BuyGamepassHistory from "./Profile/History/BuyGamepassHistory";
 import GameHistory from "./Profile/History/GameHistory";
 import PurchaseHistory from "./Profile/History/PurchaseHistory";
 import RechargeHistory from "./Profile/History/RechargeHistory";
-import RobuxHistory from "./Profile/History/RobuxHistory";
+import WithdrawHistory from "./Profile/History/WithdrawHistory";
 import Profile from "./Profile/Profile";
 import Recharge from "./Profile/Recharge/Recharge";
 import BuyRobux from "./Profile/Withdraw/BuyRobux";
@@ -30,7 +30,7 @@ export {
     GameHistory as GameHistoryPage,
     PurchaseHistory as PurchaseHistoryPage,
     RechargeHistory as RechargeHistoryPage,
-    RobuxHistory as RobuxHistoryPage,
+    WithdrawHistory as WithdrawHistory,
     AccountList as AccountListPage,
     ViewAccount as ViewAccountPage,
 }

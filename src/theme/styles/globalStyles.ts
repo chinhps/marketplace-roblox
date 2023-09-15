@@ -5,7 +5,8 @@ export const globalStyles = {
             item: "var(--bg-item-main-color)",
             item2: "var(--bg-item2-main-color)",
             item3: "var(--bg-item3-main-color)",
-            item4: "var(--bg-item4-main-color)"
+            item4: "var(--bg-item4-main-color)",
+            item5: "var(--bg-item5-main-color)"
         },
         chakra: {
             "body-bg": "black",

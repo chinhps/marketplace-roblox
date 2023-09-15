@@ -19,7 +19,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
-export default function RobuxHistory() {
+export default function WithdrawHistory() {
   /****----------------
    *      HOOK
   ----------------****/

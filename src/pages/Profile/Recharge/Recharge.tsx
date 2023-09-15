@@ -20,7 +20,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function Recharge() {
   const data_recharge: Cards = {
-    percent: 120,
+    percent: 100,
     list_card_support: {
       viettel: {
         name: "Viettel",

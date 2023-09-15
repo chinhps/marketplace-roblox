@@ -13,7 +13,7 @@ export default function Criteria() {
   return (
     <>
       <Box
-      zIndex={10}
+        zIndex={9}
         mt={10}
         bgImage="linear-gradient(to right, #131930a6, #131930a6), url('/banner.gif')"
         bgRepeat="no-repeat"
