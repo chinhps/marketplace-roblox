@@ -17,11 +17,13 @@ const shopApi = {
       },
     });
   },
+  all: () => {
+    const url = "/shop-list/all";
+    return axiosClient.get<IBaseResponse<IShopList>>(url);
+  },
   get: (id: number) => {
     const url = "/shop-list/" + id;
-    return axiosClient.get<IBaseResponseDetail<IShopDetailList>>(
-      url
-    );
+    return axiosClient.get<IBaseResponseDetail<IShopDetailList>>(url);
   },
   create: (dataForm: FormData) => {
     const url = "/shop-list/upsert";

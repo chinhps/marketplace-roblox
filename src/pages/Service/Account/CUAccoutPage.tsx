@@ -14,7 +14,7 @@ import { SubmitHandler } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
-import { compareForm, objectToFormData } from "@/utils/function";
+import { objectToFormData } from "@/utils/function";
 import { accountApi } from "@/apis/account";
 
 const initialFormState: Array<IFormInput> = [

@@ -21,6 +21,7 @@ import AdminListPage from "@/pages/User/AdminListPage";
 import UserDetailPage from "@/pages/User/Detail/UserDetailPage";
 import UserListPage from "@/pages/User/UserListPage";
 import { createBrowserRouter } from "react-router-dom";
+import CUTopRechargeVirtualPage from "@/pages/TopRecharge/CUTopRechargeVirtualPage";
 
 export const router = createBrowserRouter([
   {
@@ -169,6 +170,14 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <TopRechargeListPage />,
+      },
+      {
+        path: "create",
+        element: <CUTopRechargeVirtualPage />,
+      },
+      {
+        path: "update/:id",
+        element: <CUTopRechargeVirtualPage />,
       },
     ],
   },
