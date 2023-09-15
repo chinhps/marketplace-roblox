@@ -24,7 +24,7 @@ class ShopListResource extends BaseResource
             "stt" => $data->stt,
             "domain" => $data->domain,
             "shop" => $data->shop,
-            "created_at" =>  $data->created_at,
+            "created_at" => $data->created_at,
             "shop_detail" => $data->shopDetail ? [
                 "id" => $data->shopDetail->id,
                 "shop_title" => $data->shopDetail->shop_title,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\ShopCreateRequest;
+use App\Http\Resources\Shop\ShopAllResource;
 use App\Http\Resources\Shop\ShopListResource;
 use App\Repository\Shop\ShopInterface;
 use Illuminate\Http\Request;
@@ -15,6 +16,11 @@ class ShopController extends Controller
     public function __construct(
         private ShopInterface $shopRepository
     ) {
+    }
+
+    public function all()
+    {
+        return ShopAllResource::collection($this->shopRepository->all());
     }
 
     public function list(Request $request)

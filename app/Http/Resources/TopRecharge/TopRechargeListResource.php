@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources\TopRecharge;
 
+use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class TopRechargeListResource extends JsonResource
+class TopRechargeListResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,16 @@ class TopRechargeListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "shop_id" => $this->shop_id,
+            "user_id" => $this->user_id,
+            "price" => $this->price,
+            "name_virtual" => $this->name ?? null,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
+            "user" => $this->user,
+            "shop" => $this->shop
+        ];
     }
 }

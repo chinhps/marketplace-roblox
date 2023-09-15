@@ -11,4 +11,5 @@ interface ShopInterface
      * @return \Illuminate\Support\Collection|\App\Models\ShopList[]
      */
     public function getByListDomain(array $domains);
+    public function all();
 }

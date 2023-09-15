@@ -38,4 +38,16 @@ class TopRechargeVirtualRepository implements TopRechargeVirtualInterface
         $data->save();
         return $data;
     }
+
+    public function topVirtualRecharges(string $domain, string $month, string $year)
+    {
+        return TopRechargeVirtual::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->orderBy('price', 'desc')
+            ->with(['shop'])
+            ->whereHas('shop', function ($query) use ($domain) {
+                $query->where('domain', $domain);
+            })
+            ->get();
+    }
 }

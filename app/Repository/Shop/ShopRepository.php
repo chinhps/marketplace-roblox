@@ -20,6 +20,11 @@ class ShopRepository implements ShopInterface
         return $shopList->paginate($limit);
     }
 
+    public function all()
+    {
+        return $this->model->orderBy('stt','desc')->get();
+    }
+
     public function get(float $id)
     {
         return $this->model->with('shopDetail')->find($id);

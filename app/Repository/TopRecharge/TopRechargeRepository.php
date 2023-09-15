@@ -12,13 +12,27 @@ class TopRechargeRepository implements TopRechargeInterface
     ) {
     }
 
-    public function list(float $limit = 15)
+    public function list(float $limit = 15, array $filter = [])
     {
-        return $this->model->with(['user', 'shop'])->paginate($limit);
+        $data = $this->model->with(['user', 'shop']);
+        $data = queryRepository($data, $filter);
+        return $data->paginate($limit);
     }
 
     public function delete(float $id)
     {
         return $this->model->find($id)->delete();
+    }
+
+    public function topRecharges(string $domain, string $month, string $year)
+    {
+        return TopRecharge::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->orderBy('price', 'desc')
+            ->with(['shop', 'user'])
+            ->whereHas('shop', function ($query) use ($domain) {
+                $query->where('domain', $domain);
+            })
+            ->get();
     }
 }

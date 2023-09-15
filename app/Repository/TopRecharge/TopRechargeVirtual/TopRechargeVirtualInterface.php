@@ -10,4 +10,5 @@ interface TopRechargeVirtualInterface
     public function delete(float $id);
     public function get(float $id);
     public function updateOrInsert(float|null $id, array $params, ShopList $shop);
+    public function topVirtualRecharges(string $domain, string $month, string $year);
 }
