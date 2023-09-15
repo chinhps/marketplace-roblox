@@ -1,3 +1,6 @@
+import { IFormInput } from "@/types/form.type";
+import { IDetail2P } from "@/types/response/base.type";
+
 export const numberFormat = (price: number, currency: boolean = true) => {
   const format = new Intl.NumberFormat("vi-VN", {
     style: currency ? "currency" : undefined,
@@ -76,4 +79,13 @@ export function objectToFormData(
       }
     }
   }
+}
+
+export function compareForm(values: IDetail2P[], froms: IFormInput[] | undefined) {
+  const map1 = new Map(values.map((item) => [item.key, item.value]));
+  const resultArray = froms?.map((item) => ({
+    ...item,
+    default: map1.get(item.name),
+  }));
+  return resultArray ?? [];
 }

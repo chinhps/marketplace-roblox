@@ -14,8 +14,8 @@ import { SubmitHandler } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
-import accountApi from "@/apis/account";
-import { objectToFormData } from "@/utils/function";
+import { compareForm, objectToFormData } from "@/utils/function";
+import { accountApi } from "@/apis/account";
 
 const initialFormState: Array<IFormInput> = [
   {
@@ -62,13 +62,12 @@ export default function CUAccoutPage() {
    *      HOOK
   ----------------****/
   const { id } = useParams();
-  const [formData, setFormData] = useState<Array<IFormInput>>(() =>
+  const [formData, setFormData] = useState<IFormInput[]>(() =>
     structuredClone(initialFormState)
   );
   const [idServiceGame, setIdServiceGame] = useState<number>();
   const serviceGameListMutation = useMutation({
-    mutationFn: (formDataObject: FormData) =>
-      accountApi.createAccount(formDataObject),
+    mutationFn: (formDataObject: FormData) => accountApi.create(formDataObject),
   });
   const serviceGameListQuery = useQuery({
     queryKey: ["serviceGameList", "ACCOUNT"],
@@ -77,6 +76,36 @@ export default function CUAccoutPage() {
     cacheTime: 12000,
     refetchOnWindowFocus: false,
   });
+  const accountQuery = useQuery({
+    queryKey: ["account-detail", id],
+    queryFn: () => accountApi.get(Number(id)),
+    enabled: !!id,
+    retry: false,
+    cacheTime: 12000,
+    refetchOnWindowFocus: false,
+    onSuccess: ({ data }) => {
+      handleChangeServiceGame(data.data.service_id);
+      // const searchDataFormByQuery = serviceGameListQuery.data?.data.data.find(
+      //   (value) => value.id === data.data.service_id
+      // );
+      // const publicForm = compareForm(
+      //   data.data.detail_public,
+      //   searchDataFormByQuery?.public_form
+      // );
+      // const privateForm = compareForm(
+      //   data.data.detail_private,
+      //   searchDataFormByQuery?.private_form
+      // );
+
+      // setFormData((prev) => [
+      //   ...prev,
+      //   ...privateForm,
+      //   ...publicForm,
+      //   ...initialFormImagesState,
+      // ]);
+      // console.log("resultArray", publicForm, privateForm);
+    },
+  });
   /****----------------
   *      END-HOOK
   ----------------****/
@@ -84,11 +113,11 @@ export default function CUAccoutPage() {
   /****----------------
    *      Handle
   ----------------****/
-  const handleChangeServiceGame = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeServiceGame = (id: number) => {
     setFormData(initialFormState);
-    setIdServiceGame(Number(e.target.value));
+    setIdServiceGame(id);
     const searchDataFormByQuery = serviceGameListQuery.data?.data.data.find(
-      (value) => value.id === Number(e.target.value)
+      (value) => value.id === id
     );
     setFormData((prev) => [
       ...prev,
@@ -130,7 +159,8 @@ export default function CUAccoutPage() {
           <Select
             variant="auth"
             placeholder="Loại tài khoản"
-            onChange={handleChangeServiceGame}
+            onChange={(e) => handleChangeServiceGame(Number(e.target.value))}
+            value={accountQuery.data?.data.data.service_id}
           >
             {serviceGameListQuery.data?.data.data.map((item) => (
               <option key={item.id} value={item.id}>

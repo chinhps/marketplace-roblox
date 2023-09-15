@@ -40,6 +40,10 @@ export const buttonStyles = {
           padding: "15px 20px",
           borderColor: "main.item",
           border: "solid 1.5px",
+          _active: {
+            bg: "main.item3",
+            color: "white.100",
+          },
         }),
         red: () => ({
           bg: "red.600",

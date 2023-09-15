@@ -4,6 +4,7 @@ import { UserResponse } from "@/types/response/user.type";
 import { numberFormat } from "@/utils/function";
 import {
   Badge,
+  Box,
   Button,
   Center,
   Divider,
@@ -15,20 +16,27 @@ import {
   SimpleGrid,
   Text,
   VStack,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FiBarChart, FiTrendingDown, FiTrendingUp } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
 import RechargeHistoryPage from "@/pages/History/RechargeHistoryPage";
+import WithdrawHistoryPage from "@/pages/History/WithdrawHistoryPage";
+import { transactionApi } from "@/apis/transaction";
+import { ITransactionCreate } from "@/types/response/transaction.type";
+import ModelConfirm from "@/components/globals/Model/ModelConfirm";
 
 export default function UserDetailPage() {
   /****----------------
    *      HOOK
   ----------------****/
   const { id } = useParams();
+  const toast = useToast();
   const userDetailQuery = useQuery({
     queryKey: ["user-detail", id],
     queryFn: () => userApi.get(Number(id)),
@@ -37,10 +45,26 @@ export default function UserDetailPage() {
     retry: false,
     refetchOnWindowFocus: false,
   });
-
+  const blockUserMutation = useMutation({
+    mutationFn: ({ id, block }: { id: number; block: boolean }) =>
+      userApi.blockUser(id, block),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+      userDetailQuery.refetch();
+    },
+  });
   /****----------------
    *      END-HOOK
   ----------------****/
+  const handleBlockUser = (block: boolean) => {
+    blockUserMutation.mutate({
+      id: Number(id),
+      block: block,
+    });
+  };
   return (
     <>
       <CardCollection
@@ -58,6 +82,7 @@ export default function UserDetailPage() {
           Nơi kiểm tra thông tin hoạt động của thành viên, thao tác chặn,...
         </Text>
         <Text>Thời gian tính toán có thể tốn ít thời gian.</Text>
+        <Text>Double Click vào để có thể xem lịch sử thay đổi số dư.</Text>
 
         <SimpleGrid columns={6} gap="1rem" mt="2rem">
           <GridItem textAlign="right" fontSize="18px" colSpan={2}>
@@ -108,8 +133,22 @@ export default function UserDetailPage() {
               </VStack>
             </HStack>
             <Center>
-              <Button colorScheme="red" size="sm" w="60%" mt="1rem" mx="auto">
-                Chặn thành viên
+              <Button
+                colorScheme="red"
+                size="sm"
+                w="60%"
+                mt="1rem"
+                mx="auto"
+                onClick={() =>
+                  handleBlockUser(
+                    userDetailQuery.data?.data.data.block === "off"
+                  )
+                }
+              >
+                {userDetailQuery.data?.data.data.block === "off"
+                  ? "Chặn "
+                  : "Bỏ chặn "}
+                thành viên
               </Button>
             </Center>
           </GridItem>
@@ -126,30 +165,79 @@ export default function UserDetailPage() {
         {id ? <RechargeHistoryPage idUser={Number(id)} /> : null}
         <Divider my="2rem" />
         {id ? <ServiceHistoryPage idUser={Number(id)} /> : null}
+        <Divider my="2rem" />
+        {id ? <WithdrawHistoryPage idUser={Number(id)} /> : null}
       </CardCollection>
     </>
   );
 }
 
 function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
-  const [plusCash, setPlusCash] = useState<boolean>();
+  /****----------------
+   *      HOOK
+  ----------------****/
+  const toast = useToast();
+  const { id } = useParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [transactionType, setTransactionType] = useState<
+    "increase" | "decrease"
+  >();
+  const [currency, setCurrency] = useState<"PRICE" | "ROBUX" | "DIAMOND">();
+  const [valueCurrency, setValueCurrency] = useState<number>();
+  const [note, setNote] = useState<string>();
+
+  const transactionMutation = useMutation({
+    mutationFn: (params: ITransactionCreate) => transactionApi.create(params),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+    },
+  });
+  /****----------------
+   *      END-HOOK
+  ----------------****/
+  const handleSubmit = () => {
+    if (currency && id && transactionType && valueCurrency && note) {
+      transactionMutation.mutate({
+        user_id: Number(id),
+        currency: currency,
+        transaction_type: transactionType,
+        value: valueCurrency,
+        note: note,
+      });
+    }
+  };
+
   return (
     <>
+      <ModelConfirm
+        isOpen={isOpen}
+        onClose={onClose}
+        isLoading={false}
+        TextData={"Bạn có chắc muốn thực hiện không?"}
+        handleConfirm={() => {
+          handleSubmit();
+          onClose();
+        }}
+        children={null}
+      />
       <HStack spacing="1.5rem">
         <VStack>
           <IconButton
             variant="outline"
-            colorScheme={plusCash === true ? "green" : "gray"}
+            colorScheme={transactionType === "increase" ? "green" : "gray"}
             aria-label="plus"
-            onClick={() => setPlusCash(true)}
+            onClick={() => setTransactionType("increase")}
             size="xl"
             icon={<FiTrendingUp />}
           />
           <IconButton
             variant="outline"
-            colorScheme={plusCash === false ? "red" : "gray"}
+            colorScheme={transactionType === "decrease" ? "red" : "gray"}
             aria-label="Minus"
-            onClick={() => setPlusCash(false)}
+            onClick={() => setTransactionType("decrease")}
             size="xl"
             icon={<FiTrendingDown />}
           />
@@ -157,54 +245,76 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
         <VStack w="100%" alignItems="flex-start">
           <HStack>
             <Button
+              isActive={currency === "PRICE"}
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
+              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onClick={() => setCurrency("PRICE")}
             >
-              LS Số dư
+              Số dư
             </Button>
             <Button
+              isActive={currency === "DIAMOND"}
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
+              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onClick={() => setCurrency("DIAMOND")}
             >
-              LS Kim cương
+              Kim cương
             </Button>
             <Button
+              isActive={currency === "ROBUX"}
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
+              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onClick={() => setCurrency("ROBUX")}
             >
-              LS Robux
+              Robux
             </Button>
           </HStack>
-          <TransactionValueShow
-            nameCash="Số dư"
-            valueReal={data?.transactions_price_sum_price ?? 0}
-            valueTemp={data?.price_temporary ?? 0}
-          />
-          <TransactionValueShow
-            nameCash="Kim cương"
-            valueReal={data?.transactions_diamond_sum_diamond ?? 0}
-            valueTemp={data?.diamond_temporary ?? 0}
-          />
-          <TransactionValueShow
-            nameCash="Robux"
-            valueReal={data?.transactions_robux_sum_robux ?? 0}
-            valueTemp={data?.robux_temporary ?? 0}
-          />
+          <Box my=".5rem" w="100%">
+            <TransactionValueShow
+              nameCash="Số dư"
+              valueReal={data?.transactions_price_sum_price ?? 0}
+              valueTemp={data?.price_temporary ?? 0}
+            />
+            <TransactionValueShow
+              nameCash="Kim cương"
+              valueReal={data?.transactions_diamond_sum_diamond ?? 0}
+              valueTemp={data?.diamond_temporary ?? 0}
+            />
+            <TransactionValueShow
+              nameCash="Robux"
+              valueReal={data?.transactions_robux_sum_robux ?? 0}
+              valueTemp={data?.robux_temporary ?? 0}
+            />
+          </Box>
           <Input
             variant="auth"
+            type="number"
+            onChange={(e) => setValueCurrency(Number(e.target.value))}
             placeholder={
-              plusCash
-                ? "Nhập số tiền được cộng thêm"
-                : plusCash === false
-                ? "Nhập số tiền bị trừ đi"
+              transactionType === "increase"
+                ? `Nhập số ${currency ?? "???"} được cộng thêm`
+                : transactionType === "decrease"
+                ? `Nhập số ${currency ?? "???"} bị trừ đi`
                 : "Vui lòng chọn kiểu trước"
             }
           />
+          <Input
+            variant="auth"
+            placeholder="Lý do thực hiện"
+            onChange={(e) => setNote(e.target.value)}
+          />
           <Button
-            isDisabled={typeof plusCash === "undefined"}
+            isDisabled={
+              typeof transactionType === "undefined" ||
+              typeof currency === "undefined"
+            }
+            onClick={onOpen}
             variant="auth"
             w="100%"
           >
@@ -226,16 +336,16 @@ function TransactionValueShow({
   valueTemp: number;
 }) {
   return (
-    <HStack justifyContent="space-between" w="100%" fontSize="16px">
+    <HStack justifyContent="space-between" w="100%" fontSize="16px" my={2}>
       <Text>
         <Text as="b">{nameCash} hiện tại:</Text> {numberFormat(valueReal)}
       </Text>
       <Text>
         <Text as="b">{nameCash} hiển thị:</Text> {numberFormat(valueTemp)}
       </Text>
-      <Button colorScheme="teal" size="sm">
+      {/* <Button colorScheme="teal" size="sm">
         Cập nhật lại
-      </Button>
+      </Button> */}
     </HStack>
   );
 }

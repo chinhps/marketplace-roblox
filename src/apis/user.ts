@@ -1,5 +1,9 @@
 import { IQueryForm } from "@/types/form.type";
-import { IBaseResponse, IBaseResponseDetail } from "@/types/response/base.type";
+import {
+  IBaseResponse,
+  IBaseResponseDetail,
+  IResponseWithMessage,
+} from "@/types/response/base.type";
 import { UserResponse } from "@/types/response/user.type";
 import axiosClient from "@/utils/axiosClient";
 
@@ -16,5 +20,9 @@ export const userApi = {
   get: (id: number) => {
     const url = "/users/" + id;
     return axiosClient.get<IBaseResponseDetail<UserResponse>>(url);
+  },
+  blockUser: (id: number, block: boolean) => {
+    const url = "/users/" + id;
+    return axiosClient.put<IResponseWithMessage>(url, { block });
   },
 };

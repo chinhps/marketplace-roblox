@@ -16,9 +16,9 @@ import { numberFormat } from "@/utils/function";
 import { SubmitHandler } from "react-hook-form";
 import FormBase from "@/components/globals/FormBase";
 import { IFormInput } from "@/types/form.type";
-import accountApi from "@/apis/account";
 import { IServiceGameRandomCreate } from "@/types/response/service.type";
 import { FiZap } from "react-icons/fi";
+import { randomApi } from "@/apis/account";
 
 export default function CURandomPage() {
   /****----------------
@@ -34,8 +34,7 @@ export default function CURandomPage() {
   });
   const [idServiceGame, setIdServiceGame] = useState<number>();
   const serviceGameListMutation = useMutation({
-    mutationFn: (data: IServiceGameRandomCreate) =>
-      accountApi.createRandom(data),
+    mutationFn: (data: IServiceGameRandomCreate) => randomApi.create(data),
   });
   const serviceGameListQuery = useQuery({
     queryKey: ["serviceGameList", "RANDOM"],
@@ -63,7 +62,7 @@ export default function CURandomPage() {
       });
     }
     console.log(searchDataFormByQuery?.private_form);
-    
+
     setInputRandomList((prev) => ({
       ...prev,
       placeholder: searchDataFormByQuery?.private_form
@@ -73,7 +72,6 @@ export default function CURandomPage() {
   };
 
   const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data);
     serviceGameListMutation.mutate({
       idServiceGame: idServiceGame ?? 0,
       ...data,

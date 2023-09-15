@@ -40,7 +40,11 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
   ----------------****/
   return (
     <>
-      <CardCollection title="Lịch sử dịch vụ" fontSize="25px">
+      <CardCollection
+        padding={idUser ? "0" : undefined}
+        title="Lịch sử dịch vụ"
+        fontSize="25px"
+      >
         <Text>
           Lịch sử dịch vụ bao gồm: Rút kim cương, mua/rút robux, gamepass,...
         </Text>

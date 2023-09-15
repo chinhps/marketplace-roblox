@@ -24,7 +24,7 @@ export interface UserResponse {
 interface AdminResponse {
   id: number;
   shop_id: number;
-  admin_type: "KOC";
+  admin_type: "KOC" | "ADMIN" | "CTV" | "SUPPORT";
   name: string;
   username: string;
   block: "off" | "on";

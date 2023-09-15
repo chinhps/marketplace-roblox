@@ -92,6 +92,10 @@ export const router = createBrowserRouter([
             path: "create",
             element: <CUAccoutPage />,
           },
+          {
+            path: "update/:id",
+            element: <CUAccoutPage />,
+          },
         ],
       },
       {

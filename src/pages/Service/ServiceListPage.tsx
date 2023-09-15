@@ -108,6 +108,7 @@ function TableList() {
         status: "success",
         description: data.msg,
       });
+      serviceListQuery.refetch();
     },
   });
   /****----------------
