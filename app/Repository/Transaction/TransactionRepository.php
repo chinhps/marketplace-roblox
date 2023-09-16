@@ -16,42 +16,59 @@ class TransactionRepository implements TransactionInterface
      **********/
     public function getPrice(User $user)
     {
-        return TransactionPrice::where('user_id', $user->id)->sum('price');
+        $value = TransactionPrice::where('user_id', $user->id)->sum('price');
+        $user->price_temporary = $value;
+        $user->save();
+        return $value;
     }
     public function getDiamond(User $user)
     {
-        return TransactionDiamond::where('user_id', $user->id)->sum('diamond');
+        $value = TransactionDiamond::where('user_id', $user->id)->sum('diamond');
+        $user->price_temporary = $value;
+        $user->save();
+        return $value;
     }
     public function getRobux(User $user)
     {
-        return TransactionRobux::where('user_id', $user->id)->sum('robux');
+        $value = TransactionRobux::where('user_id', $user->id)->sum('robux');
+        $user->price_temporary = $value;
+        $user->save();
+        return $value;
     }
-
 
     /**********
      * CREATE *
      **********/
     public function createPrice(float $value, string $note)
     {
-        return (new Transaction(
-            model: new TransactionPrice,
-            custom: ['price' =>  $value],
-            note: $note
-        ))->create();
+        return $this->performTransaction(new TransactionPrice(), 'price', $value, $note);
     }
+
     public function createDiamond(float $value, string $note)
     {
-        return (new Transaction(
-            model: new TransactionDiamond,
-            custom: ['diamond' =>  $value],
-            note: $note
-        ))->create();
+        return $this->performTransaction(new TransactionDiamond(), 'diamond', $value, $note);
     }
-    public function creaeteRobux(float $value, string $note)
+
+    public function createRobux(float $value, string $note)
     {
+        return $this->performTransaction(new TransactionRobux(), 'robux', $value, $note);
+    }
+
+    private function performTransaction(Model $model, string $column, float $value, string $note)
+    {
+        $user = \App\Models\User::find(Auth::id());
+
+        if ($value < 0) {
+            $user->setAttribute($column . '_temporary', $user->getAttribute($column . '_temporary') - $value);
+        } else {
+            $user->setAttribute($column . '_temporary', $value);
+        }
+
+        $user->save();
+
         return (new Transaction(
-            model: new TransactionRobux,
-            custom: ['robux' =>  $value],
+            model: $model,
+            custom: [$column => $value],
             note: $note
         ))->create();
     }

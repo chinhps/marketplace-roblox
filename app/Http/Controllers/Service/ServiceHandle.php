@@ -66,7 +66,7 @@ class ServiceHandle
                 return $transactionRepository->createDiamond($value, $note);
                 break;
             case "ROBUX":
-                return $transactionRepository->creaeteRobux($value, $note);
+                return $transactionRepository->createRobux($value, $note);
                 break;
             case "PRICE":
                 return $transactionRepository->createPrice($value, $note);

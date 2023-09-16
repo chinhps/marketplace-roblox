@@ -22,7 +22,7 @@ class WithdrawHistoryFactory extends Factory
             "withdraw_type" => $withdraw_type,
             "value" => $this->faker->numberBetween(50, 9999),
             "cost" => $this->faker->numberBetween(10, 999),
-            "status" => $this->faker->randomElement(['0', '1', '2', '3', '4']),
+            "status" => $this->faker->randomElement(['PENDING', 'SUCCESS', 'CANCEL', 'PROCESSING']),
             "detail" => json_encode($withdraw_type === "ROBUX" ?
                 [
                     [

@@ -187,7 +187,8 @@ class ServiceController extends Controller
             if (!$decrementTurn)  return BaseResponse::msg("Bạn không đủ tiền hoặc không có lượt quay!", 402);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd("lỗi hệ thống từ module trừ tiền");
+            logReport('error_service', "lỗi hệ thống từ module trừ tiền", $e);
+            return BaseResponse::msg("Có lỗi đã xảy ra khi trừ tiền! Vui lòng liên hệ Admin!", 402);
         }
         // ==============================================
 
@@ -207,7 +208,13 @@ class ServiceController extends Controller
             # ================= END-USER =================
 
             # ================= ADMIN =================
-            # $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForAdmin($serviceOdds, $serviceDetail);
+            /**
+             * Get all gift service of user
+             * @var ['giftForUser' => Model ServiceGift, 'currentLoop' => float]
+             */
+            if (Auth::user()->admin) {
+                $giftAndCurrentLoopForUser = $this->getGiftAndCountLoopForAdmin($serviceOdds, $serviceDetail);
+            }
             # ================= END-ADMIN =================
 
             /**
@@ -220,7 +227,8 @@ class ServiceController extends Controller
             $giftForUser = $giftAndCurrentLoopForUser['giftForUser'];
         } catch (\Exception $e) {
             DB::rollBack();
-            dd("lỗi hệ thống từ module lấy quà");
+            logReport('error_service', "lỗi hệ thống từ module lấy quà", $e);
+            return BaseResponse::msg("Có lỗi khi lấy quà trong kho! Vui lòng liên hệ admin!", 402);
         }
         // ==============================================
 
@@ -242,7 +250,8 @@ class ServiceController extends Controller
             $giftTotal = $handleGiftWithLoop['giftTotal'];
         } catch (\Exception $e) {
             DB::rollBack();
-            dd("lỗi hệ thống từ module xử lý nhận quà", $e->getMessage());
+            logReport('error_service', "lỗi hệ thống từ module xử lý nhận quà", $e);
+            return BaseResponse::msg("Có lỗi khi trao quà! Vui lòng liên hệ admin!", 402);
         }
         // ==============================================
 
@@ -273,7 +282,8 @@ class ServiceController extends Controller
             });
         } catch (\Exception $e) {
             DB::rollBack();
-            dd("lỗi hệ thống từ module tạo giao dịch và lịch sử");
+            logReport('error_service', "lỗi hệ thống từ module tạo giao dịch và lịch sử", $e);
+            return BaseResponse::msg("Không thể tạo giao dịch! Vui lòng liên hệ admin!", 402);
         }
         // ==============================================
 
@@ -403,16 +413,12 @@ class ServiceController extends Controller
 
             # ADMIN OR GHOST
             if (!$checkGuard) {
-                $createRandomGift = $giftForUser->map(function (ServiceGift $serviceGift) {
-                    return ["value" => $serviceGift, 'percentage' => $serviceGift->percent_random];
-                });
-                $randomGift = RandomPercent::randomItemByPercentage($createRandomGift->toArray());
-                $currentGift = $randomGift['value'];
+                $currentGift = $giftForUser->random();
             }
 
             if (!$currentGift) {
                 # report admin
-                throw new Exception("Quà không tồn tại");
+                throw new Exception("Quà không tồn tại, service odds: {$serviceOdds->id}");
             }
 
             $valueGift = ServiceHandle::giftType(
@@ -439,7 +445,7 @@ class ServiceController extends Controller
                 "type" => $currentGift->gameCurrency->currency_key,
                 "type_name" => $currentGift->gameCurrency->currency_name,
                 "image" => $currentGift->image,
-                "msg" => "Chúc mừng bạn đã trúng $valueGift {$currentGift->gameCurrency->currency_name}",
+                "msg" => "Trúng $valueGift {$currentGift->gameCurrency->currency_name}",
                 "value" => $valueGift
             ];
             # add total
@@ -456,6 +462,30 @@ class ServiceController extends Controller
             "gifts" => $gifts,
             "giftTotal" => $giftTotal
         ];
+    }
+
+    private function getGiftAndCountLoopForAdmin(ServiceOdds $serviceOdds, ServiceDetail $serviceDetail)
+    {
+        switch ($serviceOdds->odds_admin_type) {
+            case "FIXED":
+                $listGiftFix = json_decode($serviceOdds->odds_admin, true);
+                # Get quantity used service in history
+                $quantityHistory = $this->serviceHistoryRepository->getQuantityUserByService(Auth::user(), $serviceDetail->service);
+                # Times count array "fixed" => position in array
+                $currentLoop = $quantityHistory === 0 ? 0 : ($quantityHistory - 1) % count($listGiftFix);
+
+                # Get all gift service of user
+                $giftForUser = $this->serviceDetailRepository->giftForAdminByListId($serviceOdds, $listGiftFix);
+                break;
+
+            case "RANDOM":
+                # Get all gift service of user
+                $giftForUser = $this->serviceDetailRepository->giftForAdmin($serviceOdds);
+                $currentLoop = 0;
+                break;
+        }
+
+        return ['giftForUser' => $giftForUser, 'currentLoop' => $currentLoop];
     }
 
     private function getGiftAndCountLoopForUser(ServiceOdds $serviceOdds, ServiceDetail $serviceDetail)

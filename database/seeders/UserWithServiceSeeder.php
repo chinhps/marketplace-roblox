@@ -30,8 +30,10 @@ class UserWithServiceSeeder extends Seeder
 
         ServiceHistory::factory(250)->create(function () use ($services_game, $users) {
             $currentUser = $users->random();
+            $service = $services_game->random()->services()->get()->random();
             return [
-                "service_id" => $services_game->random()->services()->get()->random()->id,
+                "service_id" => $service->id,
+                "price" => $service->price,
                 "user_id" => $currentUser->id,
                 "shop_id" => $currentUser->shop_id
             ];

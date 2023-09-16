@@ -52,6 +52,13 @@ return [
     */
 
     'channels' => [
+
+        'error_service' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/errors_service.log'),
+            'level' => 'debug',
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

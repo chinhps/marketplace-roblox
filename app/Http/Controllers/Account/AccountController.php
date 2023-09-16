@@ -128,7 +128,7 @@ class AccountController extends Controller
             return $decrementTurn;
         } catch (\Exception $e) {
             # REPORT
-            throw new Exception("Lỗi xử lý khi mua! Code: x04");
+            throw new Exception($e);
         }
     }
 

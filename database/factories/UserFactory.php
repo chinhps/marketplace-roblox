@@ -25,6 +25,7 @@ class UserFactory extends Factory
             'username' => $this->faker->unique()->userName(),
             'price_temporary' => $this->faker->randomFloat(null, 0, 1000),
             'diamond_temporary' => $this->faker->randomFloat(null, 0, 1000),
+            'robux_temporary' => $this->faker->randomFloat(null, 0, 1000),
             'password' => Hash::make("chinhdeptrai012"),
             'remember_token' => null,
             'block' => $this->faker->randomElement(['on', 'off']),

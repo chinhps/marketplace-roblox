@@ -13,6 +13,7 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
     {
         $history = new ServiceHistory;
         $history->quantity = $quantity;
+        $history->price = $service->price;
         $history->detail = json_encode($detail);
         $history->shop()->associate($user->shop);
         $history->service()->associate($service);

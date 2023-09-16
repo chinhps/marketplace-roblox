@@ -21,7 +21,7 @@ class AdminFactory extends Factory
             'admin_type' => $this->faker->randomElement(['KOC']),
             'name' => $this->faker->name(),
             'username' => $this->faker->unique()->userName(),
-            'password' => Hash::make($this->faker->password()),
+            'password' => Hash::make("123456789c"),
             'remember_token' => null,
             'block' => $this->faker->randomElement(['on', 'off']),
             'active' => $this->faker->randomElement(['on', 'off']),
