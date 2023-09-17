@@ -13,7 +13,4 @@ interface TransactionInterface
     public function createPrice(User $user, float $value, string $note);
     public function createDiamond(User $user, float $value, string $note);
     public function creaeteRobux(User $user, float $value, string $note);
-    public function getPrice(User $user);
-    public function getDiamond(User $user);
-    public function getRobux(User $user);
 }

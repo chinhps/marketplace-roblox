@@ -20,6 +20,7 @@ use App\Http\Controllers\Transactions\TransactionController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Webhook\WebhookRechargeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +33,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+# WEBHOOK
+Route::prefix('webhook')->group(function () {
+    Route::post('/recharge/callbackv2', [WebhookRechargeController::class, 'webhook']);
+});
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);

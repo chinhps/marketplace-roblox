@@ -52,7 +52,11 @@ return [
     */
 
     'channels' => [
-
+        'recharge_webhook' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recharge_webhook.log'),
+            'level' => 'debug',
+        ],
         'test' => [
             'driver' => 'single',
             'path' => storage_path('logs/test.log'),

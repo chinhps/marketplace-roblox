@@ -40,4 +40,20 @@ class RechargeHistoryRepository implements RechargeHistoryInterface
     {
         return $this->model->find($id)->update($params);
     }
+
+    public function getByCondition(array $conditions = [], array $where = [])
+    {
+        $data = $this->model->whereJsonContains('detail', $conditions);
+        if (count($where) > 0) {
+            $data = $data->where($where);
+        }
+        return $data->with(['user', 'shop.shopDetail'])->first();
+    }
+
+    public function changeStatus(RechargeHistory $rechargeHistory, $status)
+    {
+        $rechargeHistory->status = $status;
+        $rechargeHistory->save();
+        return $rechargeHistory;
+    }
 }

@@ -28,29 +28,13 @@ class TransactionRepository implements TransactionInterface
         return TransactionRobux::with('user')->paginate($limit);
     }
 
-
-    /**********
-     * GET *
-     **********/
-    public function getPrice(User $user)
-    {
-        return TransactionPrice::where('user_id', $user->id)->sum('price');
-    }
-    public function getDiamond(User $user)
-    {
-        return TransactionDiamond::where('user_id', $user->id)->sum('diamond');
-    }
-    public function getRobux(User $user)
-    {
-        return TransactionRobux::where('user_id', $user->id)->sum('robux');
-    }
-
-
     /**********
      * CREATE *
      **********/
     public function createPrice(User $user, float $value, string $note)
     {
+        $user->price_temporary = $user->price_temporary + $value;
+        $user->save();
         return (new Transaction(
             model: new TransactionPrice,
             user: $user,
@@ -60,6 +44,7 @@ class TransactionRepository implements TransactionInterface
     }
     public function createDiamond(User $user, float $value, string $note)
     {
+        $user->diamond_temporary = $user->diamond_temporary + $value;
         return (new Transaction(
             model: new TransactionDiamond,
             user: $user,
@@ -69,6 +54,7 @@ class TransactionRepository implements TransactionInterface
     }
     public function creaeteRobux(User $user, float $value, string $note)
     {
+        $user->robux_temporary = $user->robux_temporary + $value;
         return (new Transaction(
             model: new TransactionRobux,
             user: $user,
@@ -90,7 +76,6 @@ class Transaction
 
     public function create()
     {
-
         return $this->model->create([
             'user_id' => $this->user->id,
             'note' => $this->note,

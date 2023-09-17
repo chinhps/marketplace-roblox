@@ -2,7 +2,9 @@
 
 namespace App\Repository\TopRecharge;
 
+use App\Models\ShopList;
 use App\Models\TopRecharge;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class TopRechargeRepository implements TopRechargeInterface
@@ -34,5 +36,29 @@ class TopRechargeRepository implements TopRechargeInterface
                 $query->where('domain', $domain);
             })
             ->get();
+    }
+
+    public function exists(array $conditions = [], $month, $year)
+    {
+        return TopRecharge::where($conditions)
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->first();
+    }
+
+    public function updateOrCreate(float|null $id, float $price, User $user, ShopList $shop)
+    {
+        if (!$id) {
+            $topRecharge = new TopRecharge();
+            $topRecharge->user()->associate($user);
+            $topRecharge->shop()->associate($shop);
+            $topRecharge->price = $price;
+        }
+        if ($id) {
+            $topRecharge = TopRecharge::find($id);
+            $topRecharge->price += $price;
+        }
+        $topRecharge->save();
+        return $topRecharge;
     }
 }

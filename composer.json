@@ -28,7 +28,8 @@
         },
         "files": [
             "app/Helper/Upload.php",
-            "app/Helper/QueryRepository.php"
+            "app/Helper/QueryRepository.php",
+            "app/Helper/Function.php"
         ]
     },
     "autoload-dev": {
