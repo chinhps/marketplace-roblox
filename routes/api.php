@@ -5,6 +5,8 @@ use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
 use App\Http\Controllers\Histories\ServiceHistoryController;
 use App\Http\Controllers\Histories\WithdrawHistoryController;
+use App\Http\Controllers\Recharge\CallbackRechargeController;
+use App\Http\Controllers\Recharge\RechargeController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
@@ -23,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+# AUTH
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
@@ -82,14 +85,22 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
     # Profile user
     Route::prefix('profile')->group(function () {
 
+        # recharge 
+        Route::post('recharge', [RechargeController::class, 'recharge']);
+
         # history profile
         Route::prefix('history')->group(function () {
             Route::get('purchases', [PurchaseHistoryController::class, 'list']);
             Route::get('recharge', [RechargeHistoryController::class, 'list']);
             Route::get('services', [ServiceHistoryController::class, 'list']);
-
             Route::get('withdraw', [WithdrawHistoryController::class, 'list']);
-            // Route::get('rent', [RentController::class, 'list']);
+        });
+
+        # withdraw profile
+        Route::prefix('withdraw')->group(function () {
+            Route::post('robux', [WithdrawHistoryController::class, 'robux']);
+            Route::post('diamond', [WithdrawHistoryController::class, 'diamond']);
+            Route::post('buy_robux', [WithdrawHistoryController::class, 'buy_robux']);
         });
 
         # create any services

@@ -12,9 +12,9 @@ class ShopRepository implements ShopInterface
     ) {
     }
 
-    public function shopId(string $domain)
+    public function getByDomain(string $domain)
     {
-        return $this->model->where('domain', $domain)->first()->id;
+        return $this->model->where('domain', $domain)->first();
     }
 
     public function getInfomation(string $domain)

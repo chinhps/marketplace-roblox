@@ -17,7 +17,8 @@ class RechargeListFactory extends Factory
     public function definition(): array
     {
         return [
-            "recharge_name" => 'CARD'
+            "recharge_name" => 'Thẻ viễn thông',
+            "recharge_key" => 'CARD',
         ];
     }
 }

@@ -56,16 +56,9 @@ class TransactionRepository implements TransactionInterface
 
     private function performTransaction(Model $model, string $column, float $value, string $note)
     {
-        $user = \App\Models\User::find(Auth::id());
-
-        if ($value < 0) {
-            $user->setAttribute($column . '_temporary', $user->getAttribute($column . '_temporary') - $value);
-        } else {
-            $user->setAttribute($column . '_temporary', $value);
-        }
-
+        $user = User::find(Auth::id());
+        $user->setAttribute($column . '_temporary', $user->getAttribute($column . '_temporary') + $value);
         $user->save();
-
         return (new Transaction(
             model: $model,
             custom: [$column => $value],
@@ -83,7 +76,7 @@ class Transaction
         private $note = null,
         private array $custom = []
     ) {
-        $this->userId = Auth::user()->id;
+        $this->userId = Auth::id();
     }
 
     public function create()

@@ -27,7 +27,7 @@ class AuthController extends Controller
             "name" => $user->name,
             "price" => $user->price_temporary,
             "diamond" => $user->diamond_temporary,
-            "robux" => 0,
+            "robux" => $user->robux_temporary,
             "created_at" => $user->created_at,
         ]);
     }
@@ -57,7 +57,7 @@ class AuthController extends Controller
 
         try {
             $user = $this->userRepository->create([
-                "shop_id" => $this->shopRepository->shopId($validated['domain']),
+                "shop_id" => $this->shopRepository->getByDomain($validated['domain'])->id,
                 "login_type" => "account",
                 "provider_id" => $this->generateProviderId(),
                 "name" => $validated['username'],

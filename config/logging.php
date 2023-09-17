@@ -59,6 +59,18 @@ return [
             'level' => 'debug',
         ],
 
+        'recharge_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recharge_logs.log'),
+            'level' => 'debug',
+        ],
+
+        'recharge_errors' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recharge_errors.log'),
+            'level' => 'debug',
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
@@ -96,7 +108,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],

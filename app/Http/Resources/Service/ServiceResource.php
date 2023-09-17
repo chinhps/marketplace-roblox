@@ -17,7 +17,9 @@ class ServiceResource extends JsonResource
             "gameType" => $this->service->game_list->game_key,
             "counter" => $this->serviceCouter->value ?? 0,
             "slug" => $this->slug ?? 0,
-            "counterText" => "AUTO"
+            "counterText" => "AUTO",
+            "more" => json_decode($this->service->information, true),
+            "notification" => $this->service->game_list->is_game ? null : $this->service->notification
         ];
     }
 }

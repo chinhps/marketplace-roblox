@@ -35,8 +35,11 @@ class ServiceGroupRepository implements ServiceGroupInterface
                                 "price",
                                 "sale",
                                 "note",
-                                "game_id"
-                            )->with(['game_list', 'serviceCouter']);
+                                "notification",
+                                "information",
+                                "game_id",
+                                "parent_id"
+                            )->with(['game_list', 'serviceCouter']);//->where('parent_id', null);
                         },
                         'serviceImage' => function ($query) {
                             $query->select(

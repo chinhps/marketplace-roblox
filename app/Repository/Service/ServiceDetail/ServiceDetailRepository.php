@@ -33,6 +33,7 @@ class ServiceDetailRepository implements ServiceDetailInterface
                         "price",
                         "sale",
                         "note",
+                        // "information",
                         "game_id"
                     )->with(['game_list', 'serviceCouter']);
                 },
