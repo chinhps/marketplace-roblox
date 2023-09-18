@@ -1,11 +1,3 @@
-
-export type InputsRecharge = {
-    card_type: string;
-    amount: number;
-    serial: number;
-    code: number;
-};
-
 interface Card {
     name: string;
     image: string;

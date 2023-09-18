@@ -31,7 +31,7 @@ export default function ModelService({
 }) {
   return (
     <>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
         <ModalContent bg="main.item" color="white.100">
           <ModalHeader>Thông báo</ModalHeader>
@@ -64,7 +64,7 @@ export default function ModelService({
                 <List spacing={1}>
                   {data?.data.gifts.map((vl, index) => (
                     <ListItem key={index}>
-                      Quay lần {index + 1}: {vl.type_name}
+                      Quay lần {index + 1}: {vl.msg}
                     </ListItem>
                   ))}
                 </List>

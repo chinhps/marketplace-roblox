@@ -25,11 +25,27 @@ export function colorStatus(status: string) {
       return "green";
     case "CANCEL":
       return "red";
+    case "ERROR":
+      return "red";
     case "PROCESSING":
       return "blue";
+    case "PENDING":
+      return "gray";
     default:
       return "gray";
   }
+}
+
+export function hiddenPriceByGameType(gameType: string) {
+  switch (gameType) {
+    case "LINKTO":
+      return false;
+    case "CATEGORY":
+      return false;
+    case "ACCOUNT":
+      return false;
+  }
+  return true;
 }
 
 export function nameStatus(status: string) {
@@ -43,4 +59,10 @@ export function nameStatus(status: string) {
     default:
       return "Chờ duyệt";
   }
+}
+
+export function ucwords(str: string) {
+  return str.toLowerCase().replace(/(^|\s)\S/g, function (match) {
+    return match.toUpperCase();
+  });
 }

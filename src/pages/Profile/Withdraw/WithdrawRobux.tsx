@@ -1,4 +1,6 @@
+import { withdrawApi } from "@/apis/withdraw";
 import FormBase from "@/components/global/Form/FormBase";
+import { useUserData } from "@/hooks/UserDataProvider";
 import { IFormInput, InputsBuyRobux } from "@/types/form.type";
 import { numberFormat } from "@/utils/price";
 import {
@@ -9,10 +11,13 @@ import {
   GridItem,
   Heading,
   Text,
+  useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler } from "react-hook-form";
 
 export default function WithdrawRobux() {
+  const userData = useUserData();
   return (
     <>
       <Flex flexDirection="column" gap={8}>
@@ -33,7 +38,7 @@ export default function WithdrawRobux() {
             <Text as="b">
               Robux hiện có:
               <Text as="b" color="ocean.100" pl={2}>
-                {numberFormat(12300, false)}
+                {numberFormat(userData?.data.data.robux ?? 0, false)}
               </Text>
             </Text>
             <Divider orientation="horizontal" my={2} />
@@ -58,57 +63,78 @@ export default function WithdrawRobux() {
   );
 }
 
+const dataForm: Array<IFormInput> = [
+  {
+    label: "Gói rút",
+    name: "type_withdraw",
+    type: "SELECT",
+    isRequired: true,
+    selects: [
+      {
+        label: "200 Robux",
+        value: "1",
+      },
+      {
+        label: "500 Robux",
+        value: "2",
+      },
+      {
+        label: "1,000 Robux",
+        value: "3",
+      },
+      {
+        label: "2,000 Robux",
+        value: "4",
+      },
+      {
+        label: "3,000 Robux",
+        value: "5",
+      },
+      {
+        label: "5,000 Robux",
+        value: "6",
+      },
+    ],
+  },
+  {
+    label: "Nhập link Gamepass",
+    name: "linkpass",
+    type: "INPUT",
+    isRequired: true,
+  },
+];
+
 function FormWithdrawRobux() {
-  const dataForm: Array<IFormInput> = [
-    {
-      label: "Gói rút",
-      name: "type_withdraw",
-      type: "SELECT",
-      validate: { required: "Bạn cần chọn chọn gói rút" },
-      selects: [
-        {
-          label: "-- Chọn gói rút --",
-          value: "",
-        },
-        {
-          label: "200 Robux",
-          value: "1",
-        },
-        {
-          label: "500 Robux",
-          value: "2",
-        },
-        {
-          label: "1,000 Robux",
-          value: "3",
-        },
-        {
-          label: "2,000 Robux",
-          value: "4",
-        },
-        {
-          label: "3,000 Robux",
-          value: "5",
-        },
-        {
-          label: "5,000 Robux",
-          value: "6",
-        },
-      ],
+  const toast = useToast();
+  const withdrawMutate = useMutation({
+    mutationFn: ({ type_withdraw, linkpass }: InputsBuyRobux) =>
+      withdrawApi.robux({
+        type_withdraw,
+        linkpass,
+      }),
+
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
     },
-    {
-      label: "Nhập link Gamepass",
-      name: "linkpass",
-      type: "INPUT",
-      validate: { required: "Bạn cần nhập link" },
-    },
-  ];
+  });
+
   // Handle
   const onSubmit: SubmitHandler<InputsBuyRobux> = async (data) => {
-    console.log(data);
+    withdrawMutate.mutate({
+      type_withdraw: data.type_withdraw,
+      linkpass: data.linkpass,
+    });
   };
 
   return (
-    <FormBase textBtn="Rút ngay" dataForm={dataForm} onSubmit={onSubmit} />
+    <FormBase
+      textBtn="Rút ngay"
+      dataForm={dataForm}
+      isLoading={withdrawMutate.isLoading}
+      onSubmit={onSubmit}
+    />
   );
 }

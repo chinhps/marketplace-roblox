@@ -15,7 +15,7 @@ const baseStyle = definePartsStyle({
     textTransform: "uppercase",
     letterSpacing: "wider",
     textAlign: "start",
-    fontSize: "17px"
+    fontSize: "17px",
   },
   td: {
     textAlign: "start",

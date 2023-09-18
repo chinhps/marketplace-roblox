@@ -23,7 +23,7 @@ axiosClient.interceptors.request.use(config => {
   }
   if (config.method === 'get') {
     config.params = {
-      ...config.data,
+      ...config.params,
       domain: myDomain()
     }
   }

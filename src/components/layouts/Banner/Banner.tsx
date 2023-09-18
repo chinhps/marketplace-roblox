@@ -37,7 +37,7 @@ Banner.v1 = () => {
           right={0}
           top="60%"
           bottom={0}
-          bgGradient="linear(to bottom,  #ff000000, white 70%)"
+          bgGradient="linear(to bottom,  #ff000000, var(--bg-main-color) 70%)"
         />
         <Box
           position="absolute"
@@ -80,7 +80,7 @@ Banner.v1 = () => {
               overflow="hidden"
               minH="500px"
             >
-              <EventBanner />
+              <EventBanner.v1 />
             </GridItem>
           </SimpleGrid>
         </Container>

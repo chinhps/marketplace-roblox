@@ -49,16 +49,12 @@ export const listOption = [
       },
       {
         lable: "Lịch sử chơi game",
-        link: "/profile/history/games",
+        link: "/profile/history/service",
       },
       {
-        lable: "Lịch sử rút/mua Robux",
-        link: "/profile/history/robux",
+        lable: "Lịch sử rút/mua",
+        link: "/profile/history/withdraw",
       },
-      // {
-      //     lable: 'Lịch sử mua Gamepass',
-      //     link: '/profile/history/buy-gamepass',
-      // },
     ],
   },
 ];
@@ -72,4 +68,9 @@ export const token = () => {
 export const customToast: UseToastOptions = {
   position: "top",
   variant: "left-accent",
+};
+
+export const styleTextShadow = {
+  color: "white",
+  textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
 };

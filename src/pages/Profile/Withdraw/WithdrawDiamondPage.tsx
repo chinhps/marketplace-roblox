@@ -1,7 +1,7 @@
 import { withdrawApi } from "@/apis/withdraw";
 import FormBase from "@/components/global/Form/FormBase";
 import { useUserData } from "@/hooks/UserDataProvider";
-import { IFormInput, InputsBuyRobux } from "@/types/form.type";
+import { IFormInput, InputsWithdrawDiamond } from "@/types/form.type";
 import { numberFormat } from "@/utils/price";
 import {
   Box,
@@ -10,24 +10,25 @@ import {
   Grid,
   GridItem,
   Heading,
+  ListItem,
+  OrderedList,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler } from "react-hook-form";
 
-export default function BuyRobux() {
+export default function WithdrawDiamondPage() {
   const userData = useUserData();
-
   return (
     <>
       <Flex flexDirection="column" gap={8}>
         <Box>
           <Heading as="h1" fontSize="25px">
-            Mua Robux
+            Rút Kim Cương
           </Heading>
           <Text mb={2} fontSize="sm">
-            Mua Robux 120h bằng Gamepass
+            Rút kim cương trực tiếp về tài khoản
           </Text>
           <Divider />
         </Box>
@@ -37,26 +38,28 @@ export default function BuyRobux() {
         >
           <GridItem colSpan={1}>
             <Text as="b">
-              Tiền hiện có:
+              Kim cương hiện có:
               <Text as="b" color="ocean.100" pl={2}>
-                {numberFormat(userData?.data.data.price ?? 0)}
+                {numberFormat(userData?.data.data.diamond ?? 0, false)}
               </Text>
             </Text>
             <Divider orientation="horizontal" my={2} />
-            <FormBuyRobux />
+            <FormWithdrawDiamond />
           </GridItem>
           <GridItem colSpan={1}>
             <Heading as="h2" size="md" mb={3}>
-              HƯỚNG DẪN MUA ROBUX
+              Thông báo
             </Heading>
-            <Box
-              rounded="20px"
-              as="iframe"
-              width="100%"
-              height="250px"
-              allow="fullscreen;"
-              src={`https://www.youtube-nocookie.com/embed/123`}
-            ></Box>
+            <OrderedList>
+              <ListItem>Vui Lòng Nhập Đúng ID.</ListItem>
+              <ListItem>
+                Sau khi đã tạo đơn rút thành công, Vui lòng chờ từ 5-15p để hệ
+                thống duyệt kim cương vào acc. Xin cảm ơn !
+              </ListItem>
+              <ListItem>
+                Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua
+              </ListItem>
+            </OrderedList>
           </GridItem>
         </Grid>
       </Flex>
@@ -64,64 +67,50 @@ export default function BuyRobux() {
   );
 }
 
-const RATE_ROBLOX = 100;
-
 const dataForm: Array<IFormInput> = [
   {
-    label: "Gói nạp",
+    label: "Gói rút",
     name: "type_withdraw",
     type: "SELECT",
     isRequired: true,
     selects: [
       {
-        label: `10k - ${RATE_ROBLOX * 1} Robux`,
+        label: "Gói rút 88 Kim Cương (50% nhận được thêm 88 Kim Cương)",
         value: "1",
       },
       {
-        label: `20k - ${RATE_ROBLOX * 2} Robux`,
+        label: "Gói rút 220 Kim Cương (40% nhận được thêm 220 Kim Cương)",
         value: "2",
       },
       {
-        label: `30k - ${RATE_ROBLOX * 3} Robux`,
+        label: "Gói rút 440 Kim Cương (30% nhận được thêm 440 Kim Cương)",
         value: "3",
       },
       {
-        label: `50k - ${RATE_ROBLOX * 5} Robux`,
+        label: "Gói rút 880 Kim Cương (15% nhận được thêm 880 Kim Cương)",
         value: "4",
       },
       {
-        label: `100k - ${RATE_ROBLOX * 10} Robux`,
+        label: "Gói rút 2200 Kim Cương (10% nhận được thêm 2200 Kim Cương)",
         value: "5",
-      },
-      {
-        label: `200k - ${RATE_ROBLOX * 20} Robux`,
-        value: "6",
-      },
-      {
-        label: `300k - ${RATE_ROBLOX * 30} Robux`,
-        value: "7",
-      },
-      {
-        label: `500k - ${RATE_ROBLOX * 50} Robux`,
-        value: "8",
       },
     ],
   },
   {
-    label: "Nhập link Gamepass",
-    name: "linkpass",
+    label: "ID game của bạn",
+    name: "id_game",
     type: "INPUT",
     isRequired: true,
   },
 ];
 
-function FormBuyRobux() {
+function FormWithdrawDiamond() {
   const toast = useToast();
   const withdrawMutate = useMutation({
-    mutationFn: ({ type_withdraw, linkpass }: InputsBuyRobux) =>
-      withdrawApi.buyRobux({
+    mutationFn: ({ type_withdraw, id_game }: InputsWithdrawDiamond) =>
+      withdrawApi.diamond({
         type_withdraw,
-        linkpass,
+        id_game,
       }),
 
     onSuccess: ({ data }) => {
@@ -131,17 +120,18 @@ function FormBuyRobux() {
       });
     },
   });
+
   // Handle
-  const onSubmit: SubmitHandler<InputsBuyRobux> = async (data) => {
+  const onSubmit: SubmitHandler<InputsWithdrawDiamond> = (data) => {
     withdrawMutate.mutate({
       type_withdraw: data.type_withdraw,
-      linkpass: data.linkpass,
+      id_game: data.id_game,
     });
   };
 
   return (
     <FormBase
-      textBtn="Mua ngay"
+      textBtn="Rút ngay"
       dataForm={dataForm}
       isLoading={withdrawMutate.isLoading}
       onSubmit={onSubmit}

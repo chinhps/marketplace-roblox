@@ -1,21 +1,17 @@
-import { IFormBase } from "@/types/form.type";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
-  Text,
+  Switch,
   Textarea,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { IFormBase } from "@/types/form.type";
+import InputNumberCustom from "./InputNumberCustom";
 
 export default function FormBase({
   dataForm,
@@ -24,8 +20,10 @@ export default function FormBase({
   onSubmit,
   hiddenLable,
   dataDefault,
+  isLoading,
 }: IFormBase) {
   const {
+    control,
     handleSubmit,
     register,
     setValue,
@@ -39,7 +37,7 @@ export default function FormBase({
           setValue(key, value);
         }
       });
-  }, []);
+  }, [dataDefault]);
 
   function Test({ children }: { children: React.ReactNode }) {
     return (
@@ -59,22 +57,35 @@ export default function FormBase({
         <Test>
           {dataForm?.map((form, index) => (
             <FormControl
+              gridArea={form.gridAreaName}
               mb={3}
               key={index}
+              isRequired={form.isRequired}
               isInvalid={errors[form.name] ? true : false}
             >
               {!hiddenLable && <FormLabel>{form.label}</FormLabel>}
-              {form.type === "INPUT" ? (
+              {form.type === "SWITCH" ? (
+                <Switch
+                  fontSize="sm"
+                  fontWeight="500"
+                  size="lg"
+                  {...register(form.name, {
+                    value: form.default ?? false,
+                    ...(form.validate ?? null),
+                  })}
+                />
+              ) : form.type === "INPUT" ? (
                 <Input
                   variant="auth"
                   fontSize="sm"
                   fontWeight="500"
                   size="lg"
+                  disabled={form.disable}
                   {...register(form.name, {
                     value: form.default ?? null,
                     ...(form.validate ?? null),
                   })}
-                  placeholder={form.label}
+                  placeholder={form.placeholder ?? form.label}
                 />
               ) : form.type === "TEXTAREA" ? (
                 <Textarea
@@ -86,27 +97,32 @@ export default function FormBase({
                     value: form.default ?? null,
                     ...(form.validate ?? null),
                   })}
-                  placeholder={form.label}
+                  placeholder={form.placeholder ?? form.label}
                 />
               ) : form.type === "NUMBER" ? (
-                <NumberInput max={form.max ?? undefined} min={form.min ?? 1}>
-                  <NumberInputField
-                    {...register(form.name, {
-                      value: form.default ?? null,
-                      ...(form.validate ?? null),
-                    })}
+                <>
+                  <Controller
+                    render={({ field: { onChange, value } }) => (
+                      <InputNumberCustom
+                        handleChange={onChange}
+                        value={value}
+                        min={form.min}
+                        max={form.max}
+                      />
+                    )}
+                    defaultValue={form.default}
+                    control={control}
+                    name={form.name}
+                    // rules={form.validate ?? null}
                   />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
+                </>
               ) : form.type === "SELECT" ? (
                 <Select
                   variant="main"
                   fontSize="sm"
                   fontWeight="500"
                   size="lg"
+                  placeholder={form.placeholder ?? form.label}
                   {...register(form.name, {
                     value: form.default ?? null,
                     ...(form.validate ?? null),
@@ -124,15 +140,16 @@ export default function FormBase({
               </FormErrorMessage>
             </FormControl>
           ))}
+
           <Button
-            isLoading={isSubmitting}
+            isLoading={isLoading ?? isSubmitting}
             fontSize="md"
             type="submit"
             variant="blue"
             w="100%"
             h="50"
           >
-            <Text className="showText">{textBtn}</Text>
+            {textBtn}
           </Button>
         </Test>
       </form>

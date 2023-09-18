@@ -66,7 +66,7 @@ export default function ModelLogout({
     <>
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="white.100">
+        <ModalContent bg="main.item" color="white.100">
           <ModalHeader>Đăng xuất</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

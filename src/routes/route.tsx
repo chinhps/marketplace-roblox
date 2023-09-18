@@ -4,7 +4,6 @@ import { createBrowserRouter } from "react-router-dom";
 import PromotionLayout from "@/components/layouts/PromotionLayout/PromotionLayout";
 import {
   AccountListPage,
-  BuyGamepassHistoryPage,
   BuyRobuxPage,
   GameHistoryPage,
   LoginPage,
@@ -19,6 +18,8 @@ import {
   WithdrawHistory,
   ViewAccountPage,
   WithdrawRobuxPage,
+  CategoryPage,
+  WithdrawDiamondPage,
 } from "@/pages";
 import AuthLayout from "@/components/layouts/Authentication/AuthLayout";
 import ProfileLayout from "@/components/layouts/Profile/ProfileLayout";
@@ -122,6 +123,15 @@ export const router = createBrowserRouter([
                   />
                 ),
               },
+              {
+                path: "withdraw-diamond",
+                element: (
+                  <TitleSeo
+                    title="Rút Kim cương"
+                    ComponentPage={WithdrawDiamondPage}
+                  />
+                ),
+              },
             ],
           },
           {
@@ -146,7 +156,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: "games",
+                path: "service",
                 element: (
                   <TitleSeo
                     title="Lịch sử chơi game"
@@ -155,7 +165,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: "robux",
+                path: "withdraw",
                 element: (
                   <TitleSeo
                     title="Lịch sử rút/mua Robux"
@@ -163,18 +173,20 @@ export const router = createBrowserRouter([
                   />
                 ),
               },
-              {
-                path: "buy-gamepass",
-                element: (
-                  <TitleSeo
-                    title="Lịch sử mua Gamepass"
-                    ComponentPage={BuyGamepassHistoryPage}
-                  />
-                ),
-              },
             ],
           },
         ],
+      },
+    ],
+  },
+  // Category
+  {
+    path: "categories",
+    element: <HomeLayout banner={false} />,
+    children: [
+      {
+        path: ":slug",
+        element: <CategoryPage />,
       },
     ],
   },

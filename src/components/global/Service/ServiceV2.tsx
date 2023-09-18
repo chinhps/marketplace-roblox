@@ -1,6 +1,6 @@
 import { IServiceListResponse } from "@/types/response/service.type";
 import { link_service } from "@/utils/links";
-import { numberFormat } from "@/utils/price";
+import { hiddenPriceByGameType, numberFormat } from "@/utils/price";
 import {
   Box,
   Center,
@@ -27,19 +27,25 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
         as="section"
         bg="main.item"
         color="white.100"
-        height="370px"
+        height="350px"
         rounded="md"
         overflow="hidden"
       >
         <Box position="relative" height="50%" overflow="hidden">
-          <Link to={link_service(data.gameType).link + data.slug}>
+          <Link
+            to={
+              data.gameType === "LINKTO"
+                ? data.more.link_to ?? "./"
+                : link_service(data.gameType).link + data.slug
+            }
+          >
             <Flex
               left={0}
               right={0}
               position="absolute"
               justifyContent="space-between"
               alignItems="flex-start"
-              p="1rem"
+              p="0.5rem"
               zIndex={3}
             >
               <VStack>
@@ -47,17 +53,26 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
                 <Tag value="50%" bg="red" />
               </VStack>
               <HStack>
-                <Icon as={FiCreditCard} />
-                <Icon as={FiLogIn} />
+                {hiddenPriceByGameType(data.gameType) ? (
+                  <Icon as={FiCreditCard} />
+                ) : (
+                  <Icon as={FiLogIn} />
+                )}
               </HStack>
             </Flex>
             <Box
               position="absolute"
               inset={0}
               bottom="30%"
-              bgGradient="linear(to top,  #00000000, black 100%)"
+              bgGradient="linear(to top,  #00000000, black 180%)"
             />
-            <Img src={data.thumb} alt={data.name} w="100%" h="100%" objectFit="cover" />
+            <Img
+              src={data.thumb}
+              alt={data.name}
+              w="100%"
+              h="100%"
+              // objectFit="cover"
+            />
           </Link>
         </Box>
         <Flex
@@ -77,12 +92,24 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
             {data.name}
           </Heading>
           <Box mx="auto">
-            <Tag rounded="full" text="Lượt sử dụng:" value={10000} />
+            <Tag
+              rounded="full"
+              text="Lượt sử dụng:"
+              value={numberFormat(data.counter, false)}
+            />
           </Box>
           <Divider borderColor="gray.600" mx="auto" w="85%" />
           <Flex justifyContent="space-between">
-            <ServiceV2Item type="NEW" text="Hiện tại" price={data.price} />
-            <ServiceV2Item type="OLD" text="Gốc" price={data.price * 2} />
+            {hiddenPriceByGameType(data.gameType) ? (
+              <>
+                <ServiceV2Item type="NEW" text="Hiện tại" price={data.price} />
+                <ServiceV2Item type="OLD" text="Gốc" price={data.price * 2} />
+              </>
+            ) : (
+              <Center w="100%">
+                <Text className="break-word" noOfLines={2}>{data.notification}</Text>
+              </Center>
+            )}
           </Flex>
         </Flex>
       </Flex>

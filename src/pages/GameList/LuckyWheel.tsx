@@ -90,7 +90,7 @@ function GamePlay({
         numrolllop,
       });
     },
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       onOpen();
       handleLoop(1);
       // Clear class effect swing
@@ -119,9 +119,9 @@ function GamePlay({
   };
 
   // Handle size for gift
-  const handleGiftSize = (width: number) => {
-    return Math.sqrt(Math.pow(width / (num_gift / 2), 2) / 2) - 70;
-  };
+  // const handleGiftSize = (width: number) => {
+  //   return Math.sqrt(Math.pow(width / (num_gift / 2), 2) / 2) - 70;
+  // };
 
   // Play try
   const handleTry = async (numrolllop: number) => {
@@ -165,10 +165,12 @@ function GamePlay({
                 <Img
                   zIndex={3}
                   mx="auto"
-                  width={{
-                    base: handleGiftSize(window.innerWidth),
-                    md: handleGiftSize(550),
-                  }}
+                  // width={{
+                  //   base: handleGiftSize(window.innerWidth),
+                  //   md: handleGiftSize(550),
+                  // }}
+                  w="100px"
+                  h="100px"
                   aspectRatio="1/1"
                   alt={dataService?.service_image.name + " gift by chinh.dev"}
                   src={gift}

@@ -21,12 +21,12 @@ export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
     cacheTime: 120000,
     enabled: !!token(), // Only fetch data user when have token ,
     refetchOnWindowFocus: false,
-  });  
+  });
   return (
     <>
       <UserDataProvider userData={{ status: data?.status, ...data.data }}>
         <Navbar />
-        {banner ? <Banner /> : null}
+        {banner ? <Banner.v1 /> : null}
         {miniBackground ? (
           <MiniBackground miniBackground={miniBackground} />
         ) : null}

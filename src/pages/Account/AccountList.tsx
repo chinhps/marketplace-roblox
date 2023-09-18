@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 import Paginate from "@/components/global/Paginate/Paginate";
+import { styleTextShadow } from "@/utils/const";
 
 const gameApi = new GameApi();
 
@@ -50,10 +51,6 @@ export default function AccountList() {
   /****----------------
    *      END-HOOK
   ----------------****/
-  const styleTextShadow = {
-    color: "white",
-    textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
-  };
 
   return (
     <>

@@ -1,4 +1,6 @@
-import { Cards, InputsRecharge } from "@/types/recharge.type";
+import rechargeApi from "@/apis/recharge";
+import { InputsRecharge } from "@/types/form.type";
+import { Cards } from "@/types/recharge.type";
 import {
   Box,
   Divider,
@@ -14,7 +16,9 @@ import {
   Button,
   FormErrorMessage,
   Select,
+  useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -77,14 +81,35 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
     handleSubmit,
     register,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<InputsRecharge>();
 
+  const toast = useToast();
   const [cardType, setCardType] = useState<string | null>(null);
+  const rechargeMutate = useMutation({
+    mutationFn: ({ card_type, amount, serial, code }: InputsRecharge) =>
+      rechargeApi.recharge({
+        card_type,
+        amount,
+        serial,
+        code,
+      }),
 
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+    },
+  });
   // Handle
-  const onSubmit: SubmitHandler<InputsRecharge> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<InputsRecharge> = (data) => {
+    rechargeMutate.mutate({
+      card_type: data.card_type,
+      amount: data.amount,
+      serial: data.serial,
+      code: data.code,
+    });
   };
 
   return (
@@ -184,7 +209,7 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
         </FormControl>
 
         <Button
-          isLoading={isSubmitting}
+          isLoading={rechargeMutate.isLoading}
           fontSize="md"
           type="submit"
           variant="blue"
