@@ -12,6 +12,8 @@ use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
+use App\Http\Controllers\Withdraw\WithdrawDiamondController;
+use App\Http\Controllers\Withdraw\WithdrawRobuxController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -98,9 +100,9 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
 
         # withdraw profile
         Route::prefix('withdraw')->group(function () {
-            Route::post('robux', [WithdrawHistoryController::class, 'robux']);
-            Route::post('diamond', [WithdrawHistoryController::class, 'diamond']);
-            Route::post('buy_robux', [WithdrawHistoryController::class, 'buy_robux']);
+            Route::post('robux', [WithdrawRobuxController::class, 'robux']);
+            Route::post('diamond', [WithdrawDiamondController::class, 'diamond']);
+            Route::post('buy_robux', [WithdrawRobuxController::class, 'buy_robux']);
         });
 
         # create any services

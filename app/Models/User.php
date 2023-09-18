@@ -24,6 +24,7 @@ class User extends Authenticatable
         'provider_id',
         'price_temporary',
         'diamond_temporary',
+        'robux_temporary',
         'block',
         'active',
         'login_type'

@@ -71,6 +71,12 @@ return [
             'level' => 'debug',
         ],
 
+        'withdraw_errors' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/withdraw_errors.log'),
+            'level' => 'debug',
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

@@ -24,14 +24,14 @@ class TransactionRepository implements TransactionInterface
     public function getDiamond(User $user)
     {
         $value = TransactionDiamond::where('user_id', $user->id)->sum('diamond');
-        $user->price_temporary = $value;
+        $user->diamond_temporary = $value;
         $user->save();
         return $value;
     }
     public function getRobux(User $user)
     {
         $value = TransactionRobux::where('user_id', $user->id)->sum('robux');
-        $user->price_temporary = $value;
+        $user->robux_temporary = $value;
         $user->save();
         return $value;
     }
