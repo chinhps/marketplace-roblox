@@ -16,17 +16,18 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler } from "react-hook-form";
 
-export default function WithdrawRobux() {
+export default function BuyRobuxPage() {
   const userData = useUserData();
+
   return (
     <>
       <Flex flexDirection="column" gap={8}>
         <Box>
           <Heading as="h1" fontSize="25px">
-            Rút Robux
+            Mua Robux
           </Heading>
           <Text mb={2} fontSize="sm">
-            Rút Robux 120h bằng Gamepass
+            Mua Robux 120h bằng Gamepass
           </Text>
           <Divider />
         </Box>
@@ -36,17 +37,17 @@ export default function WithdrawRobux() {
         >
           <GridItem colSpan={1}>
             <Text as="b">
-              Robux hiện có:
+              Tiền hiện có:
               <Text as="b" color="ocean.100" pl={2}>
-                {numberFormat(userData?.data.data.robux ?? 0, false)}
+                {numberFormat(userData?.data.data.price ?? 0)}
               </Text>
             </Text>
             <Divider orientation="horizontal" my={2} />
-            <FormWithdrawRobux />
+            <FormBuyRobux />
           </GridItem>
           <GridItem colSpan={1}>
             <Heading as="h2" size="md" mb={3}>
-              HƯỚNG DẪN RÚT ROBUX
+              HƯỚNG DẪN MUA ROBUX
             </Heading>
             <Box
               rounded="20px"
@@ -63,36 +64,46 @@ export default function WithdrawRobux() {
   );
 }
 
+const RATE_ROBLOX = 100;
+
 const dataForm: Array<IFormInput> = [
   {
-    label: "Gói rút",
+    label: "Gói nạp",
     name: "type_withdraw",
     type: "SELECT",
     isRequired: true,
     selects: [
       {
-        label: "200 Robux",
+        label: `10k - ${RATE_ROBLOX * 1} Robux`,
         value: "1",
       },
       {
-        label: "500 Robux",
+        label: `20k - ${RATE_ROBLOX * 2} Robux`,
         value: "2",
       },
       {
-        label: "1,000 Robux",
+        label: `30k - ${RATE_ROBLOX * 3} Robux`,
         value: "3",
       },
       {
-        label: "2,000 Robux",
+        label: `50k - ${RATE_ROBLOX * 5} Robux`,
         value: "4",
       },
       {
-        label: "3,000 Robux",
+        label: `100k - ${RATE_ROBLOX * 10} Robux`,
         value: "5",
       },
       {
-        label: "5,000 Robux",
+        label: `200k - ${RATE_ROBLOX * 20} Robux`,
         value: "6",
+      },
+      {
+        label: `300k - ${RATE_ROBLOX * 30} Robux`,
+        value: "7",
+      },
+      {
+        label: `500k - ${RATE_ROBLOX * 50} Robux`,
+        value: "8",
       },
     ],
   },
@@ -104,11 +115,11 @@ const dataForm: Array<IFormInput> = [
   },
 ];
 
-function FormWithdrawRobux() {
+function FormBuyRobux() {
   const toast = useToast();
   const withdrawMutate = useMutation({
     mutationFn: ({ type_withdraw, linkpass }: InputsBuyRobux) =>
-      withdrawApi.robux({
+      withdrawApi.buyRobux({
         type_withdraw,
         linkpass,
       }),
@@ -120,7 +131,6 @@ function FormWithdrawRobux() {
       });
     },
   });
-
   // Handle
   const onSubmit: SubmitHandler<InputsBuyRobux> = async (data) => {
     withdrawMutate.mutate({
@@ -131,7 +141,7 @@ function FormWithdrawRobux() {
 
   return (
     <FormBase
-      textBtn="Rút ngay"
+      textBtn="Mua ngay"
       dataForm={dataForm}
       isLoading={withdrawMutate.isLoading}
       onSubmit={onSubmit}

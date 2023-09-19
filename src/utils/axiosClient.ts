@@ -1,10 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
-import { myDomain } from "./version";
-import { customToast, token } from "./const";
+import { customToast } from "./const";
 import { createStandaloneToast } from "@chakra-ui/react";
 import { logout } from "./price";
-// import CryptoJS from 'crypto-js';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API,
@@ -15,24 +13,9 @@ const axiosClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 axiosClient.interceptors.request.use(
-  (config) => {
-    if (config.method === "post") {
-      config.data = {
-        ...config.data,
-        domain: myDomain(),
-      };
-    }
-    if (config.method === "get") {
-      config.params = {
-        ...config.params,
-        domain: myDomain(),
-      };
-    }
-
-    if (token()) {
-      config.headers.Authorization = "Bearer " + token();
-    }
-    return config;
+  async (config) => {
+    const requestInterceptor = await import("./crypto");
+    return requestInterceptor.default(config);
   },
   (error) => {
     return Promise.reject(error);

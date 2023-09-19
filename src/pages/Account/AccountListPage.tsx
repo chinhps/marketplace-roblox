@@ -18,7 +18,7 @@ import { styleTextShadow } from "@/utils/const";
 
 const gameApi = new GameApi();
 
-export default function AccountList() {
+export default function AccountListPage() {
   /****----------------
    *      HOOK
   ----------------****/

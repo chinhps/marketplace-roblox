@@ -13,7 +13,7 @@ import { ServiceHandlePostProps } from "@/types/service.type";
 
 const gameApi = new GameApi();
 
-export default function LuckyBox() {
+export default function LuckyBoxPage() {
   /****----------------
    *      HOOK
   ----------------****/

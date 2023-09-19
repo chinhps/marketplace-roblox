@@ -17,7 +17,7 @@ let num_gift = 8; // mặc định là 8
 let angle_gift = 0;
 let degOld = 0;
 
-export default function LuckyWheel() {
+export default function LuckyWheelPage() {
   /****----------------
    *      HOOK
   ----------------****/

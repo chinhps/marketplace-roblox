@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment/moment";
 
-export default function Profile() {
+export default function ProfilePage() {
   const userData = useUserData();
   const { isOpen, onOpen, onClose } = useDisclosure();
 

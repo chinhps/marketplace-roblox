@@ -2,7 +2,7 @@ import profileApi from "@/apis/profile";
 import Paginate from "@/components/global/Paginate/Paginate";
 import TableCustom from "@/components/global/TableCustom/TableCustom";
 import { token } from "@/utils/const";
-import { colorStatus, nameStatus, numberFormat } from "@/utils/price";
+import { numberFormat } from "@/utils/price";
 import {
   Box,
   Divider,
@@ -17,14 +17,14 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { useState } from "react";
 
-export default function WithdrawHistory() {
+export default function GameHistoryPage() {
   /****----------------
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
   const dataQuery = useQuery({
-    queryKey: ["purchase-history", page],
-    queryFn: () => profileApi.historyWithdraw({ page }),
+    queryKey: ["game-history", page],
+    queryFn: () => profileApi.historyService({ page }),
     retry: false,
     cacheTime: 120000,
     enabled: !!token(), // Only fetch data user when have token ,
@@ -39,50 +39,35 @@ export default function WithdrawHistory() {
       <Flex flexDirection="column" gap={5}>
         <Box>
           <Heading as="h1" fontSize="25px">
-            Lịch sử rút và mua Robux
+            Lịch sử chơi Game
           </Heading>
           <Text mb={2} fontSize="sm">
-            Lịch sử rút và mua Robux của tài khoản
+            Lịch sử các game đã chơi của tài khoản
           </Text>
           <Divider />
         </Box>
         <TableCustom
-          thead={[
-            "Mã Đơn",
-            "Loại",
-            "Số Robux",
-            "Thông tin",
-            "Thời Gian",
-            "Trạng thái",
-          ]}
-          caption="Lịch sử rút và mua Robux"
+          thead={["Thông tin", "Chi tiết", "Số lượt"]}
+          caption="Lịch sử chơi Game"
         >
           {dataQuery?.data?.data.data.map((vl, index) => (
             <Tr key={index}>
-              <Td>#{vl.id}</Td>
               <Td>
-                <Text
-                  as="b"
-                  color={vl.withdraw_type == "DIAMOND" ? "green" : "yellow"}
-                >
-                  {vl.withdraw_type}
-                </Text>
+                <Text as="b">{vl.service_name}</Text>
+                <Text>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Text>
               </Td>
-              <Td>{numberFormat(vl.value, false)}</Td>
               <Td>
                 <Stack>
-                  {vl.detail.map((dt, index) => (
-                    <Text key={index}>
-                      {dt.name}: {dt.value}
-                    </Text>
-                  ))}
+                  <>
+                    <Text as="b">Quà: {vl.default}</Text>
+                  </>
+                  <Text as="b" color="ocean.100">
+                    Giá trị: {numberFormat(vl.price ?? 0)}
+                  </Text>
                 </Stack>
               </Td>
-              <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
               <Td>
-                <Text as="b" fontSize="sm" color={colorStatus(vl.status)}>
-                  {nameStatus(vl.status)}
-                </Text>
+                <Text>{vl.quantity}</Text>
               </Td>
             </Tr>
           ))}

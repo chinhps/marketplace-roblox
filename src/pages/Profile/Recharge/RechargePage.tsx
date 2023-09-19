@@ -22,7 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export default function Recharge() {
+export default function RechargePage() {
   const data_recharge: Cards = {
     percent: 100,
     list_card_support: {

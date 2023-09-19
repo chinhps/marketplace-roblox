@@ -20,7 +20,7 @@ import moment from "moment";
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-export default function RechargeHistory() {
+export default function RechargeHistoryPage() {
   /****----------------
    *      HOOK
   ----------------****/

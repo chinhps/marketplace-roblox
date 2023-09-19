@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { useState } from "react";
 
-export default function PurchaseHistory() {
+export default function PurchaseHistoryPage() {
   /****----------------
    *      HOOK
   ----------------****/

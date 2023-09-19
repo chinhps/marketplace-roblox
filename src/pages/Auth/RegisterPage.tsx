@@ -12,7 +12,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { OtherLogin } from "./Login";
+import { OtherLogin } from "./LoginPage";
 import { passwordValidate } from "@/utils/validate/register";
 import { useMutation } from "@tanstack/react-query";
 import { AuthApi } from "@/apis/auth";
@@ -20,7 +20,7 @@ import { IRegisterInput } from "@/types/response/auth.type";
 import { customToast } from "@/utils/const";
 import { IButtonNextUser } from "@/types/form.type";
 
-export default function Register() {
+export default function RegisterPage() {
   const [nextStep, setNextStep] = useState<boolean>(false);
   const {
     handleSubmit,

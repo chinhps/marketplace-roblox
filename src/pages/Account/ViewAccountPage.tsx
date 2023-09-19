@@ -23,7 +23,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 
-export default function ViewAccount() {
+export default function ViewAccountPage() {
   /****----------------
    *      HOOK
   ----------------****/

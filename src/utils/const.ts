@@ -1,5 +1,8 @@
 import { UseToastOptions } from "@chakra-ui/react";
 
+export const encryptionKey = import.meta.env.VITE_APP_ENCRYPT_KEY;
+export const hmacKey = import.meta.env.VITE_APP_HMAC_KEY;
+
 export const listOption = [
   {
     lable: "Tài khoản",

@@ -5,16 +5,14 @@ import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 
 export default function AuthLayout() {
-  const memoizedOutlet = useMemo(() => <Outlet />, []); // <Outlet /> chỉ tính toán lại khi dependencies thay đổi
+  const memoizedOutlet = useMemo(() => <Outlet />, []);
   const data = useInformationShopData();
 
   return (
     <Flex
       flexDirection="column"
       backgroundRepeat="no-repeat"
-      backgroundImage={
-        data?.data?.data.information.background_url || "/images/background.png"
-      }
+      backgroundImage="/images/background.png"
       backgroundAttachment="fixed"
       backgroundSize="cover"
       height="100%"

@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { customToast } from "@/utils/const";
 import { ILoginInput } from "@/types/response/auth.type";
 
-export default function Login() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const toast = useToast(customToast);
   const { handleSubmit, register, watch } = useForm();

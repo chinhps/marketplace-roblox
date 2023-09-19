@@ -23,7 +23,7 @@ let bgCardDefault = "";
 let elementSelectedGlobal: HTMLDivElement | null = null;
 let typeRoll: "REAL" | "FAKE" = "REAL";
 
-export default function LuckyCard() {
+export default function LuckyCardPage() {
   /****----------------
    *      HOOK
   ----------------****/
