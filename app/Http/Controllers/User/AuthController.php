@@ -4,11 +4,13 @@ namespace App\Http\Controllers\User;
 
 use App\Helper\Crypto;
 use App\Http\Controllers\{BaseResponse, Controller};
+use App\Http\Requests\Auth\AuthLinkRequest;
 use App\Http\Requests\User\{UserLoginRequest, UserRegisterRequest};
 use App\Repository\Shop\ShopInterface;
 use App\Repository\User\UserInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -17,6 +19,30 @@ class AuthController extends Controller
         private UserInterface $userRepository,
         private ShopInterface $shopRepository
     ) {
+    }
+
+    public function getLinkLoginSocial(AuthLinkRequest $request)
+    {
+        $validated = $request->validated();
+
+        switch ($validated['login_social']) {
+            case "facebook":
+                $url = "https://www.facebook.com/dialog/oauth?client_id=" . env('FACEBOOK_CLIENT_ID') . "&redirect_uri=" . env('FACEBOOK_CLIENT_CALLBACK') . "&scope=public_profile";
+                break;
+            case "tiktok":
+                $csrfState = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
+                $url = 'https://www.tiktok.com/v2/auth/authorize/';
+                $url .= "?client_key=" . "aw62aok9rdq9d1e0";
+                $url .= '&scope=user.info.basic';
+                $url .= '&response_type=code';
+                $url .= '&redirect_uri=' . "https://login.s1.chinh.dev/tiktok.php";
+                $url .= '&state=' . $csrfState;
+                break;
+        }
+
+        return BaseResponse::data([
+            "link" => $url
+        ]);
     }
 
     public function getCurrentInfo(Request $request)
@@ -36,38 +62,31 @@ class AuthController extends Controller
     {
         do {
             $providerId = rand(1111111, 9999999) . time();
-        } while (!$this->userRepository->checkUniqueProviderId($providerId));
+        } while (!$this->userRepository->exists([
+            ['provider_id', $providerId],
+            ['login_type', 'account']
+        ]));
         return $providerId;
     }
-
-    private function generateToken($user)
-    {
-        return Crypto::encrypt($user->createToken(env('APP_KEY'))->plainTextToken, env('APP_KEY'));
-    }
-
-    private function revokeToken($user)
-    {
-        return $user->tokens()->delete();
-    }
-
 
     public function register(UserRegisterRequest $request)
     {
         $validated = $request->validated();
 
+        DB::beginTransaction();
         try {
             $user = $this->userRepository->create([
-                "shop_id" => $this->shopRepository->getByDomain($validated['domain'])->id,
                 "login_type" => "account",
                 "provider_id" => $this->generateProviderId(),
                 "name" => $validated['username'],
                 "username" => $validated['username'],
                 "password" => Hash::make($validated['password'])
-            ]);
-            if (!$user) throw new \Exception("Có lỗi nào đấy khiến không thể tạo tài khoản");
+            ], shop: $this->shopRepository->getByDomain($validated['domain']));
 
-            return BaseResponse::token(token: $this->generateToken($user), msg: "Tạo tài thành công! Đang chuyển hướng...", status: 200);
+            DB::commit();
+            return BaseResponse::token(token: generateToken($user), msg: "Tạo tài thành công! Đang chuyển hướng...", status: 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return BaseResponse::msg("Tạo tài khoản thất bại! Liên hệ admin để được hỗ trợ", 500);
         }
     }
@@ -80,32 +99,14 @@ class AuthController extends Controller
         if (!Auth::attempt([
             "username" => $validated['username'],
             "password" => $validated['password'],
-            "block" => "off",
-            "active" => "on"
+            "login_type" => "account",
+            // "block" => "off",
+            // "active" => "on"
         ])) {
             return BaseResponse::msg("Mật khẩu không đúng! Hoặc chưa kích hoạt tài khoản! Vui lòng kiểm tra lại", 400);
         }
 
         $user = Auth::user();
-
-        # Different shop and login type isn't "account"
-        if ($user->shop->domain !== $validated['domain'] || $user->login_type !== "account") {
-            $this->revokeToken($user);
-            return BaseResponse::msg("Tài khoản không tồn tại!", 400);
-        }
-
-        # Check Block account
-        if ($user->block === "on") {
-            $this->revokeToken($user);
-            return BaseResponse::msg("Tài khoản đã bị cấm!", 400);
-        }
-
-        # Check active account
-        if ($user->active === "off") {
-            $this->revokeToken($user);
-            return BaseResponse::msg("Tài khoản chưa được kích hoạt!", 400);
-        }
-
-        return BaseResponse::token(token: $this->generateToken($user), msg: "Đăng nhập thành công!", status: 200);
+        return BaseResponse::token(token: generateToken($user), msg: "Đăng nhập thành công!", status: 200);
     }
 }

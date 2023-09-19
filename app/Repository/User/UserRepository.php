@@ -2,43 +2,38 @@
 
 namespace App\Repository\User;
 
+use App\Models\ShopList;
 use App\Models\User;
 use App\Repository\Transaction\TransactionInterface;
 use Illuminate\Support\Facades\Auth;
 
 class UserRepository implements UserInterface
 {
-    public function checkUniqueProviderId($providerId)
+    public function exists(array $conditions = [])
     {
-        return User::select('provider_id')->where('provider_id', $providerId)->count() === 0;
+        return User::select('provider_id')
+            ->where($conditions)
+            ->exists();
     }
 
-    /**
-     * Create User
-     *
-     * @param  array $params
-     * Params is:
-     * - shop_id 
-     * - login_type
-     * - provider_id
-     * - name
-     * - username
-     * - password
-     * 
-     * @return void|false
-     */
-    public function create(array $params)
+    public function getByConditions(array $conditions = [])
     {
-        try {
-            return User::create([
-                ...$params,
-                'price_temporary' => 0,
-                'diamond_temporary' => 0,
-                'block' => 'off',
-                'active' => 'on'
-            ]);
-        } catch (\Exception $e) {
-            return false;
-        }
+        return User::where($conditions)->first();
+    }
+
+    public function create(array $params, ShopList $shop)
+    {
+        $user = new User();
+        $user->shop()->associate($shop);
+        $user->fill([
+            ...$params,
+            'price_temporary' => 0,
+            'diamond_temporary' => 0,
+            'robux_temporary' => 0,
+            'block' => 'off',
+            'active' => 'on'
+        ]);
+        $user->save();
+        return $user;
     }
 }

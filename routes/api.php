@@ -5,12 +5,12 @@ use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
 use App\Http\Controllers\Histories\ServiceHistoryController;
 use App\Http\Controllers\Histories\WithdrawHistoryController;
-use App\Http\Controllers\Recharge\CallbackRechargeController;
 use App\Http\Controllers\Recharge\RechargeController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\LoginWith\FacebookLoginController;
 use App\Http\Controllers\User\LogoutController;
 use App\Http\Controllers\Withdraw\WithdrawDiamondController;
 use App\Http\Controllers\Withdraw\WithdrawRobuxController;
@@ -29,6 +29,12 @@ use Illuminate\Support\Facades\Route;
 
 # AUTH
 Route::prefix('auth')->group(function () {
+
+    Route::prefix('login-with')->group(function () {
+        Route::post('get-sign-in-url', [AuthController::class, 'getLinkLoginSocial']);
+        Route::post('verified-token-facebook', [FacebookLoginController::class, 'checkLogin']);
+    });
+
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     # Logout

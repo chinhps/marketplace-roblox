@@ -1,5 +1,7 @@
 <?php
 
+use App\Helper\Crypto;
+use App\Models\ShopList;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('logReport')) {
@@ -21,4 +23,29 @@ if (!function_exists('myIp')) {
         }
         return $ip;
     };
+}
+
+if (!function_exists('generateProviderSocial')) {
+    function generateProviderSocial(string $social, $uidProvider, ShopList $shop)
+    {
+        switch ($social) {
+            case "facebook";
+                $key = 9;
+                break;
+            case "tiktok";
+                $key = 5;
+                break;
+            case "account";
+                $key = 1;
+                break;
+        }
+        return $key . ((int)$uidProvider + $key + $shop->id) . $shop->id;
+    };
+}
+
+if (!function_exists('generateToken')) {
+    function generateToken($user)
+    {
+        return Crypto::encrypt($user->createToken(env('APP_KEY'))->plainTextToken, env('APP_KEY'));
+    }
 }

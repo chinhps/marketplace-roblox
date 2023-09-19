@@ -2,8 +2,11 @@
 
 namespace App\Repository\User;
 
+use App\Models\ShopList;
+
 interface UserInterface
 {
-    public function checkUniqueProviderId($providerId);
-    public function create(array $params);
+    public function exists(array $conditions = []);
+    public function create(array $params, ShopList $shop);
+    public function getByConditions(array $conditions = []);
 }
