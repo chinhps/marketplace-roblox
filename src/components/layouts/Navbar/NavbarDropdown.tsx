@@ -1,4 +1,4 @@
-import { customToast, listOption, token } from "@/utils/const";
+import { listOption, token } from "@/utils/const";
 import {
   Button,
   Flex,
@@ -14,13 +14,12 @@ import {
   MenuList,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { FiChevronDown, FiChevronRight, FiGitlab } from "react-icons/fi";
 import { Link as ReactLink } from "react-router-dom";
 import { Link } from "@chakra-ui/react";
 import { IInfoUserResponse } from "@/types/response/auth.type";
-import { numberFormat } from "@/utils/price";
+import { handleCopy, numberFormat } from "@/utils/price";
 import { useUserData } from "@/hooks/UserDataProvider";
 import ModelLogout from "@/components/global/Model/ModelLogout";
 
@@ -53,23 +52,7 @@ export default function NavbarDropdown() {
 }
 
 function MenuCustom({ data }: { data: IInfoUserResponse }) {
-  const toast = useToast(customToast);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(data.data.providerId);
-      toast({
-        description: "Sao chép ID thành công!",
-      });
-    } catch (error) {
-      toast({
-        description: "Thất bại khi sao chép!",
-        status: "warning",
-      });
-    }
-  };
-
   return (
     <>
       <ModelLogout isOpen={isOpen} onClose={onClose} />
@@ -83,8 +66,17 @@ function MenuCustom({ data }: { data: IInfoUserResponse }) {
           | {numberFormat(data.data.price)}
         </MenuButton>
         <MenuList overflow="hidden" paddingBottom={0} boxShadow="md">
-          <MenuItem onClick={handleCopy} as={Flex} gap={5}>
-            <Img w="50px" src="/icon.jpeg" alt="icon avatar by chinh.dev" />
+          <MenuItem
+            onClick={() => handleCopy(data.data.providerId)}
+            as={Flex}
+            gap={5}
+          >
+            <Img
+              w="50px"
+              src="/icon.jpeg"
+              rounded="md"
+              alt="icon avatar by chinh.dev"
+            />
             <List>
               <ListItem as={Flex} gap={2}>
                 <Text fontWeight="bold">ID: </Text> {data.data.providerId}

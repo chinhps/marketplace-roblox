@@ -74,9 +74,8 @@ function GamePlay({
         numrolllop,
       });
     },
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       onOpen();
-      console.log(data);
     },
   });
   /****----------------

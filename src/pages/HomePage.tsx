@@ -1,5 +1,4 @@
 import serviceApi from "@/apis/service";
-// import Service from "@/components/global/Service/Service";
 import ServiceV2 from "@/components/global/Service/ServiceV2";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 import { IServiceGroupResponse } from "@/types/response/service.type";
@@ -10,6 +9,9 @@ export default function HomePage() {
   const serviceListQuery = useQuery({
     queryKey: ["serviceList"],
     queryFn: () => serviceApi.servieList(),
+    retry: false,
+    cacheTime: 120000,
+    refetchOnWindowFocus: false,
   });
 
   return (

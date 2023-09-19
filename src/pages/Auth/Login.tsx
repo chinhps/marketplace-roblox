@@ -1,4 +1,4 @@
-import { AuthApi } from "@/apis/auth";
+import { AuthApi, loginWith } from "@/apis/auth";
 import InputCustom from "@/components/global/InputCustom/InputCustom";
 import {
   Button,
@@ -6,6 +6,7 @@ import {
   Flex,
   Heading,
   Icon,
+  IconButton,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -18,9 +19,9 @@ import { customToast } from "@/utils/const";
 import { ILoginInput } from "@/types/response/auth.type";
 
 export default function Login() {
-  const { handleSubmit, register, watch } = useForm();
   const navigate = useNavigate();
   const toast = useToast(customToast);
+  const { handleSubmit, register, watch } = useForm();
 
   const mutation = useMutation({
     mutationFn: (data: ILoginInput) => {
@@ -110,14 +111,33 @@ function changeColorButton(vl1: string | undefined, vl2: string | undefined) {
 }
 
 export function OtherLogin() {
+  const getLinkSocialLoginMutate = useMutation({
+    mutationFn: (login: string) => loginWith.urlLoginSocial(login),
+    onSuccess: ({ data }) => {
+      window.location = data.data.link;
+    },
+  });
+
   return (
     <Flex gap={2} my={3}>
-      <Button bg="messenger.500" flex={1} py={7}>
-        <Icon as={FaFacebook} color="white" fontSize="25px" />
-      </Button>
-      <Button bg="black.100" flex={1} py={7}>
-        <Icon as={FaTiktok} color="white" fontSize="25px" />
-      </Button>
+      <IconButton
+        aria-label="facebook login"
+        bg="messenger.500"
+        py={7}
+        flex={1}
+        isDisabled={getLinkSocialLoginMutate.isLoading}
+        icon={<Icon as={FaFacebook} color="white" fontSize="25px" />}
+        onClick={() => getLinkSocialLoginMutate.mutate("facebook")}
+      />
+      <IconButton
+        aria-label="tiktok login"
+        bg="black.100"
+        py={7}
+        flex={1}
+        isDisabled={getLinkSocialLoginMutate.isLoading}
+        icon={<Icon as={FaTiktok} color="white" fontSize="25px" />}
+        onClick={() => getLinkSocialLoginMutate.mutate("tiktok")}
+      />
     </Flex>
   );
 }

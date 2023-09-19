@@ -11,29 +11,42 @@ import {
   List,
   ListItem,
   HStack,
-  Grid,
   GridItem,
   Flex,
   Img,
   Stack,
   Divider,
   SimpleGrid,
+  useMediaQuery,
+  Button,
 } from "@chakra-ui/react";
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { numberFormat } from "@/utils/price";
+import { handleCopy, numberFormat } from "@/utils/price";
 import { listOption } from "@/utils/const";
 import IsAuthentication from "@/guards/IsAuthentication";
 import { useUserData } from "@/hooks/UserDataProvider";
+import { useState } from "react";
+import { FiCopy } from "react-icons/fi";
 
 export default function ProfileLayout() {
   return (
     <IsAuthentication>
-      <SimpleGrid columns={10} spacing={3} color="white.100">
-        <GridItem rounded="md" colSpan={2} bg="main.item" p={5}>
+      <SimpleGrid
+        columns={{ base: 1, lg: 12 }}
+        spacing={{ base: 0, lg: 3 }}
+        color="white.100"
+      >
+        <GridItem
+          rounded="md"
+          colSpan={3}
+          bg="main.item"
+          p={5}
+          mb={{ base: "2rem", lg: "0px" }}
+        >
           <SideBar />
         </GridItem>
-        <GridItem rounded="md" colSpan={8} bg="main.item" p={10}>
+        <GridItem rounded="md" colSpan={9} bg="main.item" p={10}>
           <Outlet />
         </GridItem>
       </SimpleGrid>
@@ -42,53 +55,57 @@ export default function ProfileLayout() {
 }
 
 function SideBar() {
-  // const [isDesktop] = useMediaQuery("(min-width: 768px)");
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
+  const [openMenu, setOpenMenu] = useState(false);
   const userData = useUserData();
 
   return (
     <>
-      <Grid templateColumns="repeat(10,1fr)" gap={3} alignItems="center">
-        <GridItem colSpan={3}>
-          <Flex justifyContent="center">
-            <Img
-              w="100%"
-              rounded="md"
-              src="https://i.imgur.com/CP32c7B.jpg"
-              alt="chinh.dev"
-            />
-          </Flex>
-        </GridItem>
-        <GridItem colSpan={7}>
-          <Box flex="1">
-            <Stack spacing={1}>
-              <Text fontSize="15px">
-                <Text as="b" pr={1}>
-                  ID:
-                </Text>
-                {userData?.data?.data.providerId}
-              </Text>
-              <Text fontSize="15px">
-                <Text as="b" pr={1}>
-                  Tên:
-                </Text>
-                {userData?.data?.data.name}
-              </Text>
-              <Text fontSize="15px">
-                <Text as="b" pr={1}>
-                  Số dư:
-                </Text>
-                <Text color="ocean.200" as="b" pr={1}>
-                  {numberFormat(userData?.data?.data.price ?? 0)}
-                </Text>
-              </Text>
-            </Stack>
-          </Box>
-        </GridItem>
-      </Grid>
-      <Divider mt={3} />
-      <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple mt={2}>
-        <ListSideBar />
-      </Accordion>
+      <HStack spacing={5}>
+        <Flex justifyContent="center" w="30%">
+          <Img w="100%" rounded="md" src="/icon.jpeg" alt="chinh.dev" />
+        </Flex>
+
+        <Stack spacing={2} flex="1" fontSize="15px">
+          <Button
+            size="sm"
+            rightIcon={<FiCopy />}
+            variant="user"
+            onClick={() => handleCopy(userData?.data?.data.providerId ?? "")}
+          >
+            ID: {userData?.data?.data.providerId}
+          </Button>
+          <Text>
+            <Text as="b" pr={2}>
+              Tên:
+            </Text>
+            {userData?.data?.data.name}
+          </Text>
+          <Text>
+            <Text as="b" pr={2}>
+              Số dư:
+            </Text>
+            <Text color="ocean.200" as="b" pr={1}>
+              {numberFormat(userData?.data?.data.price ?? 0)}
+            </Text>
+          </Text>
+        </Stack>
+      </HStack>
+      <Divider my={5} />
+      {!isDesktop && (
+        <Button
+          w="100%"
+          variant="user"
+          onClick={() => setOpenMenu((prev) => !prev)}
+        >
+          {!openMenu ? "Mở" : "Đóng"} Menu
+        </Button>
+      )}
+      {isDesktop || openMenu ? (
+        <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple mt={2}>
+          <ListSideBar />
+        </Accordion>
+      ) : null}
     </>
   );
 }

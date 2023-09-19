@@ -1,12 +1,14 @@
-import { Box, Container } from "@chakra-ui/react";
+import { Box, Container, useToast } from "@chakra-ui/react";
 import Navbar from "../Navbar/Navbar";
 import Banner from "../Banner/Banner";
 import Footer from "../Footer/Footer";
-import { Outlet } from "react-router-dom";
-import { AuthApi } from "@/apis/auth";
-import { useQuery } from "@tanstack/react-query";
-import { token } from "@/utils/const";
+import { Outlet, useSearchParams } from "react-router-dom";
+import { AuthApi, loginWith } from "@/apis/auth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { customToast, token } from "@/utils/const";
 import UserDataProvider from "@/hooks/UserDataProvider";
+import { useEffect } from "react";
+import ScrollToTop from "@/components/global/Scroll/ScrollToTop";
 
 interface IHomeLayout {
   banner?: boolean;
@@ -14,6 +16,9 @@ interface IHomeLayout {
 }
 
 export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
+  const toast = useToast(customToast);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const data = useQuery({
     queryKey: ["user"],
     queryFn: () => AuthApi.infoUser(),
@@ -22,8 +27,32 @@ export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
     enabled: !!token(), // Only fetch data user when have token ,
     refetchOnWindowFocus: false,
   });
+
+  const loginFacebookMutate = useMutation({
+    mutationFn: (token: string) => loginWith.facebook(token),
+    onSuccess: ({ data }) => {
+      toast({
+        description: data?.msg,
+        status: "success",
+      });
+      if (data?.token) {
+        localStorage.setItem("auth._token.local", data?.token);
+      }
+    },
+  });
+
+  useEffect(() => {
+    const token = searchParams.get("token_facebook");
+    if (token) {
+      loginFacebookMutate.mutate(token);
+      searchParams.delete("token_facebook");
+      setSearchParams(searchParams);
+    }
+  }, []);
+
   return (
     <>
+      <ScrollToTop />
       <UserDataProvider userData={{ status: data?.status, ...data.data }}>
         <Navbar />
         {banner ? <Banner.v1 /> : null}
@@ -34,7 +63,7 @@ export default function HomeLayout({ banner, miniBackground }: IHomeLayout) {
           maxW="container.2xl"
           height="100%"
           flex={1}
-          mt={banner ? "2rem" : "8rem"}
+          mt={banner ? "2rem" : "6rem"}
           p={0}
           zIndex={5}
         >

@@ -92,7 +92,7 @@ export default function Navbar() {
 }
 
 function LogoNav() {
-  const data = useInformationShopData();  
+  const data = useInformationShopData();
   return (
     <>
       {data?.status === "loading" ? (
@@ -209,20 +209,16 @@ const MobileNav = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) => {
+}) => {  
   return (
     <>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
         <DrawerOverlay />
-        <DrawerContent bg="white.100">
+        <DrawerContent bg="main.item">
           <DrawerCloseButton />
           <DrawerHeader>
             <Center>
-              <Image
-                src="https://i.imgur.com/wUN2rtT.png"
-                alt="logo"
-                h="50px"
-              />
+              <LogoNav />
             </Center>
           </DrawerHeader>
           <DrawerBody display="flex" flexDirection="column">
@@ -240,7 +236,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Stack spacing={4} onClick={children && onToggle}>
+    <Stack spacing={1} onClick={children && onToggle}>
       <Flex
         py={2}
         as={Link}
@@ -251,15 +247,13 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           textDecoration: "none",
         }}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
+        <Text fontWeight={600} color="white.100">
           {label}
         </Text>
         {children && (
           <Icon
             as={ChevronDownIcon}
+            color="white.100"
             transition={"all .25s ease-in-out"}
             transform={isOpen ? "rotate(180deg)" : ""}
             w={6}
@@ -270,12 +264,13 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
         <Stack
-          mt={2}
+          mb="1rem"
           pl={4}
           borderLeft={1}
           borderStyle={"solid"}
           borderColor={useColorModeValue("gray.200", "gray.700")}
           align={"start"}
+          color="white.100"
         >
           {children &&
             children.map((child) => (
@@ -308,13 +303,13 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Nạp qua thẻ cào",
         subLabel: "Thông qua các nhà mạng viễn thông",
-        href: "#",
+        href: "/profile/recharge",
       },
-      {
-        label: "Nạp qua ATM",
-        subLabel: "Chuyển khoản trực tiếp qua ngân hàng +20%",
-        href: "#",
-      },
+      // {
+      //   label: "Nạp qua ATM",
+      //   subLabel: "Chuyển khoản trực tiếp qua ngân hàng +20%",
+      //   href: "#",
+      // },
     ],
   },
   {
@@ -322,9 +317,9 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "#",
     icon: true,
   },
-  {
-    label: "Tin tức",
-    href: "#",
-    icon: true,
-  },
+  // {
+  //   label: "Tin tức",
+  //   href: "#",
+  //   icon: true,
+  // },
 ];

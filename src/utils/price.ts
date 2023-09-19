@@ -1,3 +1,6 @@
+import { createStandaloneToast } from "@chakra-ui/react";
+import { customToast } from "./const";
+
 export const numberFormat = (price: number, currency: boolean = true) => {
   const format = new Intl.NumberFormat("vi-VN", {
     style: currency ? "currency" : undefined,
@@ -66,3 +69,20 @@ export function ucwords(str: string) {
     return match.toUpperCase();
   });
 }
+
+export const handleCopy = async (text: string) => {
+  const { toast } = createStandaloneToast();
+  try {
+    await navigator.clipboard.writeText(text);
+    toast({
+      description: "Sao chép ID thành công!",
+      ...customToast,
+    });
+  } catch (error) {
+    toast({
+      description: "Thất bại khi sao chép!",
+      status: "warning",
+      ...customToast,
+    });
+  }
+};

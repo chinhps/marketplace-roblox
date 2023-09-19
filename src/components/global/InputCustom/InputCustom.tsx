@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -51,11 +52,11 @@ export default function InputCustom({
           />
           {type === "password" && (
             <InputRightElement height="100%" mr="1rem">
-              {show ? (
-                <FiEye onClick={handleClick} />
-              ) : (
-                <FiEyeOff onClick={handleClick} />
-              )}
+              <IconButton
+                aria-label="show-hidden"
+                icon={show ? <FiEye /> : <FiEyeOff />}
+                onClick={handleClick}
+              />
             </InputRightElement>
           )}
         </InputGroup>

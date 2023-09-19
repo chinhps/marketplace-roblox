@@ -8,7 +8,6 @@ import {
   Heading,
   Icon,
   SimpleGrid,
-  VStack,
 } from "@chakra-ui/react";
 import { FaWallet } from "react-icons/fa";
 import serviceApi from "@/apis/service";
