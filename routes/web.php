@@ -1,8 +1,4 @@
 <?php
-
-use App\Models\Service;
-use App\Models\ServiceDetail;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +13,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return "Welcome to API by Chinh.dev";
 });
-
-// Route::get('test', function () {
-//     $data = User::find(5)->services()->attach(5, ['turn' => 5]);
-// });
