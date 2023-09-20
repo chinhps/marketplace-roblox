@@ -1,7 +1,7 @@
 export const getVersion = () => {
-    return 123;
-}
+  return 123;
+};
 
 export const myDomain = () => {
-    return window.location.hostname.split('.').slice(-2).join('.');
-}
+  return import.meta.env.VITE_APP_DOMAIN;
+};
