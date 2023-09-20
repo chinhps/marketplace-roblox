@@ -45,6 +45,7 @@ class TransactionRepository implements TransactionInterface
     public function createDiamond(User $user, float $value, string $note)
     {
         $user->diamond_temporary = $user->diamond_temporary + $value;
+        $user->save();
         return (new Transaction(
             model: new TransactionDiamond,
             user: $user,
@@ -55,6 +56,7 @@ class TransactionRepository implements TransactionInterface
     public function creaeteRobux(User $user, float $value, string $note)
     {
         $user->robux_temporary = $user->robux_temporary + $value;
+        $user->save();
         return (new Transaction(
             model: new TransactionRobux,
             user: $user,

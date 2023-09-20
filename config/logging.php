@@ -57,6 +57,11 @@ return [
             'path' => storage_path('logs/recharge_webhook.log'),
             'level' => 'debug',
         ],
+        'withdraw_webhook' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/withdraw_webhook.log'),
+            'level' => 'debug',
+        ],
         'test' => [
             'driver' => 'single',
             'path' => storage_path('logs/test.log'),

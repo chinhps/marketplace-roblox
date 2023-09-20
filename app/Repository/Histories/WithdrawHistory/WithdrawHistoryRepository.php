@@ -24,6 +24,11 @@ class WithdrawHistoryRepository implements WithdrawHistoryInterface
         return $this->model->with(['user', 'shop'])->find($id);
     }
 
+    public function getByConditions(array $conditions = [])
+    {
+        return $this->model->with(['user', 'shop'])->where($conditions)->first();
+    }
+
     public function update(float $id, array $params)
     {
         return $this->model->find($id)->update($params);
