@@ -16,7 +16,7 @@ interface IFileDropzone {
 }
 
 export default function DropZone() {
-  const [fileList, setFileList] = useState<Array<IFileDropzone>>([]);
+  const [fileList, _] = useState<Array<IFileDropzone>>([]);
   return (
     <>
       <Box position="relative" w="full">

@@ -149,7 +149,7 @@ function TableList() {
             </Td>
 
             <Td>
-              {Object.keys(vl.information).map((vl2, index) => (
+              {vl.information && Object.keys(vl.information).map((vl2, index) => (
                 <Text key={index}>
                   {vl2}: {vl.information[vl2]}
                 </Text>

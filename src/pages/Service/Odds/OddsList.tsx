@@ -12,11 +12,10 @@ export default function OddsList() {
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
   const toast = useToast();
   const serviceOddsListQuery = useQuery({
-    queryKey: ["service-odds-list", filter, page],
-    queryFn: () => serviceOddsApi.list({ page, filter }),
+    queryKey: ["service-odds-list", page],
+    queryFn: () => serviceOddsApi.list({ page, filter: {} }),
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,

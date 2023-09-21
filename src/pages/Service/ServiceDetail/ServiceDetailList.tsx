@@ -5,7 +5,6 @@ import {
   Badge,
   Button,
   Image,
-  SimpleGrid,
   Tag,
   Td,
   Text,
@@ -43,11 +42,10 @@ export function ServiceDetailTableList() {
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
-  const [filter, setFilter] = useState({});
   const toast = useToast();
   const serviceDetailListQuery = useQuery({
-    queryKey: ["service-detail-list", filter, page],
-    queryFn: () => serviceApi.listDetail({ page, filter }),
+    queryKey: ["service-detail-list", page],
+    queryFn: () => serviceApi.listDetail({ page, filter: {} }),
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,

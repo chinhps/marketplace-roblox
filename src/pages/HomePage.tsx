@@ -17,31 +17,31 @@ import moment from "moment";
 export default function HomePage() {
   return (
     <Flex flexDirection="column" gap="1rem">
-      <SimpleGrid columns={24} gap="1rem">
-        <GridItem colSpan={14}>
+      <SimpleGrid columns={{ base: 1, lg: 24 }} gap="1rem">
+        <GridItem colSpan={{ base: 1, lg: 14 }}>
           <CardCollection title="Thống kê dịch vụ">
             <Statistical />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={6}>
+        <GridItem colSpan={{ base: 1, lg: 6 }}>
           <CardCollection title="Doanh thu hôm nay">
             <Revenue />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={4}>
+        <GridItem colSpan={{ base: 1, lg: 4 }}>
           <CardCollection title="Đang truy cập">
             <ItemTextMain>450</ItemTextMain>
             <Text fontWeight="500">Đang truy cập</Text>
           </CardCollection>
         </GridItem>
       </SimpleGrid>
-      <SimpleGrid columns={12} gap="1rem">
-        <GridItem colSpan={6}>
+      <SimpleGrid columns={{ base: 1, lg: 12 }} gap="1rem">
+        <GridItem colSpan={{ base: 1, lg: 6 }}>
           <CardCollection title="Biểu đồ doanh thu">
             <Chart />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={6}>
+        <GridItem colSpan={{ base: 1, lg: 6 }}>
           <CardCollection title="Biểu đồ lượng truy cập">
             <Chart />
           </CardCollection>

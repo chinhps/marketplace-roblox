@@ -1,10 +1,4 @@
-import {
-  Link,
-  Navigate,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar/Navbar";
 import {
   Accordion,
@@ -13,14 +7,12 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Center,
   Container,
   Flex,
   GridItem,
   List,
   ListItem,
   SimpleGrid,
-  Spinner,
   useToast,
 } from "@chakra-ui/react";
 import {
@@ -68,11 +60,6 @@ export default function DefaultLayout() {
 
   return (
     <>
-      {dataUserQuery.isLoading && (
-        <Center height="100vh">
-          <Spinner />
-        </Center>
-      )}
       {dataUserQuery.isSuccess && (
         <>
           <Navbar />
@@ -83,8 +70,8 @@ export default function DefaultLayout() {
             p={0}
             zIndex={2}
           >
-            <SimpleGrid columns={11} spacing="1rem">
-              <GridItem colSpan={2}>
+            <SimpleGrid columns={{ base: 1, lg: 11 }} spacing="1rem">
+              <GridItem colSpan={2} display={{ base: "none", lg: "block" }}>
                 <SildeBar />
               </GridItem>
               <GridItem colSpan={9}>
@@ -198,7 +185,7 @@ const dataSildeBar: Array<ISildeBar> = [
   },
 ];
 
-function SildeBar() {
+export function SildeBar() {
   const location = useLocation();
 
   return (
