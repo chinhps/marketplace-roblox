@@ -3,6 +3,11 @@ export interface IBaseResponse<T> {
   paginate?: IPaginate;
 }
 
+export interface IBaseResponseData<T> {
+  data: Array<T>;
+  status: number;
+}
+
 export interface IBaseResponseDetail<T> {
   data: T;
 }

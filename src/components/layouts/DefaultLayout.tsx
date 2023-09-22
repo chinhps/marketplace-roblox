@@ -30,6 +30,7 @@ import { useQuery } from "@tanstack/react-query";
 import { token } from "@/utils/function";
 import { AuthApi } from "@/apis/auth";
 import { useEffect } from "react";
+import { userApi } from "@/apis/user";
 
 export default function DefaultLayout() {
   const toast = useToast();
@@ -96,103 +97,21 @@ const icons: { [key: string]: React.ReactElement } = {
   "Trợ giúp": <FiPhone />,
 };
 
-const dataSildeBar: Array<ISildeBar> = [
-  {
-    name: "Trang chủ",
-    children: [
-      {
-        name: "Trang chủ",
-        link: "/",
-      },
-      {
-        name: "Quản lý shop",
-        link: "/shop-list",
-      },
-    ],
-  },
-  {
-    name: "Plugins",
-    children: [
-      {
-        name: "Quản lý Plugins",
-        link: "/abc",
-      },
-    ],
-  },
-  {
-    name: "Lịch sử dịch vụ",
-    children: [
-      {
-        name: "Trò chơi",
-        link: "/history/services",
-      },
-      {
-        name: "Mua tài khoản",
-        link: "/history/purchases",
-      },
-      {
-        name: "Nạp thẻ",
-        link: "/history/recharges",
-      },
-      {
-        name: "Rút / Thuê / ...",
-        link: "/history/withdraw",
-      },
-    ],
-  },
-  {
-    name: "Dịch vụ",
-    children: [
-      {
-        name: "Quản lý dịch vụ",
-        link: "/services",
-      },
-      {
-        name: "Quản lý tài khoản",
-        link: "/services/accounts",
-      },
-      {
-        name: "Quản lý Random",
-        link: "/services/account-random",
-      },
-    ],
-  },
-  {
-    name: "Người dùng",
-    children: [
-      {
-        name: "Quản lý khách",
-        link: "/users/user",
-      },
-      {
-        name: "Quản lý admins",
-        link: "/users/admin",
-      },
-    ],
-  },
-  {
-    name: "Top nạp thẻ",
-    children: [
-      {
-        name: "Quản lý",
-        link: "/top-recharge",
-      },
-    ],
-  },
-  {
-    name: "Trợ giúp",
-    link: "/abc",
-  },
-];
-
 export function SildeBar() {
   const location = useLocation();
+
+  const navbarQuery = useQuery({
+    queryFn: () => userApi.navbar(),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
       <Box bg="main.item2" overflow="hidden" rounded="md" p="1rem">
         <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple>
-          {dataSildeBar.map((sildeItem, index) => (
+          {navbarQuery.data?.data.data.map((sildeItem, index) => (
             <AccordionItem border="none" key={index}>
               <h2>
                 {(sildeItem.children?.length ?? 0) > 0 ? (
