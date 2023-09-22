@@ -8,7 +8,9 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\User\UserResource;
 use App\Repository\User\UserInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -16,6 +18,176 @@ class UserController extends Controller
     public function __construct(
         private UserInterface $userRepository
     ) {
+    }
+
+    public function navbar()
+    {
+
+        if (Gate::allows('ctv', Auth::user())) {
+            return BaseResponse::data([
+                [
+                    'name' => 'Trang chủ',
+                    'children' => [
+                        [
+                            'name' => 'Trang chủ',
+                            'link' => '/',
+                        ]
+                    ],
+                ],
+                [
+                    'name' => 'Dịch vụ',
+                    'children' => [
+                        [
+                            'name' => 'Quản lý tài khoản',
+                            'link' => '/services/accounts',
+                        ],
+                        [
+                            'name' => 'Quản lý Random',
+                            'link' => '/services/account-random',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Lịch sử dịch vụ',
+                    'children' => [
+                        [
+                            'name' => 'Mua tài khoản',
+                            'link' => '/history/purchases',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Trợ giúp',
+                    'link' => '/abc',
+                ],
+            ]);
+        }
+
+        if (Gate::allows('koc', Auth::user())) {
+            return BaseResponse::data([
+                [
+                    'name' => 'Trang chủ',
+                    'children' => [
+                        [
+                            'name' => 'Trang chủ',
+                            'link' => '/',
+                        ]
+                    ],
+                ],
+                [
+                    'name' => 'Lịch sử dịch vụ',
+                    'children' => [
+                        [
+                            'name' => 'Trò chơi',
+                            'link' => '/history/services',
+                        ],
+                        [
+                            'name' => 'Mua tài khoản',
+                            'link' => '/history/purchases',
+                        ],
+                        [
+                            'name' => 'Nạp thẻ',
+                            'link' => '/history/recharges',
+                        ]
+                    ],
+                ],
+                [
+                    'name' => 'Trợ giúp',
+                    'link' => '/abc',
+                ],
+            ]);
+        }
+
+        $data = [
+            [
+                'name' => 'Trang chủ',
+                'children' => [
+                    [
+                        'name' => 'Trang chủ',
+                        'link' => '/',
+                    ],
+                    [
+                        'name' => 'Quản lý shop',
+                        'link' => '/shop-list',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Plugins',
+                'children' => [
+                    [
+                        'name' => 'Quản lý Plugins',
+                        'link' => '/abc',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Lịch sử dịch vụ',
+                'children' => [
+                    [
+                        'name' => 'Trò chơi',
+                        'link' => '/history/services',
+                    ],
+                    [
+                        'name' => 'Mua tài khoản',
+                        'link' => '/history/purchases',
+                    ],
+                    [
+                        'name' => 'Nạp thẻ',
+                        'link' => '/history/recharges',
+                    ],
+                    [
+                        'name' => 'Rút / Thuê / ...',
+                        'link' => '/history/withdraw',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Dịch vụ',
+                'children' => [
+                    [
+                        'name' => 'Quản lý dịch vụ',
+                        'link' => '/services',
+                    ],
+                    [
+                        'name' => 'Quản lý tài khoản',
+                        'link' => '/services/accounts',
+                    ],
+                    [
+                        'name' => 'Quản lý Random',
+                        'link' => '/services/account-random',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Người dùng',
+                'children' => [
+                    [
+                        'name' => 'Quản lý khách',
+                        'link' => '/users/user',
+                    ],
+                    [
+                        'name' => 'Quản lý admins',
+                        'link' => '/users/admin',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Top nạp thẻ',
+                'children' => [
+                    [
+                        'name' => 'Quản lý',
+                        'link' => '/top-recharge',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Trợ giúp',
+                'link' => '/abc',
+            ],
+        ];
+
+        return BaseResponse::data($data);
     }
 
     public function list(Request $request)

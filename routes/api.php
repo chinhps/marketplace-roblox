@@ -53,6 +53,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['decryptToken:sanctum'])->group(function () {
+
+    # navbar
+    Route::get('/navbar', [UserController::class, 'navbar']);
+
     # Get infor current user
     Route::get('/user', [AuthController::class, 'getCurrentInfo']);
 
