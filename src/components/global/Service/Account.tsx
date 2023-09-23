@@ -10,6 +10,8 @@ import {
   ListIcon,
   ListItem,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { FiChevronRight, FiGift } from "react-icons/fi";
 import Skeleton from "../Skeleton/Skeleton";
@@ -17,10 +19,47 @@ import { IAccountService } from "@/types/response/service.type";
 import { numberFormat } from "@/utils/price";
 import Tag from "../Tag/Tag";
 import { Link } from "react-router-dom";
+import { customToast } from "@/utils/const";
+import { useMutation } from "@tanstack/react-query";
+import { accountApi } from "@/apis/games/accountApi";
+import ModelConfirm from "../Model/ModalConfirm";
 
 export default function Account({ data }: { data: IAccountService }) {
+  const {
+    isOpen: isOpenConfirm,
+    onOpen: onOpenConfirm,
+    onClose: onCloseConfirm,
+  } = useDisclosure();
+  const toast = useToast(customToast);
+  const accountBuyMutation = useMutation({
+    mutationFn: ({ id }: { id: number }) => {
+      return accountApi.buyAccount(id);
+    },
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+      onCloseConfirm();
+    },
+    onError: () => {
+      onCloseConfirm();
+    },
+  });
   return (
     <>
+      <ModelConfirm
+        isLoading={accountBuyMutation.isLoading}
+        isOpen={isOpenConfirm}
+        onClose={onCloseConfirm}
+        handleConfirm={() =>
+          accountBuyMutation.mutate({
+            id: Number(data.id),
+          })
+        }
+        TextData={`Bạn có chắc muốn mua #${data.id}?`}
+        children={null}
+      />
       <Flex
         position="relative"
         color="white.100"
@@ -92,14 +131,11 @@ export default function Account({ data }: { data: IAccountService }) {
         </Box>
         <Box as="footer">
           <Button
-            // leftIcon={<FiShoppingCart />}
-            py="1.4rem"
-            w="100%"
             borderRadius={0}
-            bg="ocean.100"
-            color="black.100"
-            fontWeight="bold"
-            textTransform="uppercase"
+            variant="blue"
+            w="100%"
+            py="1.4rem"
+            onClick={onOpenConfirm}
           >
             <Text className="showText">Mua ngay</Text>
           </Button>

@@ -61,27 +61,17 @@ export default function ViewAccountPage() {
    *      END-HOOK
   ----------------****/
 
-  /****----------------
-   *      Handle
-  ----------------****/
-  const handleBuy = () => {
-    if (id) {
-      accountBuyMutation.mutate({
-        id: Number(id),
-      });
-    }
-  };
-  /****----------------
-   *      END-Handle
-  ----------------****/
-
   return (
     <>
       <ModelConfirm
         isLoading={accountBuyMutation.isLoading}
         isOpen={isOpenConfirm}
         onClose={onCloseConfirm}
-        handleConfirm={handleBuy}
+        handleConfirm={() =>
+          accountBuyMutation.mutate({
+            id: Number(id),
+          })
+        }
         TextData={`Bạn có chắc muốn mua #${id}?`}
         children={null}
       />
