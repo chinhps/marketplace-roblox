@@ -117,7 +117,7 @@ class UserController extends Controller
                 'children' => [
                     [
                         'name' => 'Quản lý Plugins',
-                        'link' => '/abc',
+                        'link' => '/plugins',
                     ],
                 ],
             ],
