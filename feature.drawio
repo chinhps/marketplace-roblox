@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-09-15T15:59:40.132Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.81" etag="wCzbs_vpS1IFD9aRHuFV" version="21.7.5" type="device" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-09-21T16:09:10.128Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.31" etag="BBwU4aqGS1L0FMEczmnI" version="21.7.5" type="device" pages="3">
   <diagram name="Page-1" id="KmQgnTv5vvOI3r4hxGTt">
-    <mxGraphModel dx="2366" dy="824" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2131" dy="746" grid="1" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -127,7 +127,7 @@
         <mxCell id="98oBXOV-pdoTwL55DlCH-45" value="Chỉnh sửa hàng loạt thông tin giống nhau của các website" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="98oBXOV-pdoTwL55DlCH-42" vertex="1">
           <mxGeometry x="32.75390625" y="540" width="136.0546875" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="98oBXOV-pdoTwL55DlCH-46" value="Hiển thị menu theo quyền" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="98oBXOV-pdoTwL55DlCH-41" vertex="1">
+        <mxCell id="98oBXOV-pdoTwL55DlCH-46" value="Hiển thị menu theo quyền" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-41" vertex="1">
           <mxGeometry x="40.3125" y="300" width="120.9375" height="60" as="geometry" />
         </mxCell>
         <mxCell id="98oBXOV-pdoTwL55DlCH-47" value="(ADMIN) Chỉnh sửa thông tin của website" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="98oBXOV-pdoTwL55DlCH-41" vertex="1">

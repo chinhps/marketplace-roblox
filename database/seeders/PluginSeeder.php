@@ -16,11 +16,11 @@ class PluginSeeder extends Seeder
     {
         $shop_list = ShopList::all();
 
-        Plugin::factory(30)->create()->each(function ($plugin) use ($shop_list) {
-            if (rand(1, 10) > 5) {
-                $randomShop = $shop_list->random(20)->pluck('id');
-                $plugin->shop_list()->attach($randomShop);
-            }
-        });
+        // Plugin::factory(30)->create()->each(function ($plugin) use ($shop_list) {
+        //     if (rand(1, 10) > 5) {
+        //         $randomShop = $shop_list->random(20)->pluck('id');
+        //         $plugin->shop_list()->attach($randomShop);
+        //     }
+        // });
     }
 }
