@@ -25,7 +25,6 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import Footer from "./Footer/Footer";
-import { ISildeBar } from "@/types/layout";
 import { useQuery } from "@tanstack/react-query";
 import { token } from "@/utils/function";
 import { AuthApi } from "@/apis/auth";
