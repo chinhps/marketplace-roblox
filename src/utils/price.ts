@@ -54,7 +54,7 @@ export function hiddenPriceByGameType(gameType: string) {
 export function textCounterService(gameType: string) {
   switch (gameType) {
     case "ACCOUNT":
-      return "Tài khoản hiện có:";
+      return "Hiện có:";
     default:
       return "Lượt sử dụng:";
   }

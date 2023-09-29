@@ -31,11 +31,15 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
         as="section"
         bg="main.item"
         color="white.100"
-        height="350px"
+        height={{ base: "275px", lg: "350px" }}
         rounded="md"
         overflow="hidden"
       >
-        <Box position="relative" height="50%" overflow="hidden">
+        <Box
+          position="relative"
+          height={{ base: "40%", lg: "50%" }}
+          overflow="hidden"
+        >
           <Link
             to={
               data.gameType === "LINKTO"
@@ -80,7 +84,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
           </Link>
         </Box>
         <Flex
-          height="50%"
+          height={{ base: "60%", lg: "50%" }}
           flexDirection="column"
           px={{ base: "1rem", lg: "2rem" }}
           py="1rem"
