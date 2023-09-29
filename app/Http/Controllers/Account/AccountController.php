@@ -58,7 +58,6 @@ class AccountController extends Controller
         $domain = $validated['domain'];
         $id = $validated['id'];
 
-        DB::beginTransaction();
         # Check service exists at domain
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
         $accountDetailPublic = $this->accountRepository->accountDetail($id, $idListAllow);
@@ -73,6 +72,8 @@ class AccountController extends Controller
         if ($this->transactionRepository->getPrice(Auth::user()) < $accountDetailPublic->price) {
             return BaseResponse::msg("Bạn không đủ tiền mua tài khoản này! Vui lòng nạp thêm", 403);
         }
+
+        DB::beginTransaction();
 
         /**
          * @var \App\Models\AccountList
@@ -121,7 +122,11 @@ class AccountController extends Controller
                 throw new Exception("Không thể trừ tiền! Liên hệ admin nếu còn lặp lại!");
             }
             # Save to history purchase
-            $this->purchaseRepository->create(Auth::user(), $accountDetailPrivate->admin, $accountDetailPrivate);
+            $this->purchaseRepository->create(
+                Auth::user(),
+                $accountDetailPrivate->admin,
+                $accountDetailPrivate
+            );
             /************
              * END-DEFAULT ACTION *
              ************/

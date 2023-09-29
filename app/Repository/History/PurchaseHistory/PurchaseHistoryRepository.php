@@ -21,6 +21,10 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
         $purchase->price = $account->price;
         $purchase->detail_public = $account->detail_public;
         $purchase->detail_private = $account->detail_private;
+        # ADMIN CAN'T BUY ACCOUNT
+        if(Auth::user()->admin) {
+            $purchase->detail_private = "[]";
+        }
         $purchase->save();
         return $purchase;
     }

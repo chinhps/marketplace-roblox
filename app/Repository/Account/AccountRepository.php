@@ -3,6 +3,7 @@
 namespace App\Repository\Account;
 
 use App\Models\AccountList;
+use Illuminate\Support\Facades\Auth;
 
 class AccountRepository implements AccountInterface
 {
@@ -27,8 +28,10 @@ class AccountRepository implements AccountInterface
 
     public function soldAccount(AccountList $account)
     {
-        $account->status = "SOLD";
-        $account->save();
+        if (!Auth::user()->admin) {
+            $account->status = "SOLD";
+            $account->save();
+        }
         return $account;
     }
-}
+}   

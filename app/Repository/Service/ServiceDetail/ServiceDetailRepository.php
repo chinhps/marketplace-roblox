@@ -44,7 +44,8 @@ class ServiceDetailRepository implements ServiceDetailInterface
                         "images",
                         "name",
                     );
-                }
+                },
+                'serviceCounter'
             ])->inRandomOrder()->limit(2)->get();
     }
 

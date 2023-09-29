@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Withdraw\WithdrawBuyRobuxRequest;
 use App\Http\Requests\Withdraw\WithdrawRobuxRequest;
 use App\Repository\History\WithdrawHistory\WithdrawHistoryInterface;
+use App\Repository\Plugin\PluginInterface;
 use App\Repository\Transaction\TransactionInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ class WithdrawRobuxController extends Controller
     public function __construct(
         private WithdrawHistoryInterface $withdrawHistoryRepository,
         private TransactionInterface $transactionRepository,
+        private PluginInterface $pluginRepository
     ) {
     }
 
@@ -27,15 +29,15 @@ class WithdrawRobuxController extends Controller
         $robux = HandleHelper::getNumberWithdrawRobux($validated['type_withdraw']);
         $linkPass = $validated['linkpass'];
 
-        DB::beginTransaction();
-
         $currentRobux = $this->transactionRepository->getRobux(Auth::user());
         if ($currentRobux <= 0) {
-            return BaseResponse::msg("Tài khoản của bạn hết Robux!", 403);
+            return BaseResponse::msg("Tài khoản của bạn hết Robux!.", 403);
         }
         if ($currentRobux < $robux) {
             return BaseResponse::msg("Tài khoản của bạn không đủ Robux để rút!", 403);
         }
+
+        DB::beginTransaction();
 
         try {
             # save to history
@@ -44,7 +46,7 @@ class WithdrawRobuxController extends Controller
                 "task_number" => $requestId,
                 "withdraw_type" => "ROBUX",
                 "value" => $robux,
-                "status" => "PENDING",
+                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
                 "cost" => 0,
                 "detail" => json_encode([
                     ["key" => "link", "name" => "Đường dẫn", "value" => $linkPass],
@@ -65,11 +67,10 @@ class WithdrawRobuxController extends Controller
     public function buy_robux(WithdrawBuyRobuxRequest $request)
     {
         $validated = $request->validated();
-        $robux = (HandleHelper::getNumberBuyRobux($validated['type_withdraw']))['robux'];
-        $price = (HandleHelper::getNumberBuyRobux($validated['type_withdraw']))['cash'];
+        $cost = $this->pluginRepository->getByKey("cost_robux")['cost_robux'] ?? 0;
+        $robux = (HandleHelper::getNumberBuyRobux($validated['type_withdraw'], $cost))['robux'];
+        $price = (HandleHelper::getNumberBuyRobux($validated['type_withdraw'], $cost))['cash'];
         $linkPass = $validated['linkpass'];
-
-        DB::beginTransaction();
 
         $currentPrice = $this->transactionRepository->getPrice(Auth::user());
         if ($currentPrice <= 0) {
@@ -79,6 +80,8 @@ class WithdrawRobuxController extends Controller
             return BaseResponse::msg("Tài khoản của bạn không đủ tiền để mua!", 403);
         }
 
+        DB::beginTransaction();
+
         try {
             # save to history
             $requestId = rand(100000000, 999999999); # Order ID
@@ -86,8 +89,8 @@ class WithdrawRobuxController extends Controller
                 "task_number" => $requestId,
                 "withdraw_type" => "BUY_ROBUX",
                 "value" => $robux,
-                "status" => "PENDING",
-                "cost" => 100,
+                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
+                "cost" => $cost,
                 "detail" => json_encode([
                     ["key" => "link", "name" => "Đường dẫn", "value" => $linkPass],
                 ])
@@ -107,60 +110,57 @@ class WithdrawRobuxController extends Controller
 
 class HandleHelper
 {
-
-    // try {
-    //     $checkLinkToRobux = HandleHelper::checkLink($linkPass);
-    //     if ($checkLinkToRobux != $robux) {
-    //         return BaseResponse::msg('Link Gamepass của bạn đã sai số lượng robux! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 403);
-    //     }
-    // } catch (\Exception $e) {
-    //     return BaseResponse::msg('Link Gamepass của bạn không chính xác! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 500);
-    // }
-
     public static function checkLink($link)
     {
+        // try {
+        //     $checkLinkToRobux = HandleHelper::checkLink($linkPass);
+        //     if ($checkLinkToRobux != $robux) {
+        //         return BaseResponse::msg('Link Gamepass của bạn đã sai số lượng robux! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 403);
+        //     }
+        // } catch (\Exception $e) {
+        //     return BaseResponse::msg('Link Gamepass của bạn không chính xác! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 500);
+        // }
         $html = Http::get($link)->body();
         preg_match('/data-expected-price="(.*?)"/', $html, $matches);
         $expected_price = $matches[1];
         return $expected_price;
     }
 
-    public static function getNumberBuyRobux($id)
+    public static function getNumberBuyRobux($id, $cost)
     {
         $robux  = 0;
-        $rate_roblox = 90;
         $cash  = 0;
         switch ($id) {
             case 1:
-                $robux = $rate_roblox * 1;
+                $robux = $cost * 1;
                 $cash = 10000;
                 break;
             case 2:
-                $robux = $rate_roblox * 2;
+                $robux = $cost * 2;
                 $cash = 20000;
                 break;
             case 3:
-                $robux = $rate_roblox * 3;
+                $robux = $cost * 3;
                 $cash = 30000;
                 break;
             case 4:
-                $robux = $rate_roblox * 5;
+                $robux = $cost * 5;
                 $cash = 50000;
                 break;
             case 5:
-                $robux = $rate_roblox * 10;
+                $robux = $cost * 10;
                 $cash = 100000;
                 break;
             case 6:
-                $robux = $rate_roblox * 20;
+                $robux = $cost * 20;
                 $cash = 200000;
                 break;
             case 7:
-                $robux = $rate_roblox * 30;
+                $robux = $cost * 30;
                 $cash = 300000;
                 break;
             case 8:
-                $robux = $rate_roblox * 50;
+                $robux = $cost * 50;
                 $cash = 500000;
                 break;
             default:

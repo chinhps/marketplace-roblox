@@ -5,6 +5,7 @@ use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
 use App\Http\Controllers\Histories\ServiceHistoryController;
 use App\Http\Controllers\Histories\WithdrawHistoryController;
+use App\Http\Controllers\Plugin\PluginController;
 use App\Http\Controllers\Recharge\RechargeController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Shop\ShopController;
@@ -82,7 +83,7 @@ Route::prefix('services')->group(function () {
 
 # Plugin
 Route::prefix('plugins')->group(function () {
-    Route::get('/current', []);
+    Route::get('/all', [PluginController::class, 'all']);
     Route::post('/claim', [])->middleware('decryptToken:sanctum');
 });
 

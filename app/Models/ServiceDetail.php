@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ServiceDetail extends Model
@@ -35,5 +36,15 @@ class ServiceDetail extends Model
     public function serviceOdds(): HasOne
     {
         return $this->hasOne(ServiceOdds::class, 'id', 'service_odds_id');
+    }
+
+    public function serviceCounter(): HasOne
+    {
+        return $this->hasOne(ServiceCounter::class, "service_id");
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(AccountList::class, 'service_id');
     }
 }

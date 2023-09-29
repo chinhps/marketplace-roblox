@@ -19,6 +19,7 @@ use App\Models\ServiceGift;
 use App\Models\ServiceOdds;
 use App\Repository\Account\AccountInterface;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
+use App\Repository\Service\ServiceCounter\ServiceCounterInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
 use App\Repository\Service\ServiceInterface;
@@ -38,7 +39,8 @@ class ServiceController extends Controller
         private TransactionInterface $transactionRepository,
         private UserInterface $userRepository,
         private ServiceHistoryInterface $serviceHistoryRepository,
-        private AccountInterface $accountRepository
+        private AccountInterface $accountRepository,
+        private ServiceCounterInterface $serviceCounterRepository
     ) {
     }
 
@@ -181,6 +183,8 @@ class ServiceController extends Controller
                         DB::rollBack();
                         return BaseResponse::msg("Không thể trừ tiền! Liên hệ admin nếu còn lặp lại!", 402);
                     }
+                } else {
+                    DB::commit();
                 }
             }
             // ERROR
@@ -286,6 +290,9 @@ class ServiceController extends Controller
             return BaseResponse::msg("Không thể tạo giao dịch! Vui lòng liên hệ admin!", 402);
         }
         // ==============================================
+
+        # Increase counter service
+        $this->serviceCounterRepository->increase($serviceDetail->service);
 
         DB::commit();
         $return = [];
@@ -396,9 +403,11 @@ class ServiceController extends Controller
                         # Get list gift fixed
                         $listGiftFix = json_decode($serviceOdds->odds_user, true);
                         # if loop outside array "fixed" then set is 0(start)
-                        if ($currentLoop >= count($listGiftFix)) $currentLoop = 0;
-                        $currentLoop++;
+                        if ($currentLoop >= count($listGiftFix)) {
+                            $currentLoop = 0;
+                        }
                         $currentGift = $giftForUser->find($listGiftFix[$currentLoop]);
+                        $currentLoop += 1;
                         break;
 
                     case "RANDOM":

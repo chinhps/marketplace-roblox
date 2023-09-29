@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Withdraw\WithdrawDiamondRequest;
 use App\Repository\History\WithdrawHistory\WithdrawHistoryInterface;
 use App\Repository\Transaction\TransactionInterface;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -25,8 +24,6 @@ class WithdrawDiamondController extends Controller
         $diamond = HandleHelperDiamond::getNumberWithdrawDiamond($validated['type_withdraw']);
         $idGame = $validated['id_game'];
 
-        DB::beginTransaction();
-
         $currentDiamond = $this->transactionRepository->getDiamond(Auth::user());
         if ($currentDiamond <= 0) {
             return BaseResponse::msg("Tài khoản của bạn hết Kim cương!", 403);
@@ -35,6 +32,7 @@ class WithdrawDiamondController extends Controller
             return BaseResponse::msg("Tài khoản của bạn không đủ Kim cương để rút!", 403);
         }
 
+        DB::beginTransaction();
 
         try {
             # save to history
@@ -43,7 +41,7 @@ class WithdrawDiamondController extends Controller
                 "task_number" => $requestId,
                 "withdraw_type" => "DIAMOND",
                 "value" => $diamond,
-                "status" => "PENDING",
+                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
                 "cost" => 0,
                 "detail" => json_encode([
                     ["key" => "id_game", "name" => "ID Game", "value" => $idGame],
