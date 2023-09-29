@@ -13,7 +13,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Criteria from "./Criteria";
+// import Criteria from "./Criteria";
 import { Link } from "react-router-dom";
 import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { FaArrowUp, FaFacebookMessenger } from "react-icons/fa";
@@ -52,11 +52,15 @@ export default function Footer() {
           <FaArrowUp />
         </Button>
       </Flex>
-      <Criteria />
+      {/* <Criteria /> */}
       <Box
+        mt="2rem"
         as="footer"
         color={useColorModeValue("white", "gray.200")}
         zIndex={5}
+        borderTop="1px"
+        bg="main.item5"
+        borderColor="main.item4"
       >
         <Container maxW="container.2xl" py={10}>
           <Grid
