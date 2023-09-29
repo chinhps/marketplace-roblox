@@ -112,10 +112,11 @@ const DesktopNav = () => {
   const linkColor = useColorModeValue("white.500", "gray.200");
   const linkHoverColor = useColorModeValue("white.600", "white");
   const popoverContentBgColor = useColorModeValue("black.100", "gray.800");
+  const dataInformation = useInformationShopData();
 
   return (
     <Stack as="ul" listStyleType="none" direction={"row"} spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
+      {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map((navItem) => (
         <Box key={navItem.label} as="li">
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
@@ -209,7 +210,9 @@ const MobileNav = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) => {  
+}) => {
+  const dataInformation = useInformationShopData();
+
   return (
     <>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -222,7 +225,7 @@ const MobileNav = ({
             </Center>
           </DrawerHeader>
           <DrawerBody display="flex" flexDirection="column">
-            {NAV_ITEMS.map((navItem) => (
+            {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map((navItem) => (
               <MobileNavItem key={navItem.label} {...navItem} />
             ))}
           </DrawerBody>
@@ -292,34 +295,37 @@ interface NavItem {
   icon?: boolean;
 }
 
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Trang chủ",
-    href: "/",
-  },
-  {
-    label: "Nạp thẻ",
-    children: [
-      {
-        label: "Nạp qua thẻ cào",
-        subLabel: "Thông qua các nhà mạng viễn thông",
-        href: "/profile/recharge",
-      },
-      // {
-      //   label: "Nạp qua ATM",
-      //   subLabel: "Chuyển khoản trực tiếp qua ngân hàng +20%",
-      //   href: "#",
-      // },
-    ],
-  },
-  {
-    label: "Liên hệ Fanpage hỗ trợ",
-    href: "#",
-    icon: true,
-  },
-  // {
-  //   label: "Tin tức",
-  //   href: "#",
-  //   icon: true,
-  // },
-];
+function navItemWithData(linkPage: string) {
+  const NAV_ITEMS: Array<NavItem> = [
+    {
+      label: "Trang chủ",
+      href: "/",
+    },
+    {
+      label: "Nạp thẻ",
+      children: [
+        {
+          label: "Nạp qua thẻ cào",
+          subLabel: "Thông qua các nhà mạng viễn thông",
+          href: "/profile/recharge",
+        },
+        // {
+        //   label: "Nạp qua ATM",
+        //   subLabel: "Chuyển khoản trực tiếp qua ngân hàng +20%",
+        //   href: "#",
+        // },
+      ],
+    },
+    {
+      label: "Liên hệ Fanpage hỗ trợ",
+      href: linkPage,
+      icon: true,
+    },
+    // {
+    //   label: "Tin tức",
+    //   href: "#",
+    //   icon: true,
+    // },
+  ];
+  return NAV_ITEMS;
+}

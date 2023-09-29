@@ -1,3 +1,4 @@
+import { pluginApi } from "@/apis/plugin";
 import { shopApi } from "@/apis/shopApi";
 import InfomationShopProvider from "@/hooks/InfomationShopProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -15,11 +16,20 @@ export default function Default({
     refetchOnWindowFocus: false,
   });
 
+  const pluginQuery = useQuery({
+    queryKey: ["plugin"],
+    queryFn: () => pluginApi.all(),
+    retry: false,
+    cacheTime: 1200000,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
       <InfomationShopProvider
         infomationData={{
           status: informationQuery?.status,
+          plugin: pluginQuery.data?.data.data,
           ...informationQuery.data,
         }}
       >

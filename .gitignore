@@ -14,6 +14,7 @@ dist-ssr
 .env
 ENV
 domain
+.vite-cache
 
 # Editor directories and files
 .vscode/*

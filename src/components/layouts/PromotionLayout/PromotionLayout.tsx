@@ -18,13 +18,13 @@ export default function PromotionLayout() {
   return (
     <>
       <SimpleGrid
-        columns={{ base: 1, lg: 12 }}
+        columns={{ base: 1, lg: 21 }}
         gap={5}
         p={{ base: 2, lg: 0 }}
         color="white.100"
       >
         <GridItem
-          colSpan={{ base: 1, lg: 9 }}
+          colSpan={{ base: 1, lg: 16 }}
           bg="main.item"
           borderRadius="5px"
           p={{ base: "2.5rem 1rem", lg: "2.5rem" }}
@@ -32,7 +32,7 @@ export default function PromotionLayout() {
         >
           <Outlet />
         </GridItem>
-        <GridItem colSpan={{ base: 1, lg: 3 }}>
+        <GridItem colSpan={{ base: 1, lg: 5 }}>
           <RecomendServices />
         </GridItem>
       </SimpleGrid>
@@ -87,11 +87,11 @@ function RecomendServices() {
       <Heading as="h2" fontSize="xl" textTransform="uppercase" ml={2} mb={5}>
         Có thể bạn quan tâm
       </Heading>
-      <Flex flexDirection="column" gap={5}>
+      <SimpleGrid columns={{ base: 2, lg: 1 }} gap={{ base: 3, lg: 4 }}>
         {recommendServiceQuery.data?.data.data.map((service) => (
           <ServiceV2 key={service.id} data={service} />
         ))}
-      </Flex>
+      </SimpleGrid>
     </>
   );
 }

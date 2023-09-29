@@ -1,6 +1,10 @@
 import { IServiceListResponse } from "@/types/response/service.type";
 import { link_service } from "@/utils/links";
-import { hiddenPriceByGameType, numberFormat } from "@/utils/price";
+import {
+  hiddenPriceByGameType,
+  numberFormat,
+  textCounterService,
+} from "@/utils/price";
 import {
   Box,
   Center,
@@ -78,7 +82,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
         <Flex
           height="50%"
           flexDirection="column"
-          px="1.7rem"
+          px={{ base: "1rem", lg: "2rem" }}
           py="1rem"
           gap={2}
           justifyContent="space-between"
@@ -88,15 +92,18 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
             fontSize={{ base: "13px", md: "15px" }}
             textAlign="center"
             className="showText"
+            noOfLines={2}
           >
             {data.name}
           </Heading>
           <Box mx="auto">
-            <Tag
-              rounded="full"
-              text="Lượt sử dụng:"
-              value={numberFormat(data.counter, false)}
-            />
+            {data.gameType !== "LINKTO" ? (
+              <Tag
+                rounded="full"
+                text={textCounterService(data.gameType)}
+                value={numberFormat(data.counter, false)}
+              />
+            ) : null}
           </Box>
           <Divider borderColor="gray.600" mx="auto" w="85%" />
           <Flex justifyContent="space-between">
@@ -107,7 +114,9 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
               </>
             ) : (
               <Center w="100%">
-                <Text className="break-word" noOfLines={2}>{data.notification}</Text>
+                <Text className="break-word" noOfLines={2}>
+                  {data.notification}
+                </Text>
               </Center>
             )}
           </Flex>

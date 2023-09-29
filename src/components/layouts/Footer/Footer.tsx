@@ -1,8 +1,10 @@
 import { getVersion, myDomain } from "@/utils/version";
 import {
   Box,
+  Button,
   Center,
   Container,
+  Flex,
   Grid,
   GridItem,
   Heading,
@@ -12,10 +14,44 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Criteria from "./Criteria";
+import { Link } from "react-router-dom";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
+import { FaArrowUp, FaFacebookMessenger } from "react-icons/fa";
 
 export default function Footer() {
+  const dataInformation = useInformationShopData();
+
   return (
     <>
+      <Flex
+        zIndex={10}
+        position="fixed"
+        right="5%"
+        bottom="7%"
+        flexDirection="column"
+        gap={2}
+      >
+        <Button
+          as="a"
+          colorScheme="messenger"
+          p={1}
+          href={dataInformation?.plugin?.link_fanpage ?? "/"}
+        >
+          <FaFacebookMessenger fontSize="16px" />
+        </Button>
+        <Button
+          variant="blue"
+          p={1}
+          onClick={() => {
+            window.scroll({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+        >
+          <FaArrowUp />
+        </Button>
+      </Flex>
       <Criteria />
       <Box
         as="footer"
@@ -46,7 +82,7 @@ export default function Footer() {
                   textAlign="center"
                   textTransform="uppercase"
                 >
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit
+                  {dataInformation?.data?.data?.title_website}
                 </Heading>
               </Stack>
 
@@ -72,7 +108,9 @@ export default function Footer() {
               </Heading>
               <Text fontWeight="bold">HỆ THỐNG BÁN ACC TỰ ĐỘNG</Text>
               <Text fontWeight="bold">ĐẢM BẢO UY TÍN VÀ CHẤT LƯỢNG.</Text>
-              <Img src="https://i.imgur.com/yUC3Br8.png" alt="" w="200px" />
+              <Link to={dataInformation?.plugin?.link_fanpage ?? "/"}>
+                <Img src="https://i.imgur.com/yUC3Br8.png" alt="" w="200px" />
+              </Link>
             </GridItem>
           </Grid>
         </Container>

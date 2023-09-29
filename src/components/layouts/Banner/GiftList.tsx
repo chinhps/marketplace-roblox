@@ -13,13 +13,16 @@ import moment from "moment";
 import { TopRechargeItem } from "./TopRecharge";
 import { useQuery } from "@tanstack/react-query";
 import rechargeApi from "@/apis/recharge";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 
 export interface IGiftListProps {
   alertGift: string;
 }
 
-export default function GiftList({ alertGift }: IGiftListProps) {
+export default function GiftList() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dataInformation = useInformationShopData();
+
   const topRechargeQuery = useQuery({
     queryKey: ["top-recharge-last-month"],
     queryFn: () => rechargeApi.topRecharge("last-month"),
@@ -78,7 +81,7 @@ export default function GiftList({ alertGift }: IGiftListProps) {
         children={null}
       />
       <Center>
-        <Box dangerouslySetInnerHTML={{ __html: alertGift }} />
+        <Box dangerouslySetInnerHTML={{ __html: dataInformation?.plugin?.message_top_recharge ?? "Chưa có thông báo" }} />
       </Center>
       <VStack spacing={3}>
         <Divider w="70%" mx="auto" />

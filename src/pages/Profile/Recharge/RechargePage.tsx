@@ -1,6 +1,8 @@
 import rechargeApi from "@/apis/recharge";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { InputsRecharge } from "@/types/form.type";
 import { Cards } from "@/types/recharge.type";
+import { ucwords } from "@/utils/price";
 import {
   Box,
   Divider,
@@ -23,8 +25,10 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function RechargePage() {
+  const dataInformation = useInformationShopData();
+
   const data_recharge: Cards = {
-    percent: 100,
+    percent: dataInformation?.data?.data?.percent_recharge ?? 100,
     list_card_support: {
       viettel: {
         name: "Viettel",
@@ -83,7 +87,7 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
     setValue,
     formState: { errors },
   } = useForm<InputsRecharge>();
-
+  const dataInformation = useInformationShopData();
   const toast = useToast();
   const [cardType, setCardType] = useState<string | null>(null);
   const rechargeMutate = useMutation({
@@ -120,7 +124,11 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
       >
         <FormControl isInvalid={errors.card_type ? true : false} mb={1}>
           <Text mb={2} fontSize="sm">
-            Nhà mạng <Text as="b"> (Ưu tiên Viettel, Vinaphone)</Text>
+            Nhà mạng
+            <Text as="b">
+              (Ưu tiên{" "}
+              {ucwords(dataInformation?.plugin?.prioritize_recharge ?? "")})
+            </Text>
           </Text>
           <HStack spacing={3}>
             {Object.keys(data_recharge.list_card_support).map((key) => (

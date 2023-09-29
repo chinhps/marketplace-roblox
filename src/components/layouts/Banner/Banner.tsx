@@ -19,8 +19,10 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import Counter from "@/components/global/CounterNumber/CounterNumber";
 import { FiBookOpen, FiGift, FiLogIn } from "react-icons/fi";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 
 Banner.v1 = () => {
+  const dataInformation = useInformationShopData();
   return (
     <>
       <Box
@@ -41,7 +43,7 @@ Banner.v1 = () => {
         />
         <Box
           position="absolute"
-          backgroundImage="/banner.gif"
+          backgroundImage={dataInformation?.data?.data?.information.banner_url ?? ""}
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
           filter="blur(20px)"
@@ -71,7 +73,7 @@ Banner.v1 = () => {
               overflow="hidden"
               boxShadow="2xl"
             >
-              <Image src="/banner.gif" alt="banner" w="100%" />
+              <Image src={dataInformation?.data?.data?.information.banner_url ?? ""} alt="banner" w="100%" />
             </GridItem>
             <GridItem
               colSpan={{ base: 1, lg: 2 }}

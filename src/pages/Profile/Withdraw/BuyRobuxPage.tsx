@@ -1,5 +1,6 @@
 import { withdrawApi } from "@/apis/withdraw";
 import FormBase from "@/components/global/Form/FormBase";
+import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { useUserData } from "@/hooks/UserDataProvider";
 import { IFormInput, InputsBuyRobux } from "@/types/form.type";
 import { numberFormat } from "@/utils/price";
@@ -64,59 +65,61 @@ export default function BuyRobuxPage() {
   );
 }
 
-const RATE_ROBLOX = 100;
-
-const dataForm: Array<IFormInput> = [
-  {
-    label: "Gói nạp",
-    name: "type_withdraw",
-    type: "SELECT",
-    isRequired: true,
-    selects: [
-      {
-        label: `10k - ${RATE_ROBLOX * 1} Robux`,
-        value: "1",
-      },
-      {
-        label: `20k - ${RATE_ROBLOX * 2} Robux`,
-        value: "2",
-      },
-      {
-        label: `30k - ${RATE_ROBLOX * 3} Robux`,
-        value: "3",
-      },
-      {
-        label: `50k - ${RATE_ROBLOX * 5} Robux`,
-        value: "4",
-      },
-      {
-        label: `100k - ${RATE_ROBLOX * 10} Robux`,
-        value: "5",
-      },
-      {
-        label: `200k - ${RATE_ROBLOX * 20} Robux`,
-        value: "6",
-      },
-      {
-        label: `300k - ${RATE_ROBLOX * 30} Robux`,
-        value: "7",
-      },
-      {
-        label: `500k - ${RATE_ROBLOX * 50} Robux`,
-        value: "8",
-      },
-    ],
-  },
-  {
-    label: "Nhập link Gamepass",
-    name: "linkpass",
-    type: "INPUT",
-    isRequired: true,
-  },
-];
+function dataFormByRate(RATE_ROBLOX: number) {
+  const dataForm: Array<IFormInput> = [
+    {
+      label: "Gói nạp",
+      name: "type_withdraw",
+      type: "SELECT",
+      isRequired: true,
+      selects: [
+        {
+          label: `10k - ${RATE_ROBLOX * 1} Robux`,
+          value: "1",
+        },
+        {
+          label: `20k - ${RATE_ROBLOX * 2} Robux`,
+          value: "2",
+        },
+        {
+          label: `30k - ${RATE_ROBLOX * 3} Robux`,
+          value: "3",
+        },
+        {
+          label: `50k - ${RATE_ROBLOX * 5} Robux`,
+          value: "4",
+        },
+        {
+          label: `100k - ${RATE_ROBLOX * 10} Robux`,
+          value: "5",
+        },
+        {
+          label: `200k - ${RATE_ROBLOX * 20} Robux`,
+          value: "6",
+        },
+        {
+          label: `300k - ${RATE_ROBLOX * 30} Robux`,
+          value: "7",
+        },
+        {
+          label: `500k - ${RATE_ROBLOX * 50} Robux`,
+          value: "8",
+        },
+      ],
+    },
+    {
+      label: "Nhập link Gamepass",
+      name: "linkpass",
+      type: "INPUT",
+      isRequired: true,
+    },
+  ];
+  return dataForm;
+}
 
 function FormBuyRobux() {
   const toast = useToast();
+  const dataInformation = useInformationShopData();
   const withdrawMutate = useMutation({
     mutationFn: ({ type_withdraw, linkpass }: InputsBuyRobux) =>
       withdrawApi.buyRobux({
@@ -138,11 +141,11 @@ function FormBuyRobux() {
       linkpass: data.linkpass,
     });
   };
-
+  
   return (
     <FormBase
       textBtn="Mua ngay"
-      dataForm={dataForm}
+      dataForm={dataFormByRate(dataInformation?.plugin?.cost_robux ?? 0)}
       isLoading={withdrawMutate.isLoading}
       onSubmit={onSubmit}
     />

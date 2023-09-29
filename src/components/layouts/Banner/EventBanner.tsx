@@ -155,7 +155,7 @@ EventBanner.v1 = ({
             height="100%"
             justifyContent="space-between"
           >
-            <GiftList alertGift="helo every one today i feel so good" />
+            <GiftList />
           </TabPanel>
         </TabPanels>
       </Tabs>
