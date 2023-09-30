@@ -100,6 +100,7 @@ export function SildeBar() {
   const location = useLocation();
 
   const navbarQuery = useQuery({
+    queryKey: ["query-navbar"],
     queryFn: () => userApi.navbar(),
     cacheTime: 5 * 1000,
     retry: false,

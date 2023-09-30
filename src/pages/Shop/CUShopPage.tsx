@@ -35,6 +35,16 @@ const initialForm: Array<IFormInput> = [
     max: 50000,
   },
   {
+    label: "Tỷ lệ nạp thẻ (%)",
+    name: "percent_recharge",
+    type: "NUMBER",
+    default: "0",
+    isRequired: true,
+    gridAreaName: "e",
+    min: 0,
+    max: 200,
+  },
+  {
     label: "Keyword SEO Google",
     name: "keyword",
     type: "TEXTAREA",
@@ -61,6 +71,13 @@ const initialForm: Array<IFormInput> = [
     type: "FILE",
     isRequired: true,
     gridAreaName: "item3",
+  },
+  {
+    label: "Banner(Chỉ 1 ảnh)",
+    name: "banner_url",
+    type: "FILE",
+    isRequired: true,
+    gridAreaName: "item4",
   },
 ];
 
@@ -93,11 +110,13 @@ export default function CUShopPage() {
       setFormValue({
         domain: data.data.domain,
         shop_title: data.data.shop_detail.shop_title,
+        percent_recharge: data.data.shop_detail.percent_recharge,
         cash_new_user: data.data.shop_detail.cash_new_user,
         keyword: data.data.shop_detail.information.keyword,
         favicon_url: [data.data.shop_detail.information.favicon_url],
         background_url: [data.data.shop_detail.information.background_url],
         logo_url: [data.data.shop_detail.information.logo_url],
+        banner_url: [data.data.shop_detail.information.banner_url],
       });
     },
   });
@@ -152,8 +171,10 @@ function CustomStyle({ children }: { children: React.ReactNode }) {
           "a a a"
           "b b b"
           "c c c"
+          "e e e"
           "d d d"
           "item1 item2 item3"
+          "item4 item4 item4"
           "button button button"
         `}
       >

@@ -78,7 +78,7 @@ export interface ServiceOdds {
   countUse: number | null;
 }
 
-interface Shop {
+export interface Shop {
   id: number;
   stt: number;
   domain: string;

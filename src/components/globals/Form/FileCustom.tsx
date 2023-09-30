@@ -1,5 +1,14 @@
-import { Box, Center, Flex, Icon, Image, Input, Text } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Icon,
+  Image,
+  Input,
+  Text,
+} from "@chakra-ui/react";
+import { FiPlus, FiX } from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 export default function FileCustom({
@@ -117,6 +126,11 @@ export function FileCustomRHF({
       });
     }
   };
+  const fileRemove = (file: File | string) => {
+    const updatedList = [...fileList];
+    updatedList.splice(fileList.indexOf(file), 1);
+    setFileList(updatedList);
+  };
 
   useEffect(() => {
     if (value && typeof value === "object") {
@@ -148,14 +162,28 @@ export function FileCustomRHF({
               w="100%"
               height="100%"
             >
+              <Button
+                position="absolute"
+                right={0}
+                top={0}
+                p={0}
+                variant="outlineAuth"
+                onClick={() => fileRemove(file)}
+              >
+                <FiX height="10px" />
+              </Button>
               <Image
                 w="100%"
                 height="100%"
                 objectFit="cover"
                 src={
-                  typeof file === "string" ? file : URL.createObjectURL(file)
+                  file && typeof file === "object"
+                    ? URL.createObjectURL(file)
+                    : typeof file === "string"
+                    ? file
+                    : ""
                 }
-                alt="sdfds"
+                alt="hinh anh"
               />
             </Box>
             <Text
@@ -165,7 +193,11 @@ export function FileCustomRHF({
               fontWeight="500"
               width="100%"
             >
-              {typeof file === "string" ? file : file.name}
+              {typeof file === "string"
+                ? file
+                : file && typeof file === "object"
+                ? file.name
+                : ""}
             </Text>
           </Center>
         ))}

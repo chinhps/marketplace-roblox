@@ -38,7 +38,7 @@ export const buttonStyles = {
         }),
         outlineAuth: () => ({
           padding: "15px 20px",
-          borderColor: "main.item",
+          borderColor: "main.item3",
           border: "solid 1.5px",
           _active: {
             bg: "main.item3",
