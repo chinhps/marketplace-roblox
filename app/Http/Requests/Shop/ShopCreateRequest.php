@@ -26,11 +26,13 @@ class ShopCreateRequest extends BaseRequest
             "id" => "nullable|exists:shop_list,id",
             "domain" => "required|string|unique:shop_list,domain," . request('id'),
             "shop_title" => "required|string",
-            "cash_new_user" => "required|string|numeric|min:0",
+            "cash_new_user" => "required|numeric|min:0",
+            "percent_recharge" => "required|numeric|min:0",
             "keyword" => "required|string",
             "logo_url.*" => ["required", new UrlOrFileImage],
             "favicon_url.*" => ["required", new UrlOrFileImage],
             "background_url.*" => ['required', new UrlOrFileImage],
+            "banner_url.*" => ['required', new UrlOrFileImage],
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
 use App\Http\Controllers\Histories\ServiceHistoryController;
 use App\Http\Controllers\Histories\WithdrawHistoryController;
+use App\Http\Controllers\Plugin\PluginController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceDetailController;
 use App\Http\Controllers\Service\ServiceForAllController;
@@ -61,6 +62,11 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'getCurrentInfo']);
 
     Route::middleware(['role:admin'])->group(function () {
+        Route::prefix('plugins')->group(function () {
+            Route::get('/', [PluginController::class, 'list']);
+            Route::get('/{id}', [PluginController::class, 'getId']);
+            Route::post('/upsert', [PluginController::class, 'upsert']);
+        });
         Route::prefix('shop-list')->group(function () {
             Route::get('/', [ShopController::class, 'list']);
             Route::get('/all', [ShopController::class, 'all']);

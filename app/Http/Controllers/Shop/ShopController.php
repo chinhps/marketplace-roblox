@@ -56,6 +56,7 @@ class ShopController extends Controller
         $logoUrl = uploadImageQueue($validated['logo_url'][0]);
         $faviconUrl = uploadImageQueue($validated['favicon_url'][0]);
         $backgroundUrl = uploadImageQueue($validated['background_url'][0]);
+        $bannerUrl = uploadImageQueue($validated['banner_url'][0]);
 
         $this->shopRepository->updateOrInsert($validated['id'], [
             "stt" => 1,
@@ -64,8 +65,10 @@ class ShopController extends Controller
         ], [
             "shop_title" => $validated['shop_title'],
             "cash_new_user" => $validated['cash_new_user'],
+            "percent_recharge" => $validated['percent_recharge'],
             "information" => json_encode([
                 "keyword" => $validated['keyword'],
+                "banner_url" => $bannerUrl,
                 "logo_url" => $logoUrl,
                 "favicon_url" => $faviconUrl,
                 "background_url" => $backgroundUrl,

@@ -22,6 +22,8 @@ use App\Repository\Histories\ServiceHistory\ServiceHistoryInterface;
 use App\Repository\Histories\ServiceHistory\ServiceHistoryRepository;
 use App\Repository\Histories\WithdrawHistory\WithdrawHistoryInterface;
 use App\Repository\Histories\WithdrawHistory\WithdrawHistoryRepository;
+use App\Repository\Plugin\PluginInterface;
+use App\Repository\Plugin\PluginRepository;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailRepository;
 use App\Repository\Service\ServiceGift\ServiceGiftInterface;
@@ -74,6 +76,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TopRechargeInterface::class, TopRechargeRepository::class);
         $this->app->bind(TopRechargeVirtualInterface::class, TopRechargeVirtualRepository::class);
         $this->app->bind(AccountInterface::class, AccountRepository::class);
+        $this->app->bind(PluginInterface::class, PluginRepository::class);
     }
 
     /**

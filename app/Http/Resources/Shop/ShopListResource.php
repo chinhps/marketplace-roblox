@@ -29,6 +29,7 @@ class ShopListResource extends BaseResource
                 "id" => $data->shopDetail->id,
                 "shop_title" => $data->shopDetail->shop_title,
                 "cash_new_user" => $data->shopDetail->cash_new_user,
+                "percent_recharge" => $data->shopDetail->percent_recharge,
                 "information" => json_decode($data->shopDetail->information),
             ] : null
         ];

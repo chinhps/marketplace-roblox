@@ -9,6 +9,7 @@ class Plugin extends Model
 {
     use HasFactory;
     protected $table = "plugins";
+    protected $guarded = [];
 
     public function shop_list()
     {
