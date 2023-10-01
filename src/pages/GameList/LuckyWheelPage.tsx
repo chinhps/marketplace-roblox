@@ -169,8 +169,8 @@ function GamePlay({
                   //   base: handleGiftSize(window.innerWidth),
                   //   md: handleGiftSize(550),
                   // }}
-                  w="100px"
-                  h="100px"
+                  w={{ base: "70px", lg: "100px" }}
+                  h={{ base: "70px", lg: "100px" }}
                   aspectRatio="1/1"
                   alt={dataService?.service_image.name + " gift by chinh.dev"}
                   src={gift}

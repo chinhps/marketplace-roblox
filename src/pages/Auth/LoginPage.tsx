@@ -6,13 +6,12 @@ import {
   Flex,
   Heading,
   Icon,
-  IconButton,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { FaFacebook, FaTiktok } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import { FiChevronRight } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { customToast } from "@/utils/const";
@@ -120,16 +119,19 @@ export function OtherLogin() {
 
   return (
     <Flex gap={2} my={3}>
-      <IconButton
+      <Button
         aria-label="facebook login"
         bg="messenger.500"
         py={7}
         flex={1}
         isDisabled={getLinkSocialLoginMutate.isLoading}
-        icon={<Icon as={FaFacebook} color="white" fontSize="25px" />}
+        leftIcon={<Icon as={FaFacebook} color="white" fontSize="25px" />}
         onClick={() => getLinkSocialLoginMutate.mutate("facebook")}
-      />
-      <IconButton
+        color="white.100"
+      >
+        Đăng nhập bằng Facebook
+      </Button>
+      {/* <IconButton
         aria-label="tiktok login"
         bg="black.100"
         py={7}
@@ -137,7 +139,7 @@ export function OtherLogin() {
         isDisabled={getLinkSocialLoginMutate.isLoading}
         icon={<Icon as={FaTiktok} color="white" fontSize="25px" />}
         onClick={() => getLinkSocialLoginMutate.mutate("tiktok")}
-      />
+      /> */}
     </Flex>
   );
 }
@@ -150,9 +152,9 @@ function OtherRecommend() {
           Bạn chưa có tài khoản? Đăng ký ngay
         </Text>
       </Link>
-      <Text fontWeight="bold" color="gray">
+      {/* <Text fontWeight="bold" color="gray">
         Bạn không thể đăng nhập?
-      </Text>
+      </Text> */}
     </Flex>
   );
 }

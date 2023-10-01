@@ -1,5 +1,5 @@
 export const getVersion = () => {
-  return 123;
+  return "2.1";
 };
 
 export const myDomain = () => {

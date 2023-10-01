@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:all": "concurrently \"tsc && vite build --mode client1 --outDir domain/client1.chinh.dev/public_html\" \"tsc && vite build --mode client2 --outDir domain/client2.chinh.dev/public_html\" \"tsc && vite build --mode client3 --outDir domain/client3.chinh.dev/public_html\"",
+    "build:all": "concurrently \"tsc && vite build --mode gameroblox --outDir domain/gameroblox.vn/public_html\" \"tsc && vite build --mode rakyroblox --outDir domain/rakyroblox.com/public_html\" \"tsc && vite build --mode rexroblox --outDir domain/rexroblox.com/public_html\"",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
