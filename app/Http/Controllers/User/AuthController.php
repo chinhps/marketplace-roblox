@@ -27,7 +27,9 @@ class AuthController extends Controller
 
         switch ($validated['login_social']) {
             case "facebook":
-                $url = "https://www.facebook.com/dialog/oauth?client_id=" . env('FACEBOOK_CLIENT_ID') . "&redirect_uri=" . env('FACEBOOK_CLIENT_CALLBACK') . "&scope=public_profile";
+                $url = "https://www.facebook.com/dialog/oauth?client_id=" .
+                    env('FACEBOOK_CLIENT_ID') . "&redirect_uri=" .
+                    env('FACEBOOK_CLIENT_CALLBACK') . "%3Fdomain%3D" . $validated['domain'] . "&scope=public_profile";
                 break;
             case "tiktok":
                 $csrfState = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 10);
@@ -62,7 +64,7 @@ class AuthController extends Controller
     {
         do {
             $providerId = rand(1111111, 9999999) . time();
-        } while (!$this->userRepository->exists([
+        } while ($this->userRepository->exists([
             ['provider_id', $providerId],
             ['login_type', 'account']
         ]));
