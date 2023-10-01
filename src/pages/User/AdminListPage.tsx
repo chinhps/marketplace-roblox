@@ -7,11 +7,12 @@ import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
-import { Badge, Td, Text, Tr } from "@chakra-ui/react";
+import { Badge, Button, Td, Text, Tr } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 export default function AdminListPage() {
   /****----------------
@@ -31,7 +32,17 @@ export default function AdminListPage() {
   ----------------****/
   return (
     <>
-      <CardCollection title="Quản lý Admin" fontSize="25px">
+      <CardCollection
+        title="Quản lý Admin"
+        fontSize="25px"
+        button={
+          <Link to="./create">
+            <Button colorScheme="red" variant="outline">
+              THÊM MỚI
+            </Button>
+          </Link>
+        }
+      >
         <Text>Quản lý Admin, KOC, Support, Cộng tác viên</Text>
         <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         <TableCustom
