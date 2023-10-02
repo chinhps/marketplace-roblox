@@ -99,6 +99,7 @@ class PushDiamondController extends Controller
             logReport("push_diamond_webhook", json_encode($result) . " | NOTRESPONSE | Data: {$withdraw->id}");
             DB::commit();
             return BaseResponse::msg("Chuyển về trạng thái thường");
+            
         } catch (\Exception $e) {
             DB::rollBack();
             logReport("push_diamond_webhook", json_encode($result) . " | 500 CODE | Data: {$withdraw->id}");
