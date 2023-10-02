@@ -37,7 +37,7 @@ export default function ModelBase({
           <ModalBody>{TextData}</ModalBody>
 
           <ModalFooter gap={2}>
-            <Button colorScheme="green" onClick={onClose}>
+            <Button variant="blue" onClick={onClose}>
               Thoát
             </Button>
           </ModalFooter>
