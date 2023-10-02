@@ -21,6 +21,7 @@ use App\Http\Controllers\Transactions\TransactionController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LogoutController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Webhook\PushDiamondController;
 use App\Http\Controllers\Webhook\WebhookDiamondController;
 use App\Http\Controllers\Webhook\WebhookRechargeController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('webhook')->group(function () {
     Route::post('/recharge/callbackv2', [WebhookRechargeController::class, 'webhook']);
     Route::post('/withdraw/callback', [WebhookDiamondController::class, 'webhookDiamond']);
+    Route::get('/push_diamond', [PushDiamondController::class, 'pushDiamond']);
 });
 
 Route::prefix('auth')->group(function () {

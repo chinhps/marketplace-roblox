@@ -52,6 +52,11 @@ return [
     */
 
     'channels' => [
+        'push_diamond_webhook' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/push_diamond_webhook.log'),
+            'level' => 'debug',
+        ],
         'recharge_webhook' => [
             'driver' => 'single',
             'path' => storage_path('logs/recharge_webhook.log'),
