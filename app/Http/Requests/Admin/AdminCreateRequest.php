@@ -21,16 +21,20 @@ class AdminCreateRequest extends BaseRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             "id" => "nullable|exists:admins,id",
-            "shop_id" => "nullable|exists:shop_list,id",
-            "user_id" => "nullable|exists:users,id",
+            "domain" => "nullable|exists:shop_list,domain",
+            "provider_id" => "nullable|exists:users,provider_id",
             "admin_type" => "required|in:ADMIN,CTV,KOC",
             "name" => "required|string",
             "username" => "required|string|alpha_num|unique:admins,username," . request('id'),
-            "password" => "required|string|confirmed|min:8",
             "block" => "boolean",
-            "active" => "boolean",
         ];
+
+        if (!$this->input("id") || $this->input("password") != null) {
+            $rules = [...$rules, "password" => "required|string|min:8"];
+        }
+
+        return $rules;
     }
 }

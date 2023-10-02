@@ -29,7 +29,11 @@ class AdminResource extends BaseResource
             "shop" => $this->shop ? [
                 "id" =>  $this->shop->id,
                 "domain" =>  $this->shop->domain,
-            ] : null
+            ] : null,
+            "user" => $this->user ? [
+                "id" =>  $this->user->id,
+                "provider_id" =>  $this->user->provider_id,
+            ] : null,
         ];
     }
 }

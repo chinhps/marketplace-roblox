@@ -16,7 +16,7 @@ class AdminRepository implements AdminInterface
 
     public function list(float $limit = 15, array $filter = [])
     {
-        $builder = $this->model->with('shop');
+        $builder = $this->model->with(['shop', 'user']);
         $builder = queryRepository($builder, $filter);
 
         return $builder->withSum(['purchaseHistories' => function ($query) {
@@ -28,7 +28,7 @@ class AdminRepository implements AdminInterface
 
     public function get(float $id)
     {
-        return $this->model->find($id);
+        return $this->model->with(['shop', 'user'])->find($id);
     }
 
     public function delete(float $id)

@@ -22,7 +22,7 @@ class ShopRepository implements ShopInterface
 
     public function all()
     {
-        return $this->model->orderBy('stt','desc')->get();
+        return $this->model->orderBy('stt', 'desc')->get();
     }
 
     public function get(float $id)
@@ -33,6 +33,11 @@ class ShopRepository implements ShopInterface
     public function getByListDomain(array $domains)
     {
         return $this->model->whereIn('domain', $domains)->get();
+    }
+
+    public function getByDomain(string $domain)
+    {
+        return $this->model->where('domain', $domain)->first();
     }
 
     public function updateOrInsert(float|null $id, array $params, array $paramsDetail)

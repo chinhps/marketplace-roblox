@@ -25,7 +25,8 @@ class AdminController extends Controller
     {
         $name = $request->input('name');
         $id = $request->input('id');
-        $user_id = $request->input('user_id');
+        $providerId = $request->input('provider_id');
+        $adminType = $request->input('admin_type');
 
         $filter = [];
 
@@ -35,8 +36,11 @@ class AdminController extends Controller
         if ($id) {
             $filter['query'][] = ['id', $id];
         }
-        if ($user_id) {
-            $filter['query'][] = ['user_id', $user_id];
+        if ($adminType) {
+            $filter['query'][] = ['admin_type', $adminType];
+        }
+        if ($providerId) {
+            $filter['user_provider_id_filter'] = $providerId;
         }
 
         return AdminResource::collection($this->adminRepository->list(10, $filter));
@@ -61,23 +65,29 @@ class AdminController extends Controller
     public function upsert(AdminCreateRequest $request)
     {
         $validated = $request->validated();
+        $password = $validated['password'] ?? null;
 
-        if ($validated['user_id']) $user = $this->userRepository->get($validated['user_id']);
-        if ($validated['shop_id']) $shopList = $this->shopRepository->get($validated['shop_id']);
+        if ($validated['provider_id']) $user = $this->userRepository->getByProviderId($validated['provider_id']);
+        if ($validated['domain']) $shopList = $this->shopRepository->getByDomain($validated['domain']);
 
-        $data = $this->adminRepository->updateOrInsert(
-            $validated['id'],
-            [
-                "admin_type" => $validated['admin_type'],
-                "name" => $validated['name'],
-                "username" => $validated['username'],
-                "password" => Hash::make($validated['password']),
-                "block" => $validated['block'] ? "on" : 'off',
-                "active" => $validated['active'] ? "on" : 'off',
-            ],
+        $fillable = [
+            "admin_type" => $validated['admin_type'],
+            "name" => $validated['name'],
+            "username" => $validated['username'],
+            "block" => $validated['block'] ? 'on' : 'off',
+            "active" => "on",
+        ];
+
+        if ($password) {
+            $fillable = [...$fillable, "password" => $password ? Hash::make($password) : null];
+        }
+
+        $this->adminRepository->updateOrInsert(
+            $validated['id'] ?? null,
+            $fillable,
             user: $user ?? null,
             shopList: $shopList ?? null
         );
-        return $data;
+        return BaseResponse::msg("Thành công!");
     }
 }

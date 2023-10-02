@@ -42,4 +42,9 @@ class UserRepository implements UserInterface
     public function updateOrInsert(float|null $id, array $params)
     {
     }
+
+    public function getByProviderId(string $providerId)
+    {
+        return $this->model->where('provider_id', $providerId)->first();
+    }
 }

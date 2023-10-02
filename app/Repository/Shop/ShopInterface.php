@@ -12,4 +12,5 @@ interface ShopInterface
      */
     public function getByListDomain(array $domains);
     public function all();
+    public function getByDomain(string $domain);
 }

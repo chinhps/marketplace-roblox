@@ -18,6 +18,11 @@ if (!function_exists('queryRepository')) {
                 $subquery->where('name', 'like', '%' . $filter['user_filter'] . '%');
             });
         }
+        if (isset($filter['user_provider_id_filter'])) {
+            $model->whereHas('user', function ($subquery) use ($filter) {
+                $subquery->where('provider_id', $filter['user_provider_id_filter']);
+            });
+        }
         if (isset($filter['shop_filter'])) {
             $model->whereHas('shop', function ($subquery) use ($filter) {
                 $subquery->where('domain', 'like', '%' . $filter['shop_filter'] . '%');
