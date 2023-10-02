@@ -310,10 +310,12 @@ function GiftAdd({
   onChange,
   onClickScript,
   id,
+  giftType,
 }: {
   onChange: (data: IGiftAdd, id: number) => void;
   onClickScript: (id: number, type: "ADMIN" | "USER") => void;
   id: number;
+  giftType: string;
 }) {
   const [isRandom, setIsRandom] = useState<boolean>(false);
   const [formState, setFormState] = useState<IGiftAdd>(initialFormStateGifts);
@@ -372,10 +374,8 @@ function GiftAdd({
               <Select
                 onChange={handleChange("typeGift")}
                 variant="auth"
-                fontSize="sm"
-                fontWeight="500"
-                size="lg"
                 placeholder="-- Chọn loại quà --"
+                defaultValue={giftType}
               >
                 <option value="NOT">Không có</option>
                 <option value="DIAMOND">Kim cương</option>
@@ -424,10 +424,10 @@ function GiftAdd({
               )}
             </FormControl>
             <FormControl isRequired mb="1rem">
-              <FormLabel>Thông báo khi trúng thưởng</FormLabel>
+              <FormLabel>Note</FormLabel>
               <Input
-                placeholder={
-                  isRandom ? "Sử dụng ... để hiển thị random" : "Thông báo"
+                value={
+                  typeof formState.value !== "object" ? formState.value : ""
                 }
                 onChange={handleChange("message")}
                 variant="auth"
@@ -458,6 +458,7 @@ function ModelAddOdds({
   onChange: (data: IOddsAdd) => void;
 }) {
   const [listGift, setListGift] = useState<Array<IGiftAdd>>([]);
+  const [giftType, setGiftType] = useState<string>("");
   const [formState, setFormState] = useState<IOddsAdd>(() => {
     const temp = structuredClone(initialFormStateOdds);
     return temp;
@@ -566,23 +567,28 @@ function ModelAddOdds({
       <HStack>
         <FormControl isRequired mb="1rem">
           <FormLabel>Số lượng quà</FormLabel>
-          <HStack>
-            <InputNumberCustom
-              handleChange={handleChangeNumberGifts}
-              defaultValue={0}
-              value={listGift.length}
-              min={1}
-              max={100}
-            />
-            <IconButton
-              aria-label="add new gift"
-              size="lg"
-              onClick={() => handleChangeNumberGifts(listGift.length + 1)}
-              icon={<FiPlus />}
-            />
-          </HStack>
+          <InputNumberCustom
+            handleChange={handleChangeNumberGifts}
+            defaultValue={0}
+            value={listGift.length}
+            min={1}
+            max={100}
+          />
         </FormControl>
-        <Button variant="auth" size="lg" onClick={handleSubmit}>
+        <FormControl mb="1rem">
+          <FormLabel>Loại quà</FormLabel>
+          <Select
+            onChange={(e) => setGiftType(e.target.value)}
+            variant="auth"
+            placeholder="-- Chọn loại quà --"
+          >
+            <option value="NOT">Không có</option>
+            <option value="DIAMOND">Kim cương</option>
+            <option value="ROBUX">Robux</option>
+            <option value="QUANHUY">Quân huy</option>
+          </Select>
+        </FormControl>
+        <Button w="100%" variant="auth" size="lg" onClick={handleSubmit} mt={4}>
           Hoàn thành
         </Button>
       </HStack>
@@ -592,6 +598,7 @@ function ModelAddOdds({
           <FormLabel>Quà {index + 1}</FormLabel>
           <GiftAdd
             id={index}
+            giftType={giftType}
             onChange={handleAddGift}
             onClickScript={handleClickAddScript}
           />
@@ -632,11 +639,8 @@ function AddNewOdds({
             fontSize="sm"
             fontWeight="500"
             size="lg"
-            placeholder="-- Chọn tỷ lệ từ trước --"
           >
             <option value="0"> --- Tạo mới tỷ lệ --- </option>
-            <option value="10">Tỷ lệ của vòng quay thương hiệu</option>
-            <option value="11">Tỷ lệ vòng quay giáng sinh</option>
           </Select>
           {idTypeOdds === 0 && (
             <Box>

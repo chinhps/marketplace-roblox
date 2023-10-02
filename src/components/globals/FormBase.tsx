@@ -6,6 +6,8 @@ import {
   FormLabel,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Select,
   Switch,
   Textarea,
@@ -14,6 +16,8 @@ import { useEffect } from "react";
 import { IFormBase } from "@/types/form.type";
 import { FileCustomRHF } from "./Form/FileCustom";
 import InputNumberCustom from "./Form/InputNumberCustom";
+import { handleCopy } from "@/utils/function";
+import CKEditorCustom from "./Form/CKEditorCustom";
 
 export default function FormBase({
   dataForm,
@@ -29,6 +33,7 @@ export default function FormBase({
     handleSubmit,
     register,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -37,7 +42,7 @@ export default function FormBase({
       Object.entries(dataDefault).forEach(([key, value]) => {
         if (value) {
           setValue(key, value);
-        }        
+        }
       });
   }, [dataDefault]);
 
@@ -69,7 +74,11 @@ export default function FormBase({
               {form.type === "FILE" ? (
                 <Controller
                   render={({ field: { onChange, value } }) => (
-                    <FileCustomRHF onChange={onChange} value={value} multiple={form?.multiple} />
+                    <FileCustomRHF
+                      onChange={onChange}
+                      value={value}
+                      multiple={form?.multiple}
+                    />
                   )}
                   control={control}
                   name={form.name}
@@ -85,15 +94,27 @@ export default function FormBase({
                   })}
                 />
               ) : form.type === "INPUT" ? (
-                <Input
-                  variant="auth"
-                  disabled={form.disable}
-                  {...register(form.name, {
-                    value: form.default ?? null,
-                    ...(form.validate ?? null),
-                  })}
-                  placeholder={form.placeholder ?? form.label}
-                />
+                <InputGroup>
+                  <Input
+                    variant="auth"
+                    disabled={form.disable}
+                    {...register(form.name, {
+                      value: form.default ?? null,
+                      ...(form.validate ?? null),
+                    })}
+                    placeholder={form.placeholder ?? form.label}
+                  />
+                  {form.copy ? (
+                    <InputRightElement width="4.5rem" height="100%">
+                      <Button
+                        size="sm"
+                        onClick={() => handleCopy(watch(form.name))}
+                      >
+                        Copy
+                      </Button>
+                    </InputRightElement>
+                  ) : null}
+                </InputGroup>
               ) : form.type === "TEXTAREA" ? (
                 <Textarea
                   variant="outline"
@@ -105,6 +126,14 @@ export default function FormBase({
                     ...(form.validate ?? null),
                   })}
                   placeholder={form.placeholder ?? form.label}
+                />
+              ) : form.type === "HTML" ? (
+                <Controller
+                  render={({ field: { onChange, value } }) => (
+                    <CKEditorCustom onChange={onChange} value={value} />
+                  )}
+                  control={control}
+                  name={form.name}
                 />
               ) : form.type === "NUMBER" ? (
                 <>

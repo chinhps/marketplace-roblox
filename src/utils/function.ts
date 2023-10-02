@@ -1,5 +1,6 @@
 import { IFormInput } from "@/types/form.type";
 import { IDetail2P } from "@/types/response/base.type";
+import { createStandaloneToast } from "@chakra-ui/react";
 
 export const numberFormat = (price: number, currency: boolean = true) => {
   const format = new Intl.NumberFormat("vi-VN", {
@@ -81,7 +82,10 @@ export function objectToFormData(
   }
 }
 
-export function compareForm(values: IDetail2P[], froms: IFormInput[] | undefined) {
+export function compareForm(
+  values: IDetail2P[],
+  froms: IFormInput[] | undefined
+) {
   const map1 = new Map(values.map((item) => [item.key, item.value]));
   const resultArray = froms?.map((item) => ({
     ...item,
@@ -89,3 +93,18 @@ export function compareForm(values: IDetail2P[], froms: IFormInput[] | undefined
   }));
   return resultArray ?? [];
 }
+
+export const handleCopy = async (text: string) => {
+  const { toast } = createStandaloneToast();
+  try {
+    await navigator.clipboard.writeText(text);
+    toast({
+      description: "Sao chép ID thành công!",
+    });
+  } catch (error) {
+    toast({
+      description: "Thất bại khi sao chép!",
+      status: "warning",
+    });
+  }
+};

@@ -7,8 +7,8 @@ import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
-import { Badge, Button, Td, Text, Tr } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { Badge, Button, Td, Text, Tr, useToast } from "@chakra-ui/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
@@ -18,6 +18,7 @@ export default function AdminListPage() {
   /****----------------
    *      HOOK
   ----------------****/
+  const toast = useToast();
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState({});
   const adminListQuery = useQuery({
@@ -27,9 +28,22 @@ export default function AdminListPage() {
     retry: false,
     refetchOnWindowFocus: false,
   });
+  const adminDeleteMutation = useMutation({
+    mutationFn: (id: number) => adminApi.delete(id),
+    onSuccess: ({ data }) => {
+      toast({
+        status: "success",
+        description: data.msg,
+      });
+      adminListQuery.refetch();
+    },
+  });
   /****----------------
    *      END-HOOK
   ----------------****/
+  const handleDelete = (id: number) => {
+    adminDeleteMutation.mutate(id);
+  };
   return (
     <>
       <CardCollection
@@ -44,6 +58,8 @@ export default function AdminListPage() {
         }
       >
         <Text>Quản lý Admin, KOC, Support, Cộng tác viên</Text>
+        <Text>Chỉ có thể xóa KOC.</Text>
+
         <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         <TableCustom
           thead={[
@@ -62,6 +78,7 @@ export default function AdminListPage() {
               <Td>
                 <Text>Loại: {vl.admin_type}</Text>
                 <Text>ID USER: {vl.user_id ?? "Không có"}</Text>
+                <Text>Provider ID: {vl.user?.provider_id ?? "Không có"}</Text>
                 <Text>
                   Domain:
                   <Badge
@@ -98,7 +115,11 @@ export default function AdminListPage() {
               </Td>
 
               <Td>
-                <ActionList actions={["EDIT", "DELETE"]} />
+                <ActionList
+                  actions={["EDIT", "DELETE"]}
+                  linkUpdate={"./update/" + vl.id}
+                  onClickExits={() => handleDelete(vl.id)}
+                />
               </Td>
             </Tr>
           ))}
@@ -120,14 +141,25 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
-      label: "ID người dùng ngoài shop",
-      name: "user_id",
+      label: "ID Provider (Ngoài shop)",
+      name: "provider_id",
       type: "INPUT",
     },
     {
       label: "ID Admin",
       name: "id",
       type: "INPUT",
+    },
+    {
+      label: "Loại admin",
+      name: "admin_type",
+      type: "SELECT",
+      placeholder: "-- Chọn loại admin --",
+      selects: [
+        { label: "KOC", value: "KOC" },
+        { label: "Quản trị viên", value: "ADMIN" },
+        { label: "Cộng tác viên", value: "CTV" },
+      ],
     },
   ];
 

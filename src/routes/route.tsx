@@ -24,6 +24,7 @@ import { createBrowserRouter } from "react-router-dom";
 import CUTopRechargeVirtualPage from "@/pages/TopRecharge/CUTopRechargeVirtualPage";
 import PluginListPage from "@/pages/Plugin/PluginListPage";
 import CUPluginPage from "@/pages/Plugin/CUPluginPage";
+import CUAdminPage from "@/pages/User/CUAdminPage";
 
 export const router = createBrowserRouter([
   {
@@ -161,7 +162,20 @@ export const router = createBrowserRouter([
       },
       {
         path: "admin",
-        element: <AdminListPage />,
+        children: [
+          {
+            path: "",
+            element: <AdminListPage />,
+          },
+          {
+            path: "create",
+            element: <CUAdminPage />,
+          },
+          {
+            path: "update/:id",
+            element: <CUAdminPage />,
+          },
+        ],
       },
     ],
   },

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.0",
+    "@ckeditor/ckeditor5-build-classic": "^39.0.2",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@tanstack/react-query": "^4.32.1",

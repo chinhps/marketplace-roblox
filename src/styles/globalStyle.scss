@@ -5,7 +5,6 @@
   --bg-item-main4-color: #0303b6;
   --bg-item2-main-color: #03033f;
   --bg-loading: #ffffffb3;
-
 }
 
 body {
@@ -70,4 +69,8 @@ body {
       justify-content: center;
     }
   }
+}
+
+.ck-content {
+  height: 250px;
 }

@@ -11,10 +11,11 @@ export interface IFormBase {
 }
 
 export interface IFormInput {
+  copy?: boolean;
   label: string;
   isRequired?: boolean;
   name: string;
-  type: "SELECT" | "INPUT" | "TEXTAREA" | "NUMBER" | "FILE" | "SWITCH";
+  type: "SELECT" | "INPUT" | "TEXTAREA" | "NUMBER" | "FILE" | "SWITCH" | "HTML";
   preview?: boolean;
   default?: string;
   placeholder?: string;

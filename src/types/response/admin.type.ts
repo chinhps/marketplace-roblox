@@ -1,6 +1,6 @@
 export interface AdminResponse {
   id: number;
-  admin_type: string;
+  admin_type: "ADMIN" | "CTV" | "KOC";
   name: string;
   username: string;
   block: "off" | "on";
@@ -12,5 +12,9 @@ export interface AdminResponse {
   shop: {
     id: number;
     domain: string;
+  } | null;
+  user: {
+    id: number;
+    provider_id: string;
   } | null;
 }
