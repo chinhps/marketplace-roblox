@@ -20,12 +20,14 @@ class PluginController extends Controller
         $linkPage = $this->pluginRepository->getByKey("fanpage")['link_page'] ?? "";
         $message = $this->pluginRepository->getByKey("message_top_recharge")['message'] ?? "";
         $prioritizeRecharge = $this->pluginRepository->getByKey("prioritize_recharge")["prioritize_recharge"] ?? "";
+        $messagePopup = $this->pluginRepository->getByKey("message_popup")["message_popup"] ?? "";
 
         $response = [
             "cost_robux" => $cost,
             "link_fanpage" => $linkPage,
             "message_top_recharge" => $message,
-            "prioritize_recharge" => $prioritizeRecharge
+            "prioritize_recharge" => $prioritizeRecharge,
+            "message_popup" => $messagePopup
         ];
         return BaseResponse::data($response);
     }
