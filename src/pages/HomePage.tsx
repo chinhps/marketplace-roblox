@@ -1,25 +1,23 @@
+import { statisticalApi } from "@/apis/statistical";
 import CardCollection from "@/components/globals/CardCollection";
 import Chart from "@/components/globals/Chart";
-import TableCustom from "@/components/globals/TableCustom";
 import { numberFormat } from "@/utils/function";
-import {
-  Center,
-  Flex,
-  GridItem,
-  Image,
-  SimpleGrid,
-  Td,
-  Text,
-  Tr,
-} from "@chakra-ui/react";
-import moment from "moment";
+import { Center, Flex, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HomePage() {
+  const chartsQuery = useQuery({
+    queryKey: ["chart"],
+    queryFn: () => statisticalApi.charts(),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   return (
     <Flex flexDirection="column" gap="1rem">
       <SimpleGrid columns={{ base: 1, lg: 24 }} gap="1rem">
         <GridItem colSpan={{ base: 1, lg: 14 }}>
-          <CardCollection title="Thống kê dịch vụ">
+          <CardCollection title="Thống kê dịch vụ tháng">
             <Statistical />
           </CardCollection>
         </GridItem>
@@ -30,7 +28,7 @@ export default function HomePage() {
         </GridItem>
         <GridItem colSpan={{ base: 1, lg: 4 }}>
           <CardCollection title="Đang truy cập">
-            <ItemTextMain>450</ItemTextMain>
+            <ItemTextMain>...</ItemTextMain>
             <Text fontWeight="500">Đang truy cập</Text>
           </CardCollection>
         </GridItem>
@@ -38,89 +36,28 @@ export default function HomePage() {
       <SimpleGrid columns={{ base: 1, lg: 12 }} gap="1rem">
         <GridItem colSpan={{ base: 1, lg: 6 }}>
           <CardCollection title="Biểu đồ doanh thu">
-            <Chart />
+            <Chart
+              name="Vnđ"
+              data={chartsQuery.data?.data.data.recharge_chart ?? []}
+              lables={new Array(7)
+                .fill(0)
+                .map((_, index) => (index === 6 ? "CN" : `Thứ ${index + 2}`))}
+            />
           </CardCollection>
         </GridItem>
         <GridItem colSpan={{ base: 1, lg: 6 }}>
-          <CardCollection title="Biểu đồ lượng truy cập">
-            <Chart />
+          <CardCollection title="Biểu đồ người dùng mới">
+            <Chart
+              name="Người"
+              data={chartsQuery.data?.data.data.user_chart ?? []}
+              lables={new Array(7)
+                .fill(0)
+                .map((_, index) => (index === 6 ? "CN" : `Thứ ${index + 2}`))}
+            />
           </CardCollection>
         </GridItem>
       </SimpleGrid>
-      <CardCollection title="Lịch sử mua tài khoản gần đây">
-        <Text>Lịch sử mua tài khoản gần đây</Text>
-        <HistoryPurechase />
-      </CardCollection>
     </Flex>
-  );
-}
-
-function HistoryPurechase() {
-  const data = [
-    {
-      id: 1,
-      shop: "chinh.dev",
-      name: "Phạm Hoàng Chính",
-      serviceName: "Vòng quay hiha",
-      quantity: 10,
-      price: 100000,
-      time: "2023-07-31 20:07:15",
-    },
-    {
-      id: 2,
-      shop: "chinh.dev",
-      name: "Phạm Hoàng Chính",
-      serviceName: "Vòng quay hiha",
-      quantity: 10,
-      price: 100000,
-      time: "2023-07-31 20:07:15",
-    },
-    {
-      id: 3,
-      shop: "chinh.dev",
-      name: "Phạm Hoàng Chính",
-      serviceName: "Vòng quay hiha",
-      quantity: 10,
-      price: 100000,
-      time: "2023-07-31 20:07:15",
-    },
-  ];
-  return (
-    <>
-      <TableCustom
-        thead={[
-          "ID",
-          "Shop",
-          "Tên khách hàng",
-          "Dịch vụ",
-          "Số lượng",
-          "Giá tiền",
-          "Thời gian",
-        ]}
-      >
-        {data.map((vl) => (
-          <Tr key={vl.id}>
-            <Td>{vl.id}</Td>
-            <Td>{vl.shop}</Td>
-            <Td>
-              <Flex alignItems="center" gap="1rem">
-                <Image
-                  width="30px"
-                  rounded="50%"
-                  src={"https://ui-avatars.com/api/?name=" + vl.name}
-                  alt={vl.name}
-                />
-                <Text>{vl.name}</Text>
-              </Flex>
-            </Td>
-            <Td>{vl.serviceName}</Td>
-            <Td>{vl.quantity} Lượt</Td>
-            <Td>{numberFormat(vl.price)}</Td>
-            <Td>{moment(vl.time).format("DD/MM/yyyy hh:mm")}</Td>
-          </Tr>
-        ))}
-      </TableCustom>
-    </>
   );
 }
 
@@ -135,31 +72,60 @@ function ItemTextMain({ children }: { children: React.ReactNode }) {
 }
 
 function Statistical() {
+  const statisticalQuery = useQuery({
+    queryKey: ["statistical"],
+    queryFn: () => statisticalApi.service(),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   return (
     <>
       <SimpleGrid columns={5}>
-        <StatisticalItem value={200} text="Mua tài khoản" />
-        <StatisticalItem value={502} text="Sử dụng dịch vụ" />
-        <StatisticalItem value={1203} text="Nạp thẻ" />
-        <StatisticalItem value={121} text="Mua dịch vụ" />
-        <StatisticalItem value={300} text="Tài khoản mới" />
+        <StatisticalItem
+          value={statisticalQuery.data?.data.data.purchase ?? 0}
+          text="Mua tài khoản"
+        />
+        <StatisticalItem
+          value={statisticalQuery.data?.data.data.service ?? 0}
+          text="Lượt chơi game"
+        />
+        <StatisticalItem
+          value={statisticalQuery.data?.data.data.recharge ?? 0}
+          text="Nạp thẻ (Thành công)"
+        />
+        <StatisticalItem
+          value={statisticalQuery.data?.data.data.withdraw ?? 0}
+          text="Rút vật phẩm"
+        />
+        <StatisticalItem
+          value={statisticalQuery.data?.data.data.user ?? 0}
+          text="Tài khoản mới"
+        />
       </SimpleGrid>
     </>
   );
 }
 
 function Revenue() {
+  const revenueQuery = useQuery({
+    queryKey: ["revenue"],
+    queryFn: () => statisticalApi.revenue(),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   return (
     <>
-      <ItemTextMain>90.000.000đ</ItemTextMain>
+      <ItemTextMain>
+        {numberFormat(revenueQuery.data?.data.data.day ?? 0)}
+      </ItemTextMain>
       <Flex flexDirection="column">
         <Flex justifyContent="space-between">
-          <Text fontWeight="500">Hôm qua</Text>
-          <Text fontWeight="500">50.000.000đ</Text>
-        </Flex>
-        <Flex justifyContent="space-between">
-          <Text fontWeight="500">Tháng 7</Text>
-          <Text fontWeight="500">150.000.000đ</Text>
+          <Text fontWeight="500">Tháng hiện tại</Text>
+          <Text fontWeight="500">
+            {numberFormat(revenueQuery.data?.data.data.month ?? 0)}
+          </Text>
         </Flex>
       </Flex>
     </>

@@ -1,7 +1,15 @@
 import ChartJS from "chart.js/auto";
 import { useRef, useEffect } from "react";
 
-export default function Chart() {
+export default function Chart({
+  lables,
+  data,
+  name,
+}: {
+  lables: Array<string>;
+  data: Array<number>;
+  name: string;
+}) {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
 
@@ -17,11 +25,11 @@ export default function Chart() {
         new ChartJS(ctx, {
           type: "bar",
           data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            labels: lables,
             datasets: [
               {
-                label: "# of Votes",
-                data: [12, 19, 3, 5, 2, 3],
+                label: name,
+                data: data,
                 borderWidth: 1,
               },
             ],
@@ -41,7 +49,7 @@ export default function Chart() {
         chartInstanceRef.current.destroy();
       }
     };
-  }, []);
+  }, [data]);
 
   return <canvas ref={chartRef} />;
 }
