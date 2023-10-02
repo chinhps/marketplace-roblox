@@ -15,6 +15,7 @@ use App\Http\Controllers\Service\ServiceForAllController;
 use App\Http\Controllers\Service\ServiceGroupController;
 use App\Http\Controllers\Service\ServiceOddsController;
 use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\Statistical\StatisticalController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\TopRecharge\TopRechargeVirtualController;
 use App\Http\Controllers\Transactions\TransactionController;
@@ -56,6 +57,12 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['decryptToken:sanctum'])->group(function () {
+
+    Route::prefix('statistical')->group(function () {
+        Route::get('/service', [StatisticalController::class, 'service']);
+        Route::get('/revenue', [StatisticalController::class, 'revenue']);
+        Route::get('/charts', [StatisticalController::class, 'charts']);
+    });
 
     # navbar
     Route::get('/navbar', [UserController::class, 'navbar']);
