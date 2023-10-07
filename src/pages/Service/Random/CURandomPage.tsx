@@ -8,7 +8,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { serviceApi } from "@/apis/service";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -26,6 +26,7 @@ export default function CURandomPage() {
   ----------------****/
   const { id } = useParams();
   const toast = useToast();
+  const navigate = useNavigate();
   const [inputRandomList, setInputRandomList] = useState<IFormInput>({
     label: "Thông tin tài khoản(Mỗi tài khoản 1 hàng)",
     name: "list_account",
@@ -35,6 +36,12 @@ export default function CURandomPage() {
   const [idServiceGame, setIdServiceGame] = useState<number>();
   const serviceGameListMutation = useMutation({
     mutationFn: (data: IServiceGameRandomCreate) => randomApi.create(data),
+    onSuccess: ({ data }) => {
+      toast({
+        description: data.msg,
+      });
+      navigate("../");
+    },
   });
   const serviceGameListQuery = useQuery({
     queryKey: ["serviceGameList", "RANDOM"],

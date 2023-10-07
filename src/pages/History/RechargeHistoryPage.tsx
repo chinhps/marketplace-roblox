@@ -176,6 +176,11 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
+      label: "Provider ID",
+      name: "provider_id",
+      type: "INPUT",
+    },
+    {
       label: "Tên người dùng",
       name: "name",
       type: "INPUT",

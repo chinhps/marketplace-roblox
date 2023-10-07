@@ -14,7 +14,9 @@ import {
   IconButton,
   Input,
   SimpleGrid,
+  Td,
   Text,
+  Tr,
   VStack,
   useDisclosure,
   useToast,
@@ -22,7 +24,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FiBarChart, FiTrendingDown, FiTrendingUp } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import PurchaseHistoryPage from "@/pages/History/PurchaseHistoryPage";
 import ServiceHistoryPage from "@/pages/History/ServiceHistoryPage";
 import RechargeHistoryPage from "@/pages/History/RechargeHistoryPage";
@@ -30,6 +32,9 @@ import WithdrawHistoryPage from "@/pages/History/WithdrawHistoryPage";
 import { transactionApi } from "@/apis/transaction";
 import { ITransactionCreate } from "@/types/response/transaction.type";
 import ModelConfirm from "@/components/globals/Model/ModelConfirm";
+import ModelBase from "@/components/globals/Model/ModelBase";
+import TableCustom from "@/components/globals/TableCustom";
+import moment from "moment";
 
 export default function UserDetailPage() {
   /****----------------
@@ -179,6 +184,13 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
   const toast = useToast();
   const { id } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenPopup,
+    onOpen: onOpenPopup,
+    onClose: onClosePopup,
+  } = useDisclosure();
+  const [componentList, setComponentList] = useState<ReactElement>();
+  const [page, _] = useState<number>(1);
   const [transactionType, setTransactionType] = useState<
     "increase" | "decrease"
   >();
@@ -193,6 +205,26 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
         status: "success",
         description: data.msg,
       });
+    },
+  });
+
+  const transactionUseMutate = useMutation({
+    mutationFn: (type: "price" | "diamond" | "robux") =>
+      transactionApi.list({ page, filter: { user_id: id }, type: type }),
+    onSuccess: ({ data }) => {
+      onOpenPopup();
+      setComponentList(
+        <TableCustom thead={["ID", "Giá trị", "Ghi chú", "Ngày tạo"]}>
+          {data.data.map((vl) => (
+            <Tr>
+              <Td>{vl.id}</Td>
+              <Td>{vl.value}</Td>
+              <Td>{vl.note}</Td>
+              <Td>{moment(vl.created_at).format("DD/MM/yy hh:mm")}</Td>
+            </Tr>
+          ))}
+        </TableCustom>
+      );
     },
   });
   /****----------------
@@ -212,6 +244,10 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
 
   return (
     <>
+      <ModelBase isOpen={isOpenPopup} onClose={onClosePopup} size="5xl">
+        <Text>Hiển thị 30 giao dịch gần nhất!</Text>
+        {componentList}
+      </ModelBase>
       <ModelConfirm
         isOpen={isOpen}
         onClose={onClose}
@@ -249,7 +285,7 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
-              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onDoubleClick={() => transactionUseMutate.mutate("price")}
               onClick={() => setCurrency("PRICE")}
             >
               Số dư
@@ -259,7 +295,7 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
-              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onDoubleClick={() => transactionUseMutate.mutate("diamond")}
               onClick={() => setCurrency("DIAMOND")}
             >
               Kim cương
@@ -269,7 +305,7 @@ function CreateTransactionUser({ data }: { data: UserResponse | undefined }) {
               leftIcon={<FiBarChart />}
               colorScheme="pink"
               variant="outlineAuth"
-              onDoubleClick={() => toast({ description: "Đang phát triển" })}
+              onDoubleClick={() => transactionUseMutate.mutate("robux")}
               onClick={() => setCurrency("ROBUX")}
             >
               Robux

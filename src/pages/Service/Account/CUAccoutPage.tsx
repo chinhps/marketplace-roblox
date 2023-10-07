@@ -8,10 +8,11 @@ import {
   Grid,
   Select,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
 import { objectToFormData } from "@/utils/function";
@@ -62,12 +63,20 @@ export default function CUAccoutPage() {
    *      HOOK
   ----------------****/
   const { id } = useParams();
+  const toast = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<IFormInput[]>(() =>
     structuredClone(initialFormState)
   );
   const [idServiceGame, setIdServiceGame] = useState<number>();
   const serviceGameListMutation = useMutation({
     mutationFn: (formDataObject: FormData) => accountApi.create(formDataObject),
+    onSuccess: ({ data }) => {
+      toast({
+        description: data.msg,
+      });
+      navigate("../")
+    },
   });
   const serviceGameListQuery = useQuery({
     queryKey: ["serviceGameList", "ACCOUNT"],

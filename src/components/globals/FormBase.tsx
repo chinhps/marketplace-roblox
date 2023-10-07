@@ -8,6 +8,8 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  List,
+  ListItem,
   Select,
   Switch,
   Textarea,
@@ -18,6 +20,8 @@ import { FileCustomRHF } from "./Form/FileCustom";
 import InputNumberCustom from "./Form/InputNumberCustom";
 import { handleCopy } from "@/utils/function";
 import CKEditorCustom from "./Form/CKEditorCustom";
+import { useQuery } from "@tanstack/react-query";
+import shopApi from "@/apis/shop";
 
 export default function FormBase({
   dataForm,
@@ -45,6 +49,14 @@ export default function FormBase({
         }
       });
   }, [dataDefault]);
+
+  const shopAllQuery = useQuery({
+    queryKey: ["shop-all"],
+    queryFn: () => shopApi.all(),
+    retry: false,
+    cacheTime: 12000,
+    refetchOnWindowFocus: false,
+  });
 
   function Test({ children }: { children: React.ReactNode }) {
     return (
@@ -98,6 +110,7 @@ export default function FormBase({
                   <Input
                     variant="auth"
                     disabled={form.disable}
+                    list={form.name}
                     {...register(form.name, {
                       value: form.default ?? null,
                       ...(form.validate ?? null),
@@ -113,6 +126,13 @@ export default function FormBase({
                         Copy
                       </Button>
                     </InputRightElement>
+                  ) : null}
+                  {form.name === "domain" ? (
+                    <List as="datalist" id={form.name}>
+                      {shopAllQuery.data?.data.data.map((vl,index) => (
+                        <ListItem key={index} as="option">{vl.domain}</ListItem>
+                      ))}
+                    </List>
                   ) : null}
                 </InputGroup>
               ) : form.type === "TEXTAREA" ? (

@@ -120,7 +120,7 @@ export function TableListPurchaseHistory({
               </Text>
             </Td>
             <Td>
-              {vl.detail_public.map((detail, index) => (
+              {vl.detail_private.map((detail, index) => (
                 <Text key={index}>
                   {detail.name}: {detail.value}
                 </Text>
@@ -167,8 +167,8 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
-      label: "#Admin ID",
-      name: "admin_id",
+      label: "Thông tin: Tài khoản,...",
+      name: "detail",
       type: "INPUT",
     },
     {

@@ -180,13 +180,13 @@ function TableListWithdrawHistory({
 function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
   const dataForm: Array<IFormInput> = [
     {
-      label: "Tên miền",
-      name: "domain",
+      label: "#ID",
+      name: "id",
       type: "INPUT",
     },
     {
-      label: "Tên người dùng",
-      name: "name",
+      label: "Provider ID",
+      name: "provider_id",
       type: "INPUT",
     },
     {
@@ -216,6 +216,11 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
           value: vl,
         };
       }),
+    },
+    {
+      label: "Tên miền",
+      name: "domain",
+      type: "INPUT",
     },
   ];
 
