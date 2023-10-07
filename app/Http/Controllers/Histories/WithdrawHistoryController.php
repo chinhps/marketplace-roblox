@@ -27,12 +27,19 @@ class WithdrawHistoryController extends Controller
         $withdrawType = $request->input('withdraw_type');
         $status = $request->input('status');
         $userId = $request->input('user_id');
-
+        $providerId = $request->input('provider_id');
+        $id = $request->input('id');
 
         $filter = [];
 
+        if ($providerId) {
+            $filter['user_provider_id_filter'] = $providerId;
+        }
         if ($userId) {
             $filter['query'][] = ['user_id', $userId];
+        }
+        if ($id) {
+            $filter['query'][] = ['id', $id];
         }
         if ($domain) {
             $filter['shop_filter'] = $domain;
@@ -120,7 +127,7 @@ class WithdrawHistoryController extends Controller
     {
         $this->transactionRepository->createPrice(
             $withdrawCurrent->user,
-            $withdrawCurrent->cost * $withdrawCurrent->value,
+            $withdrawCurrent->value / $withdrawCurrent->cost * 10000,
             "Hoàn tiền khi rút Robux, Cost: {$withdrawCurrent->cost}, ID Withdraw: {$withdrawCurrent->id}"
         );
     }

@@ -15,17 +15,23 @@ class TransactionRepository implements TransactionInterface
     /**********
      * LIST *
      **********/
-    public function listPrice(float $limit = 15)
+    public function listPrice(float $limit = 15, array $filter = [])
     {
-        return TransactionPrice::with('user')->paginate($limit);
+        $data = TransactionPrice::with('user');
+        $data = queryRepository($data, $filter);
+        return $data->paginate($limit);
     }
-    public function listDiamond(float $limit = 15)
+    public function listDiamond(float $limit = 15, array $filter = [])
     {
-        return TransactionDiamond::with('user')->paginate($limit);
+        $data = TransactionDiamond::with('user');
+        $data = queryRepository($data, $filter);
+        return $data->paginate($limit);
     }
-    public function listRobux(float $limit = 15)
+    public function listRobux(float $limit = 15, array $filter = [])
     {
-        return TransactionRobux::with('user')->paginate($limit);
+        $data = TransactionRobux::with('user');
+        $data = queryRepository($data, $filter);
+        return $data->paginate($limit);
     }
 
     /**********

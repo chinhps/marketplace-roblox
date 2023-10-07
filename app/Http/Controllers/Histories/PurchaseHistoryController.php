@@ -24,9 +24,13 @@ class PurchaseHistoryController extends Controller
         $userId = $request->input('user_id');
         $account_id = $request->input('account_id');
         $refund = $request->input('refund');
+        $detail = $request->input('detail');
 
         $filter = [];
 
+        if ($detail) {
+            $filter['query'][] = ['detail_private', 'like', "%$detail%"];
+        }
         if ($userId) {
             $filter['query'][] = ['user_id', $userId];
         }

@@ -34,7 +34,7 @@ class AccountCreateRequest extends BaseRequest
         $this->replace($data);
 
         $commonRules = [
-            "id" => "nullable|exists:account_list,id",
+            // "id" => "nullable|exists:account_list,id",
             "idServiceGame" => "exists:services,id",
             "data.price" => "required|numeric|min:0",
             "data.note" => "required",

@@ -31,7 +31,6 @@ class UploadFileAPI implements ShouldQueue
      */
     public function handle(): void
     {
-
         $fileContents = Storage::get($this->tempFilePath);
         $response = Http::attach('image', $fileContents, $this->oldName)
             ->post(env('API_SERVER_IMAGE'), [

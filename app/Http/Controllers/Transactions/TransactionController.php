@@ -21,19 +21,40 @@ class TransactionController extends Controller
     ) {
     }
 
-    public function priceList()
+    public function priceList(Request $request)
     {
-        return TransactionResource::collection($this->transactionRepository->listPrice(15));
+        $userId = $request->input("user_id");
+        $filter = [];
+
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
+        $filter['sort'][] = ['id', 'desc'];
+        return TransactionResource::collection($this->transactionRepository->listPrice(15, $filter));
     }
 
-    public function robuxList()
+    public function robuxList(Request $request)
     {
-        return TransactionResource::collection($this->transactionRepository->listRobux(15));
+        $userId = $request->input("user_id");
+        $filter = [];
+
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
+        $filter['sort'][] = ['id', 'desc'];
+        return TransactionResource::collection($this->transactionRepository->listRobux(15, $filter));
     }
 
-    public function diamondList()
+    public function diamondList(Request $request)
     {
-        return TransactionResource::collection($this->transactionRepository->listDiamond(15));
+        $userId = $request->input("user_id");
+        $filter = [];
+
+        if ($userId) {
+            $filter['query'][] = ['user_id', $userId];
+        }
+        $filter['sort'][] = ['id', 'desc'];
+        return TransactionResource::collection($this->transactionRepository->listDiamond(30, $filter));
     }
 
     public function createTransaction(TransactionCreateRequest $request)

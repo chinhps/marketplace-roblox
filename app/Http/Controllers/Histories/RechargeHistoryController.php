@@ -29,10 +29,13 @@ class RechargeHistoryController extends Controller
         $refund = $request->input('refund');
         $status = $request->input('status');
         $userId = $request->input('user_id');
-
+        $providerId = $request->input('provider_id');
 
         $filter = [];
 
+        if ($providerId) {
+            $filter['user_provider_id_filter'] = $providerId;
+        }
         if ($userId) {
             $filter['query'][] = ['user_id', $userId];
         }
