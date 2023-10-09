@@ -21,10 +21,14 @@ class DecyptPayload
         $encryptionKey = env('CRYPTO_KEY');
         $hmacKey = env('CRYPTO_HMAC_KEY');
 
-        $components = explode('|', $data);
-        $encryptedPayload = $components[0];
-        $iv = hex2bin($components[1]);
-        $hmac = $components[2];
+        try {
+            $components = explode('|', $data);
+            $encryptedPayload = $components[0];
+            $iv = hex2bin($components[1]);
+            $hmac = $components[2];
+        } catch (\Exception $e) {
+            return BaseResponse::msg("Dữ liệu gửi bên sai! Vui lòng thử lại", 413);
+        }
 
         // Check HMAC
         $computedHmac = hash_hmac('sha256', $encryptedPayload, $hmacKey);

@@ -13,7 +13,7 @@ class ServiceCounterRepository implements ServiceCounterInterface
     ) {
     }
 
-    public function increase(Service $service)
+    public function increase(Service $service, float $count = 1)
     {
         $serviceCounter = $this->model->where('service_id', $service->id)->first();
         if (!$serviceCounter) {
@@ -22,7 +22,7 @@ class ServiceCounterRepository implements ServiceCounterInterface
             $serviceCounter->value = 1000;
             $serviceCounter->save();
         }
-        $serviceCounter->increment('value');
+        $serviceCounter->increment('value', $count);
         return $serviceCounter;
     }
 }

@@ -91,15 +91,19 @@ class ServiceController extends Controller
         $domain = $validated['domain'];
         # Check service exists at domain
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
-        $service = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
-        if (!$service) {
+        /**
+         * @var \App\Models\ServiceDetail
+         */
+        $serviceDetail = $this->serviceDetailRepository->serviceDetail($slug, $idListAllow);
+        if (!$serviceDetail) {
             return BaseResponse::msg("Không tồn tại dịch vụ", 404);
         }
         # Return response
-        if ($service->service_odds_id) {
-            return new ServiceDetailResource($service);
+        if ($serviceDetail->service_odds_id) {
+            $this->serviceCounterRepository->increase($serviceDetail->service, rand(3, 8));
+            return new ServiceDetailResource($serviceDetail);
         }
-        return new ServiceAccountDetailResource($service);
+        return new ServiceAccountDetailResource($serviceDetail);
     }
 
     /********

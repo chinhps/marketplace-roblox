@@ -21,6 +21,7 @@ class ServiceAccountDetailResource extends JsonResource
                 "image" => $this->serviceImage->thumb
             ],
             "notification" => $this->service->notification,
+            "game_type" => $this->service->game_list->game_key,
         ];
     }
 }

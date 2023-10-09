@@ -49,3 +49,14 @@ if (!function_exists('generateToken')) {
         return Crypto::encrypt($user->createToken(env('APP_KEY'))->plainTextToken, env('APP_KEY'));
     }
 }
+
+if (!function_exists('getValueJson')) {
+    function getValueJson($json)
+    {
+        $result = [];
+        foreach (json_decode($json, true) as $item) {
+            $result[$item['key']] = $item['value'];
+        }
+        return $result;
+    }
+}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Event\EventController;
 use App\Http\Controllers\Histories\PurchaseHistoryController;
 use App\Http\Controllers\Histories\RechargeHistoryController;
 use App\Http\Controllers\Histories\ServiceHistoryController;
@@ -84,7 +85,13 @@ Route::prefix('services')->group(function () {
 # Plugin
 Route::prefix('plugins')->group(function () {
     Route::get('/all', [PluginController::class, 'all']);
-    Route::post('/claim', [])->middleware('decryptToken:sanctum');
+});
+
+# Event
+Route::prefix('events')->group(function () {
+    Route::get('/get_one_ghost', [EventController::class, 'getEventLast']);
+    Route::get('/get_one', [EventController::class, 'getEventLast'])->middleware('decryptToken:sanctum');
+    Route::post('/claim', [EventController::class, 'claim'])->middleware('decryptToken:sanctum');
 });
 
 Route::middleware(['decryptToken:sanctum'])->group(function () {

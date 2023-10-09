@@ -37,6 +37,15 @@ class WithdrawRobuxController extends Controller
             return BaseResponse::msg("Tài khoản của bạn không đủ Robux để rút!", 403);
         }
 
+        try {
+            $checkLinkToRobux = HandleHelper::checkLink($linkPass);
+            if ($checkLinkToRobux != $robux) {
+                return BaseResponse::msg('Link Gamepass của bạn đã sai số lượng robux! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 403);
+            }
+        } catch (\Exception $e) {
+            return BaseResponse::msg('Link Gamepass của bạn không chính xác! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 500);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -80,6 +89,15 @@ class WithdrawRobuxController extends Controller
             return BaseResponse::msg("Tài khoản của bạn không đủ tiền để mua!", 403);
         }
 
+        try {
+            $checkLinkToRobux = HandleHelper::checkLink($linkPass);
+            if ($checkLinkToRobux != $robux) {
+                return BaseResponse::msg('Link Gamepass của bạn đã sai số lượng robux! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 403);
+            }
+        } catch (\Exception $e) {
+            return BaseResponse::msg('Link Gamepass của bạn không chính xác! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 500);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -112,14 +130,6 @@ class HandleHelper
 {
     public static function checkLink($link)
     {
-        // try {
-        //     $checkLinkToRobux = HandleHelper::checkLink($linkPass);
-        //     if ($checkLinkToRobux != $robux) {
-        //         return BaseResponse::msg('Link Gamepass của bạn đã sai số lượng robux! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 403);
-        //     }
-        // } catch (\Exception $e) {
-        //     return BaseResponse::msg('Link Gamepass của bạn không chính xác! Vui lòng kiểm tra lại hoặc liên hệ Admin để được hỗ trợ.', 500);
-        // }
         $html = Http::get($link)->body();
         preg_match('/data-expected-price="(.*?)"/', $html, $matches);
         $expected_price = $matches[1];

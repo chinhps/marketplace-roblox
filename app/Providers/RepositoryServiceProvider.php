@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Repository\Account\AccountInterface;
 use App\Repository\Account\AccountRepository;
+use App\Repository\Event\EventInterface;
+use App\Repository\Event\EventRepository;
+use App\Repository\History\EventHistory\EventHistoryInterface;
+use App\Repository\History\EventHistory\EventHistoryRepository;
 use App\Repository\History\PurchaseHistory\PurchaseHistoryInterface;
 use App\Repository\History\PurchaseHistory\PurchaseHistoryRepository;
 use App\Repository\History\RechargeHistory\RechargeHistoryInterface;
@@ -56,6 +60,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RechargeListInterface::class, RechargeListRepository::class);
         $this->app->bind(PluginInterface::class, PluginRepository::class);
         $this->app->bind(ServiceCounterInterface::class, ServiceCounterRepository::class);
+        $this->app->bind(EventInterface::class, EventRepository::class);
+        $this->app->bind(EventHistoryInterface::class, EventHistoryRepository::class);
     }
 
     /**
