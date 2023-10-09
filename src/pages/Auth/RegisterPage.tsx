@@ -59,20 +59,23 @@ export default function RegisterPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex
-        w="500px"
-        bg="white.100"
-        px={{ base: "2rem", lg: "4rem" }}
-        pt="6rem"
-        flexDirection="column"
-        justifyContent="space-between"
-        gap={10}
-      >
+    <Flex
+      w="500px"
+      bg="white.100"
+      px={{ base: "2rem", lg: "4rem" }}
+      pt="6rem"
+      flexDirection="column"
+      justifyContent="space-between"
+      gap={10}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Heading as="h1" textAlign="center" className="showText">
-          ĐĂNG KÝ NGAY
+          ĐĂNG KÝ
         </Heading>
         <Flex flexDirection="column" gap={3}>
+          <Text textAlign="center" color="gray">
+            ĐĂNG KÝ ĐỂ CÓ THỂ SỬ DỤNG
+          </Text>
           {nextStep ? (
             <>
               <InputCustom
@@ -140,8 +143,8 @@ export default function RegisterPage() {
             </Link>
           </Flex>
         </Flex>
-      </Flex>
-    </form>
+      </form>
+    </Flex>
   );
 }
 

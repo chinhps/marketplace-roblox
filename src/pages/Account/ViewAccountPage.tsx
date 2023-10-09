@@ -235,7 +235,7 @@ function RecomendAccount() {
                 .fill(0)
                 .map((_, index) => <Account.loading key={index} />)
             : recommendsQuery.data?.data.data.map((account) => (
-                <Account key={account.id} data={account} />
+                <Account key={account.id} data={account} thumbService="" />
               ))}
         </SimpleGrid>
       </Box>

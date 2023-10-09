@@ -68,6 +68,7 @@ export interface IServiceAccountDetail {
     image: string;
   };
   notification: string;
+  game_type: string;
 }
 
 export interface IAccountService {

@@ -16,6 +16,7 @@ domains=(
   "shopjaki.vn"
   "shoprika.vn"
   "starjinxroblox.com"
+  aburoblox.com
 )
 
 # Nội dung mẫu cho tệp .env

@@ -13,7 +13,6 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// import Criteria from "./Criteria";
 import { Link } from "react-router-dom";
 import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { FaArrowUp, FaFacebookMessenger } from "react-icons/fa";
@@ -52,12 +51,10 @@ export default function Footer() {
           <FaArrowUp />
         </Button>
       </Flex>
-      {/* <Criteria /> */}
       <Box
         mt="2rem"
         as="footer"
         color={useColorModeValue("white", "gray.200")}
-        zIndex={5}
         borderTop="1px"
         bg="main.item5"
         borderColor="main.item4"
@@ -78,7 +75,10 @@ export default function Footer() {
                 height="100%"
                 p={3}
               >
-                <Img src="/logo.png" h="75px" />
+                <Img
+                  src={dataInformation?.data?.data?.information.logo_url}
+                  h="75px"
+                />
 
                 <Heading
                   as="h2"

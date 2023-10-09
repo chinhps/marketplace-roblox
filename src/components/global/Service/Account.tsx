@@ -24,7 +24,13 @@ import { useMutation } from "@tanstack/react-query";
 import { accountApi } from "@/apis/games/accountApi";
 import ModelConfirm from "../Model/ModalConfirm";
 
-export default function Account({ data }: { data: IAccountService }) {
+export default function Account({
+  data,
+  thumbService,
+}: {
+  data: IAccountService;
+  thumbService: string | undefined;
+}) {
   const {
     isOpen: isOpenConfirm,
     onOpen: onOpenConfirm,
@@ -89,12 +95,11 @@ export default function Account({ data }: { data: IAccountService }) {
           flexDirection="column"
         >
           <Tag value={"MS " + data.id} />
-          <Tag bgColor="ocean.100" value={data.sale + "%"} />
         </Flex>
-        <Box as="figure" height="170px" overflow="hidden">
-          <Link to={"/accounts/view/" + data.id}>
+        <Box as="figure" height="150px" overflow="hidden">
+          <Link to={data.thumb ? "/accounts/view/" + data.id : "./"}>
             <Img
-              src={data.thumb}
+              src={data.thumb ?? thumbService}
               transition=".3s"
               alt="hihi"
               _hover={{ transform: "scale(1.02)" }}

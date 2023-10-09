@@ -17,6 +17,10 @@ export default async function requestInterceptor(config: InternalAxiosRequestCon
     };
   }
 
+  if (token()) {
+    config.headers.Authorization = "Bearer " + token();
+  }
+  
   const crypt = new Encryption();
   const payloadString = JSON.stringify(config.params ?? config.data);
   const iv = CryptoJS.lib.WordArray.random(16); // the reason to be 16, please read on `encryptMethod` property.
@@ -25,9 +29,6 @@ export default async function requestInterceptor(config: InternalAxiosRequestCon
   // create HMAC for payload
   const hmac = CryptoJS.HmacSHA256(encryptedPayload, hmacKey).toString();
   const encryptedData = `${encryptedPayload}|${iv}|${hmac}`;
-  if (token()) {
-    config.headers.Authorization = "Bearer " + token();
-  }
 
   if (config.method === "post") {
     config.data = {

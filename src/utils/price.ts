@@ -55,8 +55,10 @@ export function textCounterService(gameType: string) {
   switch (gameType) {
     case "ACCOUNT":
       return "Hiện có:";
+    case "RANDOM":
+      return "Hiện có:";
     default:
-      return "Lượt sử dụng:";
+      return "Đã sử dụng:";
   }
 }
 

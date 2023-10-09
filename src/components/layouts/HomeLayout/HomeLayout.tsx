@@ -79,6 +79,7 @@ function MiniBackground({ miniBackground }: { miniBackground: string }) {
   return (
     <>
       <Box
+        zIndex={-1}
         position="fixed"
         top={0}
         left={0}

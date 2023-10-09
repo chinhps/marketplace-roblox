@@ -50,6 +50,9 @@ export default function TopRecharge() {
             stt={index + 1}
           />
         ))}
+        {topRechargeQuery.data?.data.data.length === 0 ? (
+          <Center height="100%">Chưa có ai đứng top</Center>
+        ) : null}
       </Flex>
       <VStack spacing={3}>
         <Divider w="70%" mx="auto" />
@@ -59,7 +62,7 @@ export default function TopRecharge() {
         </Alert>
         <Link to="/profile/recharge" style={{ width: "100%" }}>
           <Button variant="rechargeNow" className="changeColor">
-            <Text className="showText"> NẠP THẺ NGAY</Text>
+            NẠP THẺ NGAY
           </Button>
         </Link>
       </VStack>

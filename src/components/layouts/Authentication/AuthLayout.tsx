@@ -20,12 +20,12 @@ export default function AuthLayout() {
       position="relative"
       p={{ base: ".5rem", lg: "2rem" }}
     >
-      <Flex justifyContent={{ base: "center", lg: "flex-start" }}>
+      <Flex justifyContent={{ base: "center", lg: "flex-start" }} my=".5rem">
         <Link to="/">
           {data?.status === "loading" ? (
             <Skeleton w="300px" height="110px" rounded="lg" />
           ) : (
-            <Img src={data?.data?.data.information.logo_url} alt="logo" />
+            <Img w="175px" src={data?.data?.data.information.logo_url} alt="logo" />
           )}
         </Link>
       </Flex>

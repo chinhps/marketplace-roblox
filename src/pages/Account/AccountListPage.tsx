@@ -2,7 +2,7 @@ import GameApi from "@/apis/games/gameApi";
 import FormBase from "@/components/global/Form/FormBase";
 import Account from "@/components/global/Service/Account";
 import { IFormInput } from "@/types/form.type";
-import { Box, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { SubmitHandler } from "react-hook-form";
 import {
@@ -80,10 +80,19 @@ export default function AccountListPage() {
             </Text>
           )}
         </Box>
-        {accountQuery.isLoading || (
+        {!accountQuery.isLoading &&
+        serviceInfoQuery.data?.data.data.game_type === "ACCOUNT" ? (
           <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
-        )}
+        ) : null}
       </Box>
+      {accountQuery.data?.data.data.length === 0 && (
+        <Center py={20} px={7}>
+          <Text color="white.100" fontWeight="bold" textAlign="center">
+            Sản phẩm đã được mua hết, vui lòng báo cho admin để được bổ sung.
+            Xin cảm ơn!
+          </Text>
+        </Center>
+      )}
       <SimpleGrid
         columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
         gap={5}
@@ -95,7 +104,13 @@ export default function AccountListPage() {
               .fill(0)
               .map((_, index) => <Account.loading key={index} />)
           : accountQuery.data?.data.data.map((account) => (
-              <Account key={account.id} data={account} />
+              <Account
+                key={account.id}
+                data={account}
+                thumbService={
+                  serviceInfoQuery.data?.data.data.service_image.image
+                }
+              />
             ))}
       </SimpleGrid>
       <Paginate paginate={accountQuery.data?.data.paginate} action={setPage} />

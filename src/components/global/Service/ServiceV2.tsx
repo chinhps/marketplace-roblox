@@ -10,16 +10,13 @@ import {
   Center,
   Divider,
   Flex,
-  HStack,
   Heading,
-  Icon,
   Img,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Tag from "../Tag/Tag";
-import { FiCreditCard, FiLogIn } from "react-icons/fi";
 import Skeleton from "../Skeleton/Skeleton";
 
 export default function ServiceV2({ data }: { data: IServiceListResponse }) {
@@ -47,33 +44,6 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
                 : link_service(data.gameType).link + data.slug
             }
           >
-            <Flex
-              left={0}
-              right={0}
-              position="absolute"
-              justifyContent="space-between"
-              alignItems="flex-start"
-              p="0.5rem"
-              zIndex={3}
-            >
-              <VStack>
-                <Tag value="Mới" />
-                <Tag value="50%" bg="red" />
-              </VStack>
-              <HStack>
-                {hiddenPriceByGameType(data.gameType) ? (
-                  <Icon as={FiCreditCard} />
-                ) : (
-                  <Icon as={FiLogIn} />
-                )}
-              </HStack>
-            </Flex>
-            <Box
-              position="absolute"
-              inset={0}
-              bottom="30%"
-              bgGradient="linear(to top,  #00000000, black 180%)"
-            />
             <Img
               src={data.thumb}
               alt={data.name}
@@ -145,11 +115,15 @@ function ServiceV2Item({
         {text}
       </Text>
       {type === "NEW" ? (
-        <Text fontSize="17px" as="b">
+        <Text fontSize={{ base: "15px", lg: "17px" }} as="b">
           {numberFormat(price)}
         </Text>
       ) : (
-        <Text fontSize="17px" textDecoration="line-through" color="gray.400">
+        <Text
+          fontSize={{ base: "15px", lg: "17px" }}
+          textDecoration="line-through"
+          color="gray.400"
+        >
           {numberFormat(price)}
         </Text>
       )}

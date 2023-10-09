@@ -263,6 +263,15 @@ function TitleSeo({
   title: string;
   ComponentPage: any;
 }) {
+  return (
+    <>
+      <Meta title={title} />
+      <ComponentPage />
+    </>
+  );
+}
+
+function Meta({ title }: { title: string }) {
   const data = useInformationShopData();
   return (
     <>
@@ -293,7 +302,6 @@ function TitleSeo({
           content={data?.data?.data.title_website || ""}
         />
       </Helmet>
-      <ComponentPage />
     </>
   );
 }

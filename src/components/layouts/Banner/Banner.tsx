@@ -29,7 +29,7 @@ Banner.v1 = () => {
         as="header"
         overflow="hidden"
         display="flex"
-        mt="5rem"
+        mt="2.7rem"
         position="relative"
       >
         <Box
