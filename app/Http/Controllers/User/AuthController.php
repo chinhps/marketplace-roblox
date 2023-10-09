@@ -16,7 +16,7 @@ class AuthController extends Controller
         return BaseResponse::data([
             "id" => $user->id,
             "name" => $user->name,
-            "shop" => $user->shop->domain,
+            "shop" => $user->shop->domain ?? "",
             "admin_type" => $user->admin_type,
             "created_at" => $user->created_at,
         ]);
