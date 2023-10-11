@@ -38,6 +38,7 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
     public function update(float $id, array $params)
     {
         $purchase = $this->model->findOrFail($id);
-        return $purchase->update($params);
+        $purchase->update($params);
+        return $purchase;
     }
 }

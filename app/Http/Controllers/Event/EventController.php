@@ -42,12 +42,31 @@ class EventController extends Controller
         $validated = $request->validated();
 
         # UPLOAD IMAGE
-        $image = uploadImageQueue($validated['image']);
+        $image = uploadImageQueue($validated['images'][0]);
 
-        return $this->eventRepository->updateOrInsert($validated['id'], [
+        $this->eventRepository->updateOrInsert($validated['id'], [
             "name" => $validated['name'],
             "image" => $image,
-            "active" => $validated['active'],
+            "active" => $validated['active'] == "true" ? "ON" : "OFF",
+            "form_public" => "[]",
+            "data_public" => json_encode([
+                [
+                    "key" => "value_gift",
+                    "name" => "Nhận quà cho người mới",
+                    "value" => $validated['value_gift']
+                ],
+                [
+                    "key" => "gift",
+                    "name" => "Loại quà nhận được",
+                    "value" => $validated['gift']
+                ]
+            ])
         ]);
+
+        $msg = "Đã tạo thành công";
+        if ($validated['id']) {
+            $msg = "Cập nhật thành công!";
+        }
+        return BaseResponse::msg("$msg");
     }
 }

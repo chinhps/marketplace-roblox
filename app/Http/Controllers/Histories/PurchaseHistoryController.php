@@ -7,12 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Histories\PurchaseUpdateRequest;
 use App\Http\Resources\Histories\PurchaseHistoryListResource;
 use App\Repository\Histories\PurchaseHistory\PurchaseHistoryInterface;
+use App\Repository\Transaction\TransactionInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseHistoryController extends Controller
 {
     public function __construct(
         private PurchaseHistoryInterface $purchaseHistoryRepository,
+        private TransactionInterface $transactionRepository
     ) {
     }
 
@@ -54,14 +57,31 @@ class PurchaseHistoryController extends Controller
 
     public function updateRefund($id, PurchaseUpdateRequest $request)
     {
+        DB::beginTransaction();
         try {
             $validated = $request->validated();
-            $this->purchaseHistoryRepository->update($id, [
+
+            if ($validated['refund'] == false) {
+                return BaseResponse::msg("Giao dịch đã được hoàn tiền không thể thao tác!", 406);
+            }
+            $purchase = $this->purchaseHistoryRepository->update($id, [
                 "refund" => $validated['refund'] ? "YES" : "NO"
             ]);
-            return BaseResponse::msg("Đã chuyển đổi thành công!");
+            $this->refundPrice($purchase);
+            DB::commit();
+            return BaseResponse::msg("Đã chuyển đổi thành công và hoàn tiền thành công!");
         } catch (\Exception $e) {
+            DB::rollBack();
             return BaseResponse::msg($e->getMessage(), 500);
         }
+    }
+
+    private function refundPrice($purchase)
+    {
+        $this->transactionRepository->createPrice(
+            $purchase->user,
+            $purchase->price,
+            "Hoàn tiền mua tài khoản, Giá: {$purchase->price}, ID History purchase: {$purchase->id}"
+        );
     }
 }

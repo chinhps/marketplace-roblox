@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Event;
 
 use App\Http\Requests\BaseRequest;
+use App\Rules\UrlOrFileImage;
 
 class EventCreateRequest extends BaseRequest
 {
@@ -24,8 +25,10 @@ class EventCreateRequest extends BaseRequest
         return [
             "id" => "nullable|exists:event_list,id",
             "name" => "required|string",
-            "image" => "file|image",
-            "active" => "required|in:ON,OFF",
+            "active" => "in:true,false",
+            "value_gift" => "required",
+            "gift" => "required|in:diamond,robux",
+            "images.*" => ['required', new UrlOrFileImage],
         ];
     }
 }

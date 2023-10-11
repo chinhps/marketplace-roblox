@@ -130,7 +130,6 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         Route::prefix('events')->group(function () {
             Route::get('/', [EventController::class, 'list']);
             Route::get('/{id}', [EventController::class, 'getId']);
-            Route::delete('/{id}', [EventController::class, 'delete']);
             Route::post('/upsert', [EventController::class, 'upsert']);
         });
 
@@ -178,6 +177,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
                     });
                     Route::prefix('withdraw')->group(function () {
                         Route::get('/', [WithdrawHistoryController::class, 'list']);
+                        Route::post('/export-robux', [WithdrawHistoryController::class, 'exportRobux']);
                         Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);
                     });
                 });

@@ -23,8 +23,8 @@ class WebhookRechargeController extends Controller
     public function webhook(Request $request)
     {
 
-        $code = (int)($request->pin);
-        $serial = (int)($request->serial);
+        $code = ($request->pin);
+        $serial = ($request->serial);
         $price = (int)$request->amount;
         $content = (int)$request->content;
         $status = $request->status;
@@ -40,7 +40,6 @@ class WebhookRechargeController extends Controller
             ], [
                 ['task_number', $content],
                 ['status', 'PENDING'],
-                ['price', $price]
             ]);
 
             if (!$rechargeHistory) {
@@ -88,7 +87,7 @@ class WebhookRechargeController extends Controller
 
             $this->topRechargeRepository->updateOrCreate(
                 id: $topRechargeExists ? $topRechargeExists->id : null,
-                price: $price,
+                price: $rechargeHistory->price,
                 user: $rechargeHistory->user,
                 shop: $rechargeHistory->shop,
             );

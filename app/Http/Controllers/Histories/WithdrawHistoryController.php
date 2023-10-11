@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Histories;
 
+use App\Exports\WithdrawExport;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Histories\WithdrawUpdateRequest;
@@ -10,6 +11,7 @@ use App\Repository\Histories\WithdrawHistory\WithdrawHistoryInterface;
 use App\Repository\Transaction\TransactionInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class WithdrawHistoryController extends Controller
 {
@@ -17,6 +19,12 @@ class WithdrawHistoryController extends Controller
         private WithdrawHistoryInterface $withdrawHistoryRepository,
         private TransactionInterface $transactionRepository
     ) {
+    }
+
+    public function exportRobux()
+    {
+        $time = date("Y_m_d");
+        return Excel::download(new WithdrawExport, "export_withdraw_robux_$time.xlsx");
     }
 
     public function list(Request $request)

@@ -119,6 +119,10 @@ class UserController extends Controller
                         'name' => 'Quản lý Plugins',
                         'link' => '/plugins',
                     ],
+                    [
+                        'name' => 'Quản lý Event',
+                        'link' => '/events',
+                    ],
                 ],
             ],
             [

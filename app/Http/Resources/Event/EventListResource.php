@@ -14,6 +14,15 @@ class EventListResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "image" => $this->image,
+            "active" => $this->active,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
+            "form_public" => json_decode($this->form_public, true),
+            "data_public" => json_decode($this->data_public, true)
+        ];
     }
 }

@@ -22,3 +22,14 @@ if (!function_exists('myIp')) {
         return $ip;
     };
 }
+
+if (!function_exists('getValueJson')) {
+    function getValueJson($json)
+    {
+        $result = [];
+        foreach (json_decode($json, true) as $item) {
+            $result[$item['key']] = $item['value'];
+        }
+        return $result;
+    }
+}
