@@ -75,9 +75,14 @@ export default function AccountListPage() {
           {accountQuery.isLoading ? (
             <Skeleton height="20px" width="30%" rounded="md" />
           ) : (
-            <Text fontSize="17px" sx={styleTextShadow}>
-              {serviceInfoQuery.data?.data.data.notification}
-            </Text>
+            <Box
+              color="white"
+              dangerouslySetInnerHTML={{
+                __html:
+                  serviceInfoQuery.data?.data.data.notification ??
+                  "Chưa có thông báo",
+              }}
+            />
           )}
         </Box>
         {!accountQuery.isLoading &&

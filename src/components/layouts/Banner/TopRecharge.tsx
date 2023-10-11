@@ -6,8 +6,6 @@ import {
   Box,
   Text,
   Divider,
-  Alert,
-  AlertIcon,
   Button,
   Icon,
   VStack,
@@ -56,10 +54,6 @@ export default function TopRecharge() {
       </Flex>
       <VStack spacing={3}>
         <Divider w="70%" mx="auto" />
-        <Alert status="info" color="black.100">
-          <AlertIcon />
-          Đang có sự kiện: Phần thưởng người mới (Nhận ngay)
-        </Alert>
         <Link to="/profile/recharge" style={{ width: "100%" }}>
           <Button variant="rechargeNow" className="changeColor">
             NẠP THẺ NGAY

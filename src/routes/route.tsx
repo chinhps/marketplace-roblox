@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
   // ACCOUNT
   {
     path: "accounts",
-    element: <HomeLayout banner={false} miniBackground="/roblox-bg.jpg" />,
+    element: <HomeLayout banner={false} />,
     children: [
       {
         path: ":slug",

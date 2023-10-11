@@ -71,6 +71,7 @@ export const token = () => {
 export const customToast: UseToastOptions = {
   position: "top",
   variant: "left-accent",
+  isClosable: true,
 };
 
 export const styleTextShadow = {

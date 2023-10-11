@@ -43,7 +43,9 @@ Banner.v1 = () => {
         />
         <Box
           position="absolute"
-          backgroundImage={dataInformation?.data?.data?.information.banner_url ?? ""}
+          backgroundImage={
+            dataInformation?.data?.data?.information.banner_url ?? ""
+          }
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
           filter="blur(20px)"
@@ -73,14 +75,20 @@ Banner.v1 = () => {
               overflow="hidden"
               boxShadow="2xl"
             >
-              <Image src={dataInformation?.data?.data?.information.banner_url ?? ""} alt="banner" w="100%" />
+              <Image
+                objectFit="cover"
+                src={dataInformation?.data?.data?.information.banner_url ?? ""}
+                alt="banner"
+                w="100%"
+                maxH="420px"
+              />
             </GridItem>
             <GridItem
               colSpan={{ base: 1, lg: 2 }}
               bg="white.100"
               rounded="5px"
               overflow="hidden"
-              minH="500px"
+              minH="420px"
             >
               <EventBanner.v1 />
             </GridItem>
