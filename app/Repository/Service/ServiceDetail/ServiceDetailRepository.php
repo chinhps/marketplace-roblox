@@ -106,7 +106,7 @@ class ServiceDetailRepository implements ServiceDetailInterface
             $accounts = $accounts->orderBy('price', $filter['sort'] == 1 ? "ASC" : "DESC");
         }
 
-        $service->service->setRelation('accounts', $accounts->paginate(15));
+        $service->service->setRelation('accounts', $accounts->paginate(20));
 
         return $service;
     }

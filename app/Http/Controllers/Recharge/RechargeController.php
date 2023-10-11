@@ -27,8 +27,8 @@ class RechargeController extends Controller
         $validated = $request->validated();
 
         $type = ucwords($validated['card_type']); # type=Viettel, Vinaphone, Mobifone
-        $code = (int)$validated['pin'];
-        $serial = (int)$validated['serial'];
+        $code = $validated['pin'];
+        $serial = $validated['serial'];
         $amount = $validated['amount'];
 
         $checkExists = $this->rechargeHistoryRepository->exists([
