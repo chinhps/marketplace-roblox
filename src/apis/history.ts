@@ -75,4 +75,8 @@ export const withdrawHistoryApi = {
       status,
     });
   },
+  downloadRobux: () => {
+    const url = "/histories/withdraw/export-robux";
+    return axiosClient.post(url, [], { responseType: "blob" });
+  },
 };

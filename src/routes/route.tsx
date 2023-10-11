@@ -25,6 +25,8 @@ import CUTopRechargeVirtualPage from "@/pages/TopRecharge/CUTopRechargeVirtualPa
 import PluginListPage from "@/pages/Plugin/PluginListPage";
 import CUPluginPage from "@/pages/Plugin/CUPluginPage";
 import CUAdminPage from "@/pages/User/CUAdminPage";
+import EventListPage from "@/pages/Event/EventListPage";
+import CUEventPage from "@/pages/Event/CUEventPage";
 
 export const router = createBrowserRouter([
   {
@@ -208,6 +210,24 @@ export const router = createBrowserRouter([
       {
         path: "update/:id",
         element: <CUPluginPage />,
+      },
+    ],
+  },
+  {
+    path: "events",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "",
+        element: <EventListPage />,
+      },
+      {
+        path: "update/:id",
+        element: <CUEventPage />,
+      },
+      {
+        path: "create",
+        element: <CUEventPage />,
       },
     ],
   },

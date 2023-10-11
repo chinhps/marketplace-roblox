@@ -4,9 +4,22 @@ import FormBase from "@/components/globals/FormBase";
 import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
-import { Badge, Box, HStack, Td, Text, Tr, useToast } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Td,
+  Text,
+  Tr,
+  useToast,
+} from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { FiCheck, FiSearch } from "react-icons/fi";
+import { FiCheck, FiDownload, FiSearch } from "react-icons/fi";
 import { useState } from "react";
 import { UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { withdrawHistoryApi } from "@/apis/history";
@@ -17,7 +30,12 @@ import {
 } from "@/types/response/history.type";
 import Paginate from "@/components/globals/Paginate";
 import UserInfo from "@/components/globals/UserInfo";
-import { colorStatus, nameStatus, numberFormat } from "@/utils/function";
+import {
+  colorStatus,
+  downloadRes,
+  nameStatus,
+  numberFormat,
+} from "@/utils/function";
 import moment from "moment";
 
 export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
@@ -35,6 +53,12 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
     retry: false,
     refetchOnWindowFocus: false,
   });
+  const downloadRobuxMutate = useMutation({
+    mutationFn: () => withdrawHistoryApi.downloadRobux(),
+    onSuccess: (data) => {
+      downloadRes(data.data, `export_withdraw_robux_${moment().format()}.xlsx`);
+    },
+  });
   /****----------------
    *      END-HOOK
   ----------------****/
@@ -44,6 +68,19 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
         padding={idUser ? "0" : undefined}
         title="Lịch sử dịch vụ"
         fontSize="25px"
+        button={
+          <Menu isLazy placement="bottom-end">
+            <MenuButton variant="auth" as={Button} rightIcon={<FiDownload />}>
+              Xuất dữ liệu
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => downloadRobuxMutate.mutate()}>
+                Rút/Mua Robux
+              </MenuItem>
+              <MenuItem>Gamepass</MenuItem>
+            </MenuList>
+          </Menu>
+        }
       >
         <Text>
           Lịch sử dịch vụ bao gồm: Rút kim cương, mua/rút robux, gamepass,...

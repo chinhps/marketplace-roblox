@@ -7,7 +7,7 @@ import { IFormInput, IFormSearchProps } from "@/types/form.type";
 import { numberFormat } from "@/utils/function";
 import { Badge, Td, Text, Tr, useToast } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { FiCornerDownLeft, FiCornerUpRight, FiSearch } from "react-icons/fi";
+import { FiCornerUpRight, FiSearch } from "react-icons/fi";
 import { useState } from "react";
 import { UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { purchaseApi } from "@/apis/history";
@@ -135,17 +135,13 @@ export function TableListPurchaseHistory({
               )}
             </Td>
             <Td>
-              <ActionList
-                actions={["CUSTOM"]}
-                icon={
-                  vl.refund === "YES" ? (
-                    <FiCornerDownLeft />
-                  ) : (
-                    <FiCornerUpRight />
-                  )
-                }
-                onClickExits={() => handleUpdateRefund(vl.id, vl.refund)}
-              />
+              {vl.refund === "NO" && (
+                <ActionList
+                  actions={["CUSTOM"]}
+                  icon={<FiCornerUpRight />}
+                  onClickExits={() => handleUpdateRefund(vl.id, vl.refund)}
+                />
+              )}
             </Td>
           </Tr>
         ))}

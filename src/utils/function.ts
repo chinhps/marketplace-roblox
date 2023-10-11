@@ -99,7 +99,7 @@ export const handleCopy = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
     toast({
-      description: "Sao chép ID thành công!",
+      description: "Sao chép thành công!",
     });
   } catch (error) {
     toast({
@@ -107,4 +107,12 @@ export const handleCopy = async (text: string) => {
       status: "warning",
     });
   }
+};
+
+export const downloadRes = (fetchData: BlobPart, name: string): void => {
+  const blob = new Blob([fetchData]);
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = name;
+  link.click();
 };

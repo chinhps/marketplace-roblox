@@ -78,7 +78,7 @@ const formBase: Array<IFormInput> = [
   {
     label: "Thông báo cho dịch vụ",
     name: "notification_service",
-    type: "TEXTAREA",
+    type: "HTML",
     gridAreaName: "notification_service",
   },
   {

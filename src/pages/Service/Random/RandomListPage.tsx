@@ -13,6 +13,7 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import FormBase from "@/components/globals/FormBase";
 import { FiSearch } from "react-icons/fi";
+import BadgeCustom from "@/components/globals/BadgeCustom";
 
 export default function RandomListPage() {
   /****----------------
@@ -78,9 +79,9 @@ export default function RandomListPage() {
                 {vl.detail_private.map((value, i) => (
                   <Text key={i}>
                     {value.name}:
-                    <Badge colorScheme="purple" marginLeft="5px">
+                    <BadgeCustom colorScheme="purple">
                       {value.value}
-                    </Badge>
+                    </BadgeCustom>
                   </Text>
                 ))}
               </Td>
