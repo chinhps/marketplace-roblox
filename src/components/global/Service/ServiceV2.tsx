@@ -89,7 +89,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
             ) : (
               <Center w="100%">
                 <Text className="break-word" noOfLines={2}>
-                  {data.notification}
+                  Đang giảm {data.sale}%
                 </Text>
               </Center>
             )}

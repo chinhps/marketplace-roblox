@@ -19,6 +19,8 @@ const LuckyCardPage = lazy(() => import("@/pages/GameList/LuckyCardPage"));
 const LuckyWheelPage = lazy(() => import("@/pages/GameList/LuckyWheelPage"));
 const CategoryPage = lazy(() => import("@/pages/GameList/CategoryPage"));
 
+const GamePassPage = lazy(() => import("@/pages/GamePass/GamePassPage"));
+
 const GameHistoryPage = lazy(
   () => import("@/pages/Profile/History/GameHistoryPage")
 );
@@ -194,6 +196,26 @@ export const router = createBrowserRouter([
                 ),
               },
             ],
+          },
+        ],
+      },
+    ],
+  },
+  // form
+  {
+    path: "service-game-pass",
+    element: <HomeLayout banner={false} />,
+    children: [
+      {
+        path: "",
+        element: <ProfileLayout />,
+        children: [
+          {
+            path: ":slug",
+            element:  <TitleSeo
+            title="Mua Game Pass"
+            ComponentPage={GamePassPage}
+          />,
           },
         ],
       },

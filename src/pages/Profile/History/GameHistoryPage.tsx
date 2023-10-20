@@ -54,7 +54,7 @@ export default function GameHistoryPage() {
             <Tr key={index}>
               <Td>
                 <Text as="b">{vl.service_name}</Text>
-                <Text>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Text>
+                <Text>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Text>
               </Td>
               <Td>
                 <Stack>

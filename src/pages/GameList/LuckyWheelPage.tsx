@@ -102,8 +102,7 @@ function GamePlay({
    *      END-HOOK
   ----------------****/
 
-  const service_button =
-    "https://quanly.gameroblox.vn/upload/doanhmuc/1674163694245285.png";
+  const service_button = "https://i.imgur.com/aWwTU7o.png";
 
   /****----------------
    *      HANDLE

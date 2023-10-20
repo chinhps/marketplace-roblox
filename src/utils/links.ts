@@ -7,6 +7,10 @@ export const link_service = (game_key: string) => {
       link = "/game-list/lucky-card/";
       textBtn = "CHƠI NGAY";
       break;
+      case "GAMEPASS":
+      link = "/service-game-pass/";
+      textBtn = "MUA NGAY";
+      break;
     case "WHEEL":
       link = "/game-list/lucky-wheel/";
       textBtn = "CHƠI NGAY";

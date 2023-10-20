@@ -9,6 +9,7 @@ import {
   GridItem,
   Heading,
   Img,
+  Link as LinkChakra,
   Stack,
   Text,
   useColorModeValue,
@@ -88,12 +89,32 @@ export default function Footer() {
                 >
                   {dataInformation?.data?.data?.title_website}
                 </Heading>
+                <Flex mt={2} justifyContent="space-between" gap={1} alignItems="center">
+                  <LinkChakra
+                    fontSize="14px"
+                    href="https://chính.vn/chinhsach.html"
+                    isExternal
+                  >
+                    Privacy Policy
+                  </LinkChakra>
+                  |
+                  <LinkChakra
+                    fontSize="14px"
+                    href="https://chính.vn/dieukhoan.html"
+                    isExternal
+                  >
+                    Terms of Service
+                  </LinkChakra>
+                  |
+                  <LinkChakra
+                    fontSize="14px"
+                    href="https://chính.vn/posts.html"
+                    isExternal
+                  >
+                    Delete user data
+                  </LinkChakra>
+                </Flex>
               </Stack>
-
-              {/* <List mt={2} display="flex" gap={5}>
-              <ListItem fontWeight="bold">Privacy Policy</ListItem>
-              <ListItem fontWeight="bold">Terms of Service</ListItem>
-            </List> */}
             </GridItem>
             <GridItem colSpan={5}>
               <Heading as="h2" fontSize="2xl" mb={5}>

@@ -58,7 +58,7 @@ export default function PurchaseHistoryPage() {
                     {vl.service_name}
                   </Text>
                   <Text>
-                    {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+                    {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}
                   </Text>
                 </Stack>
               </Td>

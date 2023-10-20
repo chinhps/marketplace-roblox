@@ -53,7 +53,7 @@ export default function TopRecharge() {
         ) : null}
       </Flex>
       <VStack spacing={3}>
-        <Divider w="70%" mx="auto" />
+        <Divider w="70%" mx="auto" borderColor="main.item3" />
         <Link to="/profile/recharge" style={{ width: "100%" }}>
           <Button variant="rechargeNow" className="changeColor">
             NẠP THẺ NGAY

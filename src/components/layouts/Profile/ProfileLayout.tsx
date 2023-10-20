@@ -19,6 +19,8 @@ import {
   SimpleGrid,
   useMediaQuery,
   Button,
+  VStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -27,7 +29,7 @@ import { listOption } from "@/utils/const";
 import IsAuthentication from "@/guards/IsAuthentication";
 import { useUserData } from "@/hooks/UserDataProvider";
 import { useState } from "react";
-import { FiCopy } from "react-icons/fi";
+import { FiChevronDown, FiChevronUp, FiCopy } from "react-icons/fi";
 
 export default function ProfileLayout() {
   return (
@@ -75,32 +77,35 @@ function SideBar() {
           >
             ID: {userData?.data?.data.providerId}
           </Button>
-          <Text>
-            <Text as="b" pr={2}>
-              Tên:
-            </Text>
-            {userData?.data?.data.name}
-          </Text>
-          <Text>
-            <Text as="b" pr={2}>
-              Số dư:
-            </Text>
-            <Text color="ocean.200" as="b" pr={1}>
-              {numberFormat(userData?.data?.data.price ?? 0)}
-            </Text>
-          </Text>
+          <HStack justifyContent="space-between" mt=".5rem">
+            <VStack alignItems="flex-start">
+              <Text>
+                <Text as="b" pr={2}>
+                  Tên:
+                </Text>
+                {userData?.data?.data.name}
+              </Text>
+              <Text>
+                <Text as="b" pr={2}>
+                  Số dư:
+                </Text>
+                <Text color="ocean.200" as="b" pr={1}>
+                  {numberFormat(userData?.data?.data.price ?? 0)}
+                </Text>
+              </Text>
+            </VStack>
+            {!isDesktop && (
+              <IconButton
+                aria-label={(!openMenu ? "Mở" : "Đóng") + "Menu"}
+                variant="user"
+                onClick={() => setOpenMenu((prev) => !prev)}
+                icon={!openMenu ? <FiChevronDown /> : <FiChevronUp />}
+              />
+            )}
+          </HStack>
         </Stack>
       </HStack>
-      <Divider my={5} />
-      {!isDesktop && (
-        <Button
-          w="100%"
-          variant="user"
-          onClick={() => setOpenMenu((prev) => !prev)}
-        >
-          {!openMenu ? "Mở" : "Đóng"} Menu
-        </Button>
-      )}
+      {isDesktop && <Divider my={5} />}
       {isDesktop || openMenu ? (
         <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple mt={2}>
           <ListSideBar />

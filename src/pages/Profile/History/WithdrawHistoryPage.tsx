@@ -39,23 +39,16 @@ export default function WithdrawHistoryPage() {
       <Flex flexDirection="column" gap={5}>
         <Box>
           <Heading as="h1" fontSize="25px">
-            Lịch sử rút và mua Robux
+            Lịch sử rút và mua vật phẩm
           </Heading>
           <Text mb={2} fontSize="sm">
-            Lịch sử rút và mua Robux của tài khoản
+            Lịch sử rút và mua vật phẩm của tài khoản
           </Text>
           <Divider />
         </Box>
         <TableCustom
-          thead={[
-            "Mã Đơn",
-            "Loại",
-            "Số Robux",
-            "Thông tin",
-            "Thời Gian",
-            "Trạng thái",
-          ]}
-          caption="Lịch sử rút và mua Robux"
+          thead={["Mã Đơn", "Loại", "Thông tin", "Thời Gian", "Trạng thái"]}
+          caption="Lịch sử rút và mua vật phẩm"
         >
           {dataQuery?.data?.data.data.map((vl, index) => (
             <Tr key={index}>
@@ -68,9 +61,12 @@ export default function WithdrawHistoryPage() {
                   {vl.withdraw_type}
                 </Text>
               </Td>
-              <Td>{numberFormat(vl.value, false)}</Td>
               <Td>
                 <Stack>
+                  <Text>
+                    {vl.withdraw_type == "GAMEPASS" ? "Giá tiền" : "Số lượng"}:{" "}
+                    {numberFormat(vl.value, false)}
+                  </Text>
                   {vl.detail.map((dt, index) => (
                     <Text key={index}>
                       {dt.name}: {dt.value}
@@ -78,7 +74,14 @@ export default function WithdrawHistoryPage() {
                   ))}
                 </Stack>
               </Td>
-              <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
+              <Td>
+                <Text>
+                  Tạo: {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}
+                </Text>
+                <Text>
+                  Cập nhật: {moment(vl.updated_at).format("DD/MM/yyyy HH:mm")}
+                </Text>
+              </Td>
               <Td>
                 <Text as="b" fontSize="sm" color={colorStatus(vl.status)}>
                   {nameStatus(vl.status)}

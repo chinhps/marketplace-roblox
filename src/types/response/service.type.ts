@@ -16,6 +16,7 @@ export interface IServiceListResponse {
   counterText: string | "AUTO";
   more: { [key: string]: string };
   notification: string | null;
+  sale: number;
 }
 
 export interface IServiceDetailResponse {
@@ -40,6 +41,10 @@ export interface IServiceDetailResponse {
   price: number;
   sale: number;
   gifts: Array<string>;
+  parcels: Array<{
+    id: string;
+    text: string;
+  }>;
 }
 
 export interface IServiceHandle {

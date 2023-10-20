@@ -170,10 +170,6 @@ function FormSearch({
       type: "SELECT",
       selects: [
         {
-          label: "Khoảng giá tiền",
-          value: "",
-        },
-        {
           label: `Dưới 50K`,
           value: "1",
         },
@@ -204,14 +200,10 @@ function FormSearch({
       ],
     },
     {
-      label: "Sắp xếp theo",
+      label: "Sắp xếp theo giá",
       name: "sort",
       type: "SELECT",
       selects: [
-        {
-          label: "Sắp xếp theo",
-          value: "",
-        },
         {
           label: `Thấp đến cao`,
           value: "1",

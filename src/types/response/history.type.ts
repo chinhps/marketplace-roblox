@@ -30,7 +30,7 @@ export interface IWithdrawHistory {
   refund: boolean;
   value: number;
   status: "PENDING" | "SUCCESS" | "CANCEL" | "PROCESSING";
-  withdraw_type: "ROBUX" | "DIAMOND" | "BUY_ROBUX";
+  withdraw_type: "ROBUX" | "DIAMOND" | "BUY_ROBUX" | "GAMEPASS";
   detail: Array<{
     key: string;
     name: string;

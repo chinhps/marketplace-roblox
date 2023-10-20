@@ -56,16 +56,23 @@ export function HeadingService({
   children,
   price,
   notification,
+  textBtn = "Thể lệ",
 }: {
   children: string | undefined;
-  price: number;
+  price?: number;
   notification: React.ReactElement | string;
+  textBtn?: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <ModelBase TextData={notification} isOpen={isOpen} onClose={onClose} children />
+      <ModelBase
+        TextData={notification}
+        isOpen={isOpen}
+        onClose={onClose}
+        children
+      />
       <Heading
         as="h1"
         fontSize="3xl"
@@ -82,23 +89,31 @@ export function HeadingService({
         flexDirection={{ base: "column", md: "row" }}
         gap={2}
       >
-        <HStack gap={2} flexDirection={{ base: "column", md: "row" }}>
-          <Button variant="action" gap={2}>
-            <Icon as={FaUserAlt} w="13px" variant="action" />
-            Đang chơi: {Math.floor(Math.random() * 50) + 2}
+        {typeof price !== "undefined" && (
+          <HStack
+            gap={2}
+            flexDirection={{ base: "column", md: "row" }}
+            w="100%"
+          >
+            <Button variant="action" gap={2}>
+              <Icon as={FaUserAlt} w="13px" variant="action" />
+              Đang chơi: {Math.floor(Math.random() * 50) + 2}
+            </Button>
+            <Button variant="action" gap={2}>
+              <Icon as={FaMoneyBill} w="13px" variant="action" />
+              {numberFormat(price)}
+            </Button>
+          </HStack>
+        )}
+
+        <HStack
+          justifyContent={typeof price !== "undefined" ? "right" : "center"}
+          w="100%"
+        >
+          <Button variant="action" onClick={onOpen}>
+            {textBtn}
           </Button>
-          <Button variant="action" gap={2}>
-            <Icon as={FaMoneyBill} w="13px" variant="action" />
-            {numberFormat(price)}
-          </Button>
-        </HStack>
-        <HStack justifyContent="center">
-          <Button flex={1} variant="action" onClick={onOpen}>
-            Thể lệ
-          </Button>
-          <Button flex={1} variant="action">
-            Lịch sử
-          </Button>
+          <Button variant="action">Lịch sử</Button>
         </HStack>
       </Flex>
     </>

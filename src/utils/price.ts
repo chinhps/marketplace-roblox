@@ -47,6 +47,8 @@ export function hiddenPriceByGameType(gameType: string) {
       return false;
     case "ACCOUNT":
       return false;
+    case "GAMEPASS":
+      return false;
   }
   return true;
 }

@@ -59,7 +59,7 @@ export default function RechargeHistoryPage() {
                 <Stack spacing={2}>
                   <Text as="b">{vl.recharge_type}</Text>
                   <Text>
-                    {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+                    {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}
                   </Text>
                   <Text as="b" color={colorStatus(vl.status)}>
                     {vl.status}
