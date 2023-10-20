@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -18,14 +19,14 @@ class ServiceDetail extends Model
         return $this->belongsToMany(ShopList::class, 'service_details_except_shop', 'service_detail_id', 'shop_id');
     }
 
-    public function serviceGroup(): HasOne
+    public function serviceGroup(): BelongsTo
     {
-        return $this->hasOne(ServiceGroup::class, 'id', 'service_group_id');
+        return $this->belongsTo(ServiceGroup::class, 'service_group_id');
     }
 
-    public function service(): HasOne
+    public function service(): BelongsTo
     {
-        return $this->hasOne(Service::class, 'id', 'service_id');
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
     public function serviceImage(): HasOne

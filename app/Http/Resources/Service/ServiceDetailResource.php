@@ -24,7 +24,15 @@ class ServiceDetailResource extends JsonResource
             "notification" => $this->service->notification,
             "price" => $this->service->price,
             "sale" => $this->service->sale,
-            "gifts" => $this->serviceOdds->serviceGifts->pluck('image') ?? []
+            "gifts" => $this->serviceOdds->serviceGifts->pluck('image') ?? [],
+            "parcels" => $this->service->game_list->game_key === "GAMEPASS" ?
+                $this->serviceOdds->serviceGifts->map(function ($item) {
+                    $cash = number_format($item->value1);
+                    return [
+                        "id" => $item->id,
+                        "text" => "Thành tiền: {$cash}đ | {$item->text_custom}"
+                    ];
+                }) : []
         ];
     }
 }

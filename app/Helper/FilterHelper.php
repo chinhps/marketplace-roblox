@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Helper;
+use Illuminate\Database\Eloquent\Builder;
 
-class FilterHelper
-{
-    public static function GetPriceFilter($price)
+if (!function_exists('getPriceFilter')) {
+    function getPriceFilter($price)
     {
         switch ($price) {
             case 1:
@@ -42,4 +41,28 @@ class FilterHelper
         }
         return [$cashStart, $cashEnd];
     }
+}
+
+if (!function_exists('queryRepository')) {
+    function queryRepository(Builder $model, array $filter)
+    {
+        if (isset($filter['query'])) {
+            $model->where($filter['query']);
+        }
+        if (isset($filter['sort'])) {
+            foreach ($filter['sort'] as $valueSort) {
+                $model->orderBy($valueSort[0], $valueSort[1]);
+            }
+        }
+        if (isset($filter['between'])) {
+            foreach ($filter['between'] as $valueBetween) {
+                $model->whereBetween($valueBetween[0], $valueBetween[1]);
+            }
+        }
+        if (!isset($filter['sort'])) {
+            $model->orderBy('id', 'desc');
+        }
+
+        return $model;
+    };
 }

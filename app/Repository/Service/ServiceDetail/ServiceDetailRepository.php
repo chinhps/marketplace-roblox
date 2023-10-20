@@ -2,7 +2,6 @@
 
 namespace App\Repository\Service\ServiceDetail;
 
-use App\Helper\FilterHelper;
 use App\Models\ServiceDetail;
 use App\Models\ServiceOdds;
 use Illuminate\Database\Eloquent\Model;
@@ -70,7 +69,7 @@ class ServiceDetailRepository implements ServiceDetailInterface
             ->with([
                 'serviceImage',
                 'service.game_list',
-                'serviceOdds.serviceGifts:id,odds_id,image,game_currency_id',
+                'serviceOdds.serviceGifts:id,odds_id,image,game_currency_id,text_custom,value1',
             ])
             ->first() ?? false;
     }
@@ -79,7 +78,7 @@ class ServiceDetailRepository implements ServiceDetailInterface
      * @param array ['id','price','sort']
      * @return \App\Models\ServiceDetail
      */
-    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter)
+    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter = [])
     {
         $service = $this->model
             ->where('slug', $slug)
@@ -91,23 +90,13 @@ class ServiceDetailRepository implements ServiceDetailInterface
             return false;
         }
 
-        $accounts = $service->service->accounts()
+        $accounts = $service->service->accounts()->getQuery()
             ->select("id", "service_id", "note", "detail_public", "price", "thumb", "images")
             ->where('active', 'YES')
             ->where('status', 'NOTSELL');
 
-        if (isset($filter['id'])) {
-            $accounts = $accounts->where('id', $filter['id']);
-        }
-        if (isset($filter['price'])) {
-            $accounts = $accounts->whereBetween('price', FilterHelper::GetPriceFilter($filter['price']));
-        }
-        if (isset($filter['sort'])) {
-            $accounts = $accounts->orderBy('price', $filter['sort'] == 1 ? "ASC" : "DESC");
-        }
-
+        $accounts = queryRepository($accounts, $filter);
         $service->service->setRelation('accounts', $accounts->paginate(20));
-
         return $service;
     }
 

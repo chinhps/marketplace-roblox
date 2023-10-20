@@ -14,6 +14,7 @@ use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\LoginWith\FacebookLoginController;
 use App\Http\Controllers\User\LogoutController;
+use App\Http\Controllers\Withdraw\GamePassController;
 use App\Http\Controllers\Withdraw\WithdrawDiamondController;
 use App\Http\Controllers\Withdraw\WithdrawRobuxController;
 use Illuminate\Support\Facades\Route;
@@ -80,6 +81,8 @@ Route::prefix('services')->group(function () {
     # play game
     Route::post('/is_play_try/{slug}', [ServiceController::class, 'handlePlayTry']);
     Route::post('/is_play/{slug}', [ServiceController::class, 'handlePlay'])->middleware('decryptToken:sanctum');
+    # game pass
+    Route::post('/game_pass/{slug}', [GamePassController::class, 'buyGamePass'])->middleware('decryptToken:sanctum');
 });
 
 # Plugin

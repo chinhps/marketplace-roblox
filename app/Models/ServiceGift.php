@@ -14,4 +14,9 @@ class ServiceGift extends Model
     {
         return $this->belongsTo(GameCurrency::class, 'game_currency_id');
     }
+
+    public function serviceOdds()
+    {
+        return $this->belongsTo(ServiceOdds::class, 'odds_id');
+    }
 }

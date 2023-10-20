@@ -19,7 +19,7 @@ interface ServiceDetailInterface
      * @param array ['id','price','sort']
      * @return \App\Models\ServiceDetail
      */
-    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter);
+    public function serviceDetailHaveAccounts(string $slug, array $listIdAllow, array $filter = []);
     /**
      * @return \App\Models\ServiceDetail
      */

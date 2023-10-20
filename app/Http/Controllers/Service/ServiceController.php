@@ -68,10 +68,23 @@ class ServiceController extends Controller
         /**
          * @var array ['id','price','sort']
          */
-        $filter = $request->validated();
+        $validated = $request->validated();
         $domain = $request->domain;
         # Check service exists at domain
         $idListAllow = $this->serviceDetailRepository->idServiceDetailList($domain);
+
+        $filter = [];
+
+        if (isset($validated['id'])) {
+            $filter['query'][] = ['id', $validated['id']];
+        }
+        if (isset($validated['price'])) {
+            $filter['between'][] = ["price", getPriceFilter($validated['price'])];
+        }
+        if (isset($validated['sort'])) {
+            $filter['sort'][] = ['price', $validated['sort'] == 1 ? "ASC" : "DESC"];
+        }
+
         $serviceDetail = $this->serviceDetailRepository->serviceDetailHaveAccounts($slug, $idListAllow, $filter);
         if (!$serviceDetail) {
             return BaseResponse::msg("Không tồn tại dịch vụ", 404);

@@ -20,6 +20,7 @@ class ServiceGiftFactory extends Factory
         return [
             "gift_type" => $gift_type,
             "image" => $this->faker->imageUrl(),
+            "text_custom" => null,
             "value1" => $this->faker->numberBetween(10, 100),
             "value2" => $gift_type === 'RANDOM' ? $this->faker->numberBetween(101, 999) : null,
             "vip" => $this->faker->randomElement(['YES', 'NO']),

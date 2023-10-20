@@ -25,7 +25,8 @@ class GameListFactory extends Factory
             "WHEEL", # VÒNG QUAY
             "LUCKY_BOX", # MỞ HỘP QUÀ
             "LUCKY_CARD", # LẬT HÌNH
-            "BOX" # các loại hòm
+            "BOX", # các loại hòm
+            "GAMEPASS", # Gamepass
         ]);
         return [
             "game_key" => $game_key,

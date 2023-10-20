@@ -18,7 +18,7 @@ class ServicesSeeder extends Seeder
     public function run(): void
     {
         # Tạo 7 games
-        $gameList = GameList::factory(8)->create();
+        $gameList = GameList::factory(9)->create();
 
         # Tạo 4 đơn vị
         $gameCurrencies = GameCurrency::factory(3)->create()->pluck('id','currency_key');
