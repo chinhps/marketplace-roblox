@@ -27,6 +27,7 @@ import CUPluginPage from "@/pages/Plugin/CUPluginPage";
 import CUAdminPage from "@/pages/User/CUAdminPage";
 import EventListPage from "@/pages/Event/EventListPage";
 import CUEventPage from "@/pages/Event/CUEventPage";
+import CUGamePassPage from "@/pages/Service/GamePass/CUGamePassPage";
 
 export const router = createBrowserRouter([
   {
@@ -131,6 +132,19 @@ export const router = createBrowserRouter([
           {
             path: "update/:id",
             element: <CUServiceGroup />,
+          },
+        ],
+      },
+      {
+        path: "game-pass",
+        children: [
+          {
+            path: "create",
+            element: <CUGamePassPage />,
+          },
+          {
+            path: "update/:id",
+            element: <CUGamePassPage />,
           },
         ],
       },

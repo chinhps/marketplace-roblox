@@ -128,7 +128,7 @@ export function TableListServiceHistory({
               <Badge colorScheme="green">{numberFormat(vl.price)}</Badge>
             </Td>
             <Td>
-              <Text>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Text>
+              <Text>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Text>
             </Td>
           </Tr>
         ))}

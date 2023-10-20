@@ -158,6 +158,8 @@ function TableListWithdrawHistory({
               <Badge colorScheme="orange">Rút Robux</Badge>
             ) : vl.withdraw_type === "BUY_ROBUX" ? (
               <Badge colorScheme="pink">Mua Robux</Badge>
+            ) : vl.withdraw_type === "GAMEPASS" ? (
+              <Badge colorScheme="yellow">GAMEPASS</Badge>
             ) : (
               <Badge colorScheme="gray">Không xác định</Badge>
             )}
@@ -184,9 +186,9 @@ function TableListWithdrawHistory({
             <Text>Task: {vl.task_number}</Text>
           </Td>
           <Td>
-            <Text>Tạo: {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Text>
+            <Text>Tạo: {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Text>
             <Text>
-              Cập nhật: {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+              Cập nhật: {moment(vl.updated_at).format("DD/MM/yyyy HH:mm")}
             </Text>
           </Td>
           <Td>

@@ -146,10 +146,10 @@ export function TableListRechargeHistory({
                 <Badge colorScheme="green">Bình thường</Badge>
               )}
               <Text>
-                Nạp: {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+                Nạp: {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}
               </Text>
               <Text>
-                Duyệt: {moment(vl.updated_at).format("DD/MM/yyyy hh:mm")}
+                Duyệt: {moment(vl.updated_at).format("DD/MM/yyyy HH:mm")}
               </Text>
             </Td>
             <Td>

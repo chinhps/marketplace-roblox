@@ -95,10 +95,10 @@ export default function TopRechargeListPage() {
               <Td>{numberFormat(vl.price ?? 0)}</Td>
               <Td>
                 <Text>
-                  Tạo: {moment(vl.created_at).format("DD/MM/yyyy hh:mm")}
+                  Tạo: {moment(vl.created_at).format("DD/MM/yyyy HH:mm")}
                 </Text>
                 <Text>
-                  Cập nhật: {moment(vl.updated_at).format("DD/MM/yyyy hh:mm")}
+                  Cập nhật: {moment(vl.updated_at).format("DD/MM/yyyy HH:mm")}
                 </Text>
               </Td>
               <Td>

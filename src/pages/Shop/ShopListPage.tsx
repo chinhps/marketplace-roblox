@@ -83,7 +83,7 @@ export default function ShopListPage() {
                 </Flex>
               </Td>
               <Td>{numberFormat(vl.shop_detail.cash_new_user)}</Td>
-              <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
+              <Td>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Td>
               <Td>
                 <ActionList
                   actions={["EDIT"]}

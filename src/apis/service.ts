@@ -103,3 +103,22 @@ export const serviceOddsApi = {
     return axiosClient.delete<IResponseWithMessage>(url);
   },
 };
+
+export const gamePassApi = {
+  get: (id: number) => {
+    const url = "/game-pass/" + id;
+    return axiosClient.get<IBaseResponseDetail<ServiceGroup>>(url);
+  },
+  delete: (id: number) => {
+    const url = "/game-pass/" + id;
+    return axiosClient.delete<IResponseWithMessage>(url);
+  },
+  create: (dataForm: FormData) => {
+    const url = "/game-pass/upsert";
+    return axiosClient.post<IResponseWithMessage>(url, dataForm, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+  },
+};

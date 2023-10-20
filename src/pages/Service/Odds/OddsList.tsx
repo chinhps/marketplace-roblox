@@ -64,7 +64,7 @@ export default function OddsList() {
               <Text>{vl.odds_user}</Text>
             </Td>
             <Td>{vl.countUse}</Td>
-            <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
+            <Td>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Td>
             <Td>
               <ActionList
                 actions={["DELETE"]}

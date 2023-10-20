@@ -126,7 +126,7 @@ export function TableListPurchaseHistory({
                 </Text>
               ))}
             </Td>
-            <Td>{moment(vl.created_at).format("DD/MM/yyyy hh:mm")}</Td>
+            <Td>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Td>
             <Td>
               {vl.refund === "YES" ? (
                 <Badge colorScheme="red">Hoàn tiền</Badge>

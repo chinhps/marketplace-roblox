@@ -52,6 +52,9 @@ export default function ServiceListPage() {
               <MenuItem as={Link} to="./groups/create">
                 Nhóm dịch vụ
               </MenuItem>
+              <MenuItem as={Link} to="./game-pass/create">
+                GamePass
+              </MenuItem>
             </MenuList>
           </Menu>
         }
@@ -149,11 +152,12 @@ function TableList() {
             </Td>
 
             <Td>
-              {vl.information && Object.keys(vl.information).map((vl2, index) => (
-                <Text key={index}>
-                  {vl2}: {vl.information[vl2]}
-                </Text>
-              ))}
+              {vl.information &&
+                Object.keys(vl.information).map((vl2, index) => (
+                  <Text key={index}>
+                    {vl2}: {vl.information[vl2]}
+                  </Text>
+                ))}
               <Badge colorScheme="cyan">
                 Lượt sử dụng:{" "}
                 {numberFormat(vl.service_couter?.value ?? 0, false)}
