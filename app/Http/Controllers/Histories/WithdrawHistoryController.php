@@ -79,31 +79,16 @@ class WithdrawHistoryController extends Controller
 
         DB::beginTransaction();
         try {
-            if ($withdrawCurrent->status === "PENDING") {
-                $newStatus = $validated['status'] ? "PROCESSING" : "CANCEL";
-                $this->updateWithdrawStatus($id, $newStatus);
+            $newStatus = $validated['status'] ? "SUCCESS" : "CANCEL";
+            $this->updateWithdrawStatus($id, $newStatus);
 
-                # IF STATUS = FALSE THEN REFUND FOR USER
-                if (!$validated['status']) {
-                    $this->refundForWithdrawType($withdrawCurrent);
-                }
-
-                DB::commit();
-                return BaseResponse::msg("Robux: Chuyển sang trạng thái -> " . $newStatus);
+            # IF STATUS = FALSE THEN REFUND FOR USER
+            if (!$validated['status']) {
+                $this->refundForWithdrawType($withdrawCurrent);
             }
 
-            if ($withdrawCurrent->withdraw_type === "DIAMOND" || $withdrawCurrent->status === "PROCESSING") {
-                $newStatus = $validated['status'] ? "SUCCESS" : "CANCEL";
-                $this->updateWithdrawStatus($id, $newStatus);
-
-                # IF STATUS = FALSE THEN REFUND FOR USER
-                if (!$validated['status']) {
-                    $this->refundForWithdrawType($withdrawCurrent);
-                }
-
-                DB::commit();
-                return BaseResponse::msg("{$withdrawCurrent->withdraw_type}: Chuyển sang trạng thái -> " . $newStatus);
-            }
+            DB::commit();
+            return BaseResponse::msg("{$withdrawCurrent->withdraw_type}: Chuyển sang trạng thái -> " . $newStatus);
         } catch (\Exception $e) {
             DB::rollBack();
             return BaseResponse::msg("Có lỗi xảy ra vui lòng liên hệ admin!", 500);
@@ -120,7 +105,10 @@ class WithdrawHistoryController extends Controller
     {
         switch ($withdrawCurrent->withdraw_type) {
             case "BUY_ROBUX":
-                $this->refundPrice($withdrawCurrent);
+                $this->refundPrice($withdrawCurrent, $withdrawCurrent->value / $withdrawCurrent->cost * 10000);
+                break;
+            case "GAMEPASS":
+                $this->refundPrice($withdrawCurrent, $withdrawCurrent->value);
                 break;
             case "ROBUX":
                 $this->refundRobux($withdrawCurrent);
@@ -131,12 +119,12 @@ class WithdrawHistoryController extends Controller
         }
     }
 
-    private function refundPrice($withdrawCurrent)
+    private function refundPrice($withdrawCurrent, $value = 0)
     {
         $this->transactionRepository->createPrice(
             $withdrawCurrent->user,
-            $withdrawCurrent->value / $withdrawCurrent->cost * 10000,
-            "Hoàn tiền khi rút Robux, Cost: {$withdrawCurrent->cost}, ID Withdraw: {$withdrawCurrent->id}"
+            $value,
+            "Hoàn tiền khi mua Robux/Gamepass, Cost: {$withdrawCurrent->cost}, ID Withdraw: {$withdrawCurrent->id}"
         );
     }
 
