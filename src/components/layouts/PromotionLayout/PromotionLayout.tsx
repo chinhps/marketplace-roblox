@@ -65,6 +65,7 @@ function RecomendServices() {
         border="solid 1px"
         borderColor="gold.100"
         rounded="md"
+        bg="var(--bg-item-main-color)"
       >
         <Heading as="h2" fontSize="xl" textTransform="uppercase">
           NẠP TIỀN

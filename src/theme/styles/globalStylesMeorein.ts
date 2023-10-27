@@ -16,7 +16,7 @@ export const globalStyles = {
             100: "#e5e5e5"
         },
         black: {
-            100: "#111",
+            100: "#fff",
             999: "#111",
             200: "#282828",
             300: "#525252"
@@ -25,7 +25,7 @@ export const globalStyles = {
             100: "#D0A85C"
         },
         white: {
-            100: "#fff",
+            100: "#111",
             999: "#fff",
             500: "#f9f9f9",
             600: "#b3b3b3"

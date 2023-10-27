@@ -66,7 +66,7 @@ export default function GiftList() {
                 ))
               )}
             </Flex>
-            <Text textAlign="center" color="white" fontWeight="bold">
+            <Text textAlign="center" color="white.100" fontWeight="bold" mt="1rem">
               Shop đã trao các phần thưởng tương ứng cho
               <Text as="span" color="green" mx={1}>
                 5

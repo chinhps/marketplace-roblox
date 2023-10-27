@@ -3,12 +3,12 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/route";
 import { ChakraProvider, Flex, Spinner } from "@chakra-ui/react";
 import theme from "./theme";
-import "@/styles/globalStyle.scss";
+// import "@/styles/globalStyle.scss";
+import "@/styles/globalStyleMeoren.scss";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { HelmetProvider } from "react-helmet-async";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Default from "./components/layouts/Default";
 import { Suspense } from "react";
 
@@ -32,7 +32,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               }
             >
               <RouterProvider router={router} />
-              <ReactQueryDevtools initialIsOpen={false} />
             </Suspense>
           </Default>
         </QueryClientProvider>

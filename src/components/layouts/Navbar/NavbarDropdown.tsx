@@ -65,7 +65,7 @@ function MenuCustom({ data }: { data: IInfoUserResponse }) {
         >
           | {numberFormat(data.data.price)}
         </MenuButton>
-        <MenuList overflow="hidden" paddingBottom={0} boxShadow="md">
+        <MenuList overflow="hidden" paddingBottom={0} boxShadow="base">
           <MenuItem
             onClick={() => handleCopy(data.data.providerId)}
             as={Flex}

@@ -39,12 +39,13 @@ export default function Navbar() {
   return (
     <Box as="nav" position="fixed" top={0} left={0} right={0} zIndex={10}>
       <Flex
-        bg={useColorModeValue("#111111", "gray.800")}
-        color={useColorModeValue("white.500", "white")}
+        bg="main.nav"
+        color="white.100"
         minH={"80px"}
         py={{ base: 2 }}
         px={{ base: 5, md: 20 }}
         align={"center"}
+        boxShadow="base"
       >
         <Flex flex={{ base: 1 }} alignItems="center" justify="start">
           <Flex alignItems="center" gap={2}>
@@ -109,60 +110,60 @@ function LogoNav() {
 }
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue("white.500", "gray.200");
-  const linkHoverColor = useColorModeValue("white.600", "white");
   const popoverContentBgColor = useColorModeValue("black.100", "gray.800");
   const dataInformation = useInformationShopData();
 
   return (
     <Stack as="ul" listStyleType="none" direction={"row"} spacing={4}>
-      {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map((navItem) => (
-        <Box key={navItem.label} as="li">
-          <Popover trigger={"hover"} placement={"bottom-start"}>
-            <PopoverTrigger>
-              <Link
-                p={4}
-                as={ReactLink}
-                to={navItem.href ?? "#"}
-                fontSize={"md"}
-                fontWeight={600}
-                textTransform="uppercase"
-                color={linkColor}
-                display="flex"
-                gap=".3rem"
-                alignItems="center"
-                _hover={{
-                  textDecoration: "none",
-                  color: linkHoverColor,
-                  borderBottom: "2px",
-                }}
-              >
-                <Text>{navItem.label}</Text>
-                {navItem.icon ? (
-                  <Icon as={FiArrowUpRight} color="gray" />
-                ) : null}
-              </Link>
-            </PopoverTrigger>
+      {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map(
+        (navItem) => (
+          <Box key={navItem.label} as="li">
+            <Popover trigger={"hover"} placement={"bottom-start"}>
+              <PopoverTrigger>
+                <Link
+                  p={4}
+                  as={ReactLink}
+                  to={navItem.href ?? "#"}
+                  color="white.100"
+                  fontSize={"md"}
+                  fontWeight={600}
+                  textTransform="uppercase"
+                  display="flex"
+                  gap=".3rem"
+                  alignItems="center"
+                  _hover={{
+                    textDecoration: "none",
+                    color: "red",
+                    borderBottom: "2px",
+                  }}
+                >
+                  <Text>{navItem.label}</Text>
+                  {navItem.icon ? (
+                    <Icon as={FiArrowUpRight} color="gray" />
+                  ) : null}
+                </Link>
+              </PopoverTrigger>
 
-            {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={"xl"}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={"xl"}
-                minW={"sm"}
-              >
-                <Stack>
-                  {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
-              </PopoverContent>
-            )}
-          </Popover>
-        </Box>
-      ))}
+              {navItem.children && (
+                <PopoverContent
+                  border={0}
+                  boxShadow={"xl"}
+                  bg={popoverContentBgColor}
+                  p={4}
+                  rounded={"xl"}
+                  minW={"sm"}
+                >
+                  <Stack>
+                    {navItem.children.map((child) => (
+                      <DesktopSubNav key={child.label} {...child} />
+                    ))}
+                  </Stack>
+                </PopoverContent>
+              )}
+            </Popover>
+          </Box>
+        )
+      )}
     </Stack>
   );
 };
@@ -175,7 +176,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("black.300", "gray.900") }}
+      _hover={{ bg: "black.100" }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
@@ -225,9 +226,11 @@ const MobileNav = ({
             </Center>
           </DrawerHeader>
           <DrawerBody display="flex" flexDirection="column">
-            {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map((navItem) => (
-              <MobileNavItem key={navItem.label} {...navItem} />
-            ))}
+            {navItemWithData(dataInformation?.plugin?.link_fanpage ?? "").map(
+              (navItem) => (
+                <MobileNavItem key={navItem.label} {...navItem} />
+              )
+            )}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

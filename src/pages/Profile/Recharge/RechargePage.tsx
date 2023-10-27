@@ -138,7 +138,7 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
                 flex={1}
                 cursor="pointer"
                 border="1px"
-                bg="white.100"
+                bg="black.100"
                 borderColor={cardType !== key ? "gray.400" : "red"}
                 filter={cardType !== key ? "grayscale(100%)" : "none"}
                 rounded="md"

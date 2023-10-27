@@ -119,7 +119,7 @@ export default function ViewAccountPage() {
               w="100%"
               backgroundImage="/bg-1.jpeg"
               backgroundSize="cover"
-              color="white"
+              color="white.100"
               rounded="md"
               py={3}
               px={5}
@@ -169,7 +169,7 @@ export default function ViewAccountPage() {
             {accountDetailQuery.isLoading ? (
               <Skeleton w="100%" height="100px" />
             ) : (
-              <Box w="100%" p={5} bg="white.100" rounded="md">
+              <Box w="100%" p={5} bg="black.100" rounded="md">
                 <Text as="b" mb={2}>
                   Thông tin
                 </Text>

@@ -58,7 +58,7 @@ export const buttonStyles = {
                 }),
                 rechargeNow: (props: any) => ({
                     bg: mode("main.item2", "white")(props),
-                    color: 'white.100',
+                    color: "var(--color-text-price-top-recharge)",
                     textTransform: "uppercase",
                     fontSize: "18px",
                     fontWeight: "bold",
@@ -100,26 +100,28 @@ export const buttonStyles = {
                         textDecoration: "none"
                     },
                 }),
-                user: (props: any) => ({
+                user: {
                     fontWeight: "bold",
                     padding: "10px 15px",
                     borderRadius: "5px",
-                    outlineColor: "#0BC4E2",
+                    outlineColor: "var(--color-btn-1)",
                     _hover: {
-                        bg: mode('linear-gradient(45deg, #2C8CC2, #0BC4E2)', 'brand.400')(props),
+                        color: "black.100",
+                        bg: 'linear-gradient(45deg, var(--color-btn-1), var(--color-btn-2))',
                     },
-                }),
-                blue: (props: any) => ({
-                    bg: mode('linear-gradient(45deg, #0BC4E2, #2C8CC2)', 'linear-gradient(45deg, #2C8CC2, #0BC4E2)')(props),
+                },
+                blue: {
+                    bg: 'linear-gradient(45deg, var(--color-btn-1), var(--color-btn-2))',
                     color: 'black.100',
                     textTransform: "uppercase",
                     fontWeight: "bold",
                     padding: "10px 20px",
                     borderRadius: "9px",
                     _hover: {
-                        bg: mode('linear-gradient(45deg, #2C8CC2, #0BC4E2)', 'brand.400')(props),
+                        color: 'black.100',
+                        bg:'linear-gradient(45deg, var(--color-btn-2), var(--color-btn-1))',
                     },
-                }),
+                },
             },
         },
     },

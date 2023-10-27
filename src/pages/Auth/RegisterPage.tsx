@@ -61,7 +61,7 @@ export default function RegisterPage() {
   return (
     <Flex
       w="500px"
-      bg="white.100"
+      bg="white.999"
       px={{ base: "2rem", lg: "4rem" }}
       pt="6rem"
       flexDirection="column"

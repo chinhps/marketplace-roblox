@@ -115,7 +115,7 @@ export function TopRechargeItem({ stt, name, price }: ITopRechargeItem) {
         w="130px"
         py=".5rem"
         my="auto"
-        color="white.100"
+        color="var(--color-text-price-top-recharge)"
         textAlign="center"
         fontWeight="bold"
       >

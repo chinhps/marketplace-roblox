@@ -20,12 +20,12 @@ export default function Tag({ text, value, ...props }: ITag) {
         {...props}
       >
         {text && (
-          <Text as="span" mr=".3rem">
+          <Text as="span" mr=".3rem" fontWeight="500" color="var(--color-text-tag)">
             {text}
           </Text>
         )}
         {value && (
-          <Text as="span" fontWeight="bold">
+          <Text as="span" fontWeight="bold" color="var(--color-text-tag)">
             {value}
           </Text>
         )}

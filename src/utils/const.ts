@@ -75,6 +75,6 @@ export const customToast: UseToastOptions = {
 };
 
 export const styleTextShadow = {
-  color: "white",
-  textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
+  color: "var(--color-text-header-account)",
+  // textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
 };

@@ -12,7 +12,6 @@ import {
   Link as LinkChakra,
   Stack,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useInformationShopData } from "@/hooks/InfomationShopProvider";
@@ -55,9 +54,9 @@ export default function Footer() {
       <Box
         mt="2rem"
         as="footer"
-        color={useColorModeValue("white", "gray.200")}
         borderTop="1px"
-        bg="main.item5"
+        color="var(--color-footer)"
+        bg="var(--bg-footer)"
         borderColor="main.item4"
       >
         <Container maxW="container.2xl" py={10}>
@@ -89,7 +88,12 @@ export default function Footer() {
                 >
                   {dataInformation?.data?.data?.title_website}
                 </Heading>
-                <Flex mt={2} justifyContent="space-between" gap={1} alignItems="center">
+                <Flex
+                  mt={2}
+                  justifyContent="space-between"
+                  gap={1}
+                  alignItems="center"
+                >
                   <LinkChakra
                     fontSize="14px"
                     href="https://chính.vn/chinhsach.html"
@@ -140,7 +144,7 @@ export default function Footer() {
           </Grid>
         </Container>
       </Box>
-      <Center bg="black.100" color="white.100" py=".5rem">
+      <Center bg="var(--bg-footer)" color="var(--color-footer)" py=".5rem">
         <Text fontWeight="500" textTransform="capitalize">
           {myDomain()} [Version {getVersion()}]
         </Text>

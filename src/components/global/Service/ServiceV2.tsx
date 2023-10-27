@@ -2,6 +2,7 @@ import { IServiceListResponse } from "@/types/response/service.type";
 import { link_service } from "@/utils/links";
 import {
   hiddenPriceByGameType,
+  hiddenTagByGameType,
   numberFormat,
   textCounterService,
 } from "@/utils/price";
@@ -31,6 +32,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
         height={{ base: "275px", lg: "350px" }}
         rounded="md"
         overflow="hidden"
+        boxShadow="base"
       >
         <Box
           position="relative"
@@ -71,7 +73,7 @@ export default function ServiceV2({ data }: { data: IServiceListResponse }) {
             {data.name}
           </Heading>
           <Box mx="auto">
-            {data.gameType !== "LINKTO" ? (
+            {hiddenTagByGameType(data.gameType) ? (
               <Tag
                 rounded="full"
                 text={textCounterService(data.gameType)}
@@ -142,6 +144,7 @@ ServiceV2.loading = () => {
       height="370px"
       rounded="md"
       overflow="hidden"
+      boxShadow="base"
     >
       <Box position="relative" height="50%" overflow="hidden">
         <Box

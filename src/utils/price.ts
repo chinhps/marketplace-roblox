@@ -39,6 +39,16 @@ export function colorStatus(status: string) {
   }
 }
 
+export function hiddenTagByGameType(gameType: string) {
+  switch (gameType) {
+    case "LINKTO":
+      return false;
+    case "GAMEPASS":
+      return false;
+  }
+  return true;
+}
+
 export function hiddenPriceByGameType(gameType: string) {
   switch (gameType) {
     case "LINKTO":

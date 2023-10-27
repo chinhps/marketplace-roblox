@@ -166,10 +166,10 @@ EventBanner.v1 = ({
 function TabCustom(props: TabProps) {
   return (
     <Tab
-      _selected={{ color: "white.200", bg: "main.item" }}
-      bg="black.100"
+      _selected={{ color: "white.100", bg: "main.item" }}
+      bg="var(--bg-top-recharge-unactive)"
       fontWeight="bold"
-      color="white.500"
+      color="white.100"
       p="1rem"
       {...props}
     >

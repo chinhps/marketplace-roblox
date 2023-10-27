@@ -3,18 +3,19 @@
 }
 
 :root {
-  --bg-nav-color: #111;
-  --bg-main-color: #131930;
-  --bg-item-main-color: #1b2448;
-  --bg-item2-main-color: #2542dd;
-  --bg-item3-main-color: #2139c0;
-  --bg-item4-main-color: #33427b;
-  --bg-item4-main-color: #253266;
+  --bg-nav-color: #ffffff;
+  --bg-main-color: #f5f5f5;
+  --bg-item-main-color: #ffffff;
+  --bg-item2-main-color: #dc2626;
+  --bg-item3-main-color: #ef4444;
+  --bg-item4-main-color: #af9494;
+  --bg-item4-main-color: #f6f3f3;
   --color-text-price-top-recharge: #ffffff;
-  --bg-top-recharge-unactive: #111;
+  --bg-top-recharge-unactive: #e4e4e4;
+
   // BUTTON
-  --color-btn-1: #2C8CC2;
-  --color-btn-2: #0BC4E2;
+  --color-btn-1: var(--bg-item2-main-color);
+  --color-btn-2: var(--bg-item3-main-color);
 
   // TAG
   --color-text-tag: #fff;
@@ -131,7 +132,7 @@ body {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(57, 77, 225, 0.5),
+    var(--bg-skeleton),
     transparent
   );
   animation: skeleton-loading 1.5s linear infinite;

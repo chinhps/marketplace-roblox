@@ -55,7 +55,7 @@ export default function AccountListPage() {
   return (
     <>
       <Box as="header" mt="1rem" px={{ base: 5, lg: 0 }}>
-        <Text size="sm" sx={styleTextShadow}>
+        <Text size="sm">
           Danh mục
         </Text>
         <Heading
@@ -76,7 +76,7 @@ export default function AccountListPage() {
             <Skeleton height="20px" width="30%" rounded="md" />
           ) : (
             <Box
-              color="white"
+              color="white.100"
               dangerouslySetInnerHTML={{
                 __html:
                   serviceInfoQuery.data?.data.data.notification ??

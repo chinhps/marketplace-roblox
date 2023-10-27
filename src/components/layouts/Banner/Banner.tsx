@@ -73,7 +73,7 @@ Banner.v1 = () => {
               colSpan={{ base: 1, lg: 6 }}
               rounded="5px"
               overflow="hidden"
-              boxShadow="2xl"
+              boxShadow="base"
             >
               <Image
                 objectFit="cover"
@@ -117,7 +117,7 @@ export default function Banner() {
               position="relative"
               colSpan={{ base: 1, lg: 6 }}
               rounded="md"
-              boxShadow="2xl"
+              boxShadow="base"
             >
               <BannerImage />
             </GridItem>
@@ -150,7 +150,7 @@ function BannerImage() {
         gap="3rem"
         justifyContent="space-between"
         height="100%"
-        color="white"
+        color="white.100"
         p="2rem"
       >
         <Flex

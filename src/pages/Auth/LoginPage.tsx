@@ -49,7 +49,7 @@ export default function LoginPage() {
   return (
     <Flex
       w="500px"
-      bg="white.100"
+      bg="white.999"
       px={{ base: "2rem", lg: "4rem" }}
       pt="6rem"
       flexDirection="column"
@@ -92,10 +92,10 @@ export default function LoginPage() {
                 : "gray"
             }
           >
-            <Text fontFamily="sans-serif" fontSize="18px" className="showText">
+            <Text fontFamily="sans-serif" fontSize="18px" color="white.999" className="showText">
               Đăng nhập ngay
             </Text>
-            <Icon as={FiChevronRight} />
+            <Icon as={FiChevronRight} color="white.999" />
           </Button>
           {/* OtherRecommend */}
           <OtherRecommend />
@@ -122,12 +122,12 @@ export function OtherLogin() {
       <Button
         aria-label="facebook login"
         bg="messenger.500"
-        py={7}
+        py={8}
         flex={1}
         isDisabled={getLinkSocialLoginMutate.isLoading}
-        leftIcon={<Icon as={FaFacebook} color="white" fontSize="25px" />}
+        leftIcon={<Icon as={FaFacebook} color="white.999" fontSize="25px" />}
         onClick={() => getLinkSocialLoginMutate.mutate("facebook")}
-        color="white.100"
+        color="white.999"
       >
         Đăng nhập bằng Facebook
       </Button>
@@ -137,7 +137,7 @@ export function OtherLogin() {
         py={7}
         flex={1}
         isDisabled={getLinkSocialLoginMutate.isLoading}
-        icon={<Icon as={FaTiktok} color="white" fontSize="25px" />}
+        icon={<Icon as={FaTiktok} color="white.999" fontSize="25px" />}
         onClick={() => getLinkSocialLoginMutate.mutate("tiktok")}
       /> */}
     </Flex>

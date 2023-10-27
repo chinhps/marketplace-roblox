@@ -14,7 +14,7 @@ const baseStyle = definePartsStyle({
     color: "gray.200",
     _hover: {
       bg: "teal.600",
-      color: "white",
+      color: "white.100",
     },
   },
   list: {
@@ -35,7 +35,7 @@ const baseStyle = definePartsStyle({
   },
   groupTitle: {
     textTransform: "uppercase",
-    color: "white",
+    color: "white.100",
     fontSize: "15px",
     letterSpacing: "wider",
   },
@@ -51,7 +51,7 @@ const baseStyle = definePartsStyle({
   divider: {
     // this will style the MenuDivider component
     my: "4",
-    borderColor: "white",
+    borderColor: "white.100",
     borderBottom: "2px dotted",
   },
 });
