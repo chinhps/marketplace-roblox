@@ -16,6 +16,7 @@ use App\Models\TransactionDiamond;
 use App\Models\TransactionPrice;
 use App\Models\User;
 use App\Models\WithdrawHistory;
+use App\Models\WithdrawType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,8 +31,9 @@ class BaseDataSeeder extends Seeder
         $eventList = EventList::factory(5)->create();
 
         $rechargeList = RechargeList::factory(1)->create();
+        $withdrawTypes = WithdrawType::factory(4)->create();
 
-        ShopList::factory(50)->create()->each(function ($shop) use ($eventList, $rechargeList) {
+        ShopList::factory(50)->create()->each(function ($shop) use ($eventList, $rechargeList, $withdrawTypes) {
 
             # mỗi shop tạo 1 KOC
             Admin::factory(1)->create([
@@ -87,10 +89,11 @@ class BaseDataSeeder extends Seeder
             ]);
 
             # tạo lịch sử rút | Mỗi shop có 10 lịch sử rút
-            $users->each(function ($user) use ($shop) {
+            $users->each(function ($user) use ($shop, $withdrawTypes) {
                 WithdrawHistory::factory(1)->create([
                     "shop_id" => $shop->id,
-                    "user_id" => $user->id
+                    "user_id" => $user->id,
+                    "withdraw_type_id" => $withdrawTypes->random()->id
                 ]);
             });
         });
