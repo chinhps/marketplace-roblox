@@ -36,58 +36,8 @@ import InputExcept from "@/components/globals/Form/InputExcept";
 import { useMutation } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
 import { objectToFormData } from "@/utils/function";
+import { handleImageByService, initialFormState } from "@/utils/service";
 
-const formBase: Array<IFormInput> = [
-  {
-    label: "Tên dịch vụ",
-    name: "name_service_image",
-    type: "INPUT",
-    isRequired: true,
-    gridAreaName: "name_service_image",
-  },
-  {
-    label: "Note cho dịch vụ",
-    name: "note_service",
-    type: "INPUT",
-    isRequired: true,
-    gridAreaName: "note_service",
-  },
-  {
-    label: "Giá tiền",
-    name: "price_service",
-    type: "NUMBER",
-    default: "0",
-    min: 0,
-    gridAreaName: "price_service",
-  },
-  {
-    label: "Giảm giá (%)",
-    name: "sale_service",
-    type: "NUMBER",
-    default: "0",
-    gridAreaName: "sale_service",
-    min: 0,
-    max: 100,
-  },
-  {
-    label: "Kích hoạt",
-    name: "active_service",
-    type: "SWITCH",
-    gridAreaName: "active_service",
-  },
-  {
-    label: "Thông báo cho dịch vụ",
-    name: "notification_service",
-    type: "HTML",
-    gridAreaName: "notification_service",
-  },
-  {
-    label: "Hình ảnh đại diện",
-    isRequired: true,
-    name: "thumb_service_image",
-    type: "FILE",
-  },
-];
 const initialFormStateGifts: IGiftAdd = {
   image: {} as File,
   isRandom: false,
@@ -112,17 +62,17 @@ export default function CUServicePage() {
   const toast = useToast();
   const [dataDomainExcept, setDataDomainExcept] =
     useState<Array<string | number>>();
-  const [dataFormState, setDataFormState] =
-    useState<Array<IFormInput>>(formBase);
+  const [dataFormState, setDataFormState] = useState<IFormInput[]>(() =>
+    structuredClone(initialFormState)
+  );
   const [typeService, setTypeService] = useState<string>("");
   const [dataOdds, setDataOdds] = useState<IOddsAdd>();
-  const [except, setExcept] = useState<boolean>(false);
+  const [except, setExcept] = useState<boolean>(true);
   const [idTypeOdds, setIdTypeOdds] = useState<number>(0);
 
   const serviceMutation = useMutation({
-    mutationFn: ({ formData, data }: IServiceMutation) => {
-      return serviceApi.create({ formData, data });
-    },
+    mutationFn: ({ formData, data }: IServiceMutation) =>
+      serviceApi.create({ formData, data }),
     onSuccess: ({ data }) => {
       toast({
         status: "success",
@@ -139,106 +89,27 @@ export default function CUServicePage() {
   ----------------****/
   const handleChangeService = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTypeService(e.target.value);
-    setDataFormState(formBase);
-    handleImageByService(e.target.value);
+    setDataFormState([
+      ...initialFormState,
+      ...handleImageByService(e.target.value),
+    ]);
   };
 
   const onSubmit: SubmitHandler<any> = (data) => {
     const formData = new FormData();
-    objectToFormData(formData, {
+    const form = {
       dataForm: data,
       dataOdds: dataOdds ?? null,
       typeService: typeService,
       dataExcept: dataDomainExcept,
       idTypeOdds: idTypeOdds,
       except: except,
-    });
+    };
+    objectToFormData(formData, form);
     serviceMutation.mutate({
       formData,
-      data: JSON.stringify({
-        dataForm: data,
-        dataOdds: dataOdds ?? null,
-        typeService: typeService,
-        dataExcept: dataDomainExcept,
-        idTypeOdds: idTypeOdds,
-        except: except,
-      }),
+      data: JSON.stringify(form),
     });
-    console.log(data, dataOdds, dataDomainExcept);
-  };
-  const handleChangeOdds = (data: IOddsAdd) => setDataOdds(data);
-  const handleChangeInputExcept = (data: (string | number)[]) =>
-    setDataDomainExcept(data);
-  const handleImageByService = (type: string) => {
-    let serviceForm: Array<IFormInput> = [];
-    switch (type) {
-      case IServiceType.BOX:
-        serviceForm.push({
-          label: "Loại tiền tệ",
-          name: "currency",
-          type: "SELECT",
-          selects: [
-            {
-              label: "Kim cương",
-              value: "1",
-            },
-            {
-              label: "Robux",
-              value: "3",
-            },
-          ],
-        });
-        break;
-      case IServiceType.LUCKY_BOX:
-        serviceForm.push({
-          label: "Ảnh nền của box",
-          name: "image_1",
-          type: "FILE",
-        });
-        serviceForm.push({
-          label: "Quà hiển thị khi đang rút",
-          name: "image_3",
-          type: "FILE",
-        });
-        serviceForm.push({
-          label: "Quà hiển thị khi chưa rút",
-          name: "image_2",
-          type: "FILE",
-        });
-
-        // serviceForm.push(oddsInput);
-        break;
-      case IServiceType.LUCKY_CARD:
-        serviceForm.push({
-          label: "Thẻ mặc định",
-          name: "image_1",
-          type: "FILE",
-        });
-        // serviceForm.push(oddsInput);
-        break;
-      case IServiceType.WHEEL:
-        serviceForm.push({
-          label: "Ảnh nền vòng quay",
-          name: "image_1",
-          type: "FILE",
-        });
-        // serviceForm.push(oddsInput);
-        break;
-      case IServiceType.LINKTO:
-        serviceForm.push({
-          label: "Đường dẫn tới",
-          name: "link_to",
-          type: "INPUT",
-        });
-        break;
-      case IServiceType.ACCOUNT:
-        toast({
-          description: "Không cần điền giá tiền",
-          position: "bottom-right",
-        });
-        break;
-    }
-    setDataFormState((vl) => [...vl, ...serviceForm]);
   };
   /****----------------
    *      END-Handle
@@ -260,9 +131,6 @@ export default function CUServicePage() {
           <FormLabel>Chọn loại dịch vụ</FormLabel>
           <Select
             variant="auth"
-            fontSize="sm"
-            fontWeight="500"
-            size="lg"
             placeholder="Loại Chọn loại dịch vụ"
             onChange={handleChangeService}
           >
@@ -280,14 +148,14 @@ export default function CUServicePage() {
         <InputExcept
           except={except}
           setExcept={setExcept}
-          onChange={handleChangeInputExcept}
+          onChange={(data) => setDataDomainExcept(data)}
         />
 
         {(typeService === IServiceType.LUCKY_BOX ||
           typeService === IServiceType.LUCKY_CARD ||
           typeService === IServiceType.WHEEL) && (
           <AddNewOdds
-            onChange={handleChangeOdds}
+            onChange={(data) => setDataOdds(data)}
             idTypeOdds={idTypeOdds}
             setIdTypeOdds={setIdTypeOdds}
           />
