@@ -90,7 +90,7 @@ function DropdownNav() {
           fontWeight="500"
           onClick={() => setIsDropdown((prev) => !prev)}
         >
-          Phạm Hoàng Chính
+          Hi, Chinh
         </Text>
         {isDropdown && (
           <Box

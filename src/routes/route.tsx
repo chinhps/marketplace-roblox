@@ -28,6 +28,9 @@ import CUAdminPage from "@/pages/User/CUAdminPage";
 import EventListPage from "@/pages/Event/EventListPage";
 import CUEventPage from "@/pages/Event/CUEventPage";
 import CUGamePassPage from "@/pages/Service/GamePass/CUGamePassPage";
+import StatisticalPage from "@/pages/Statistical/StatisticalPage";
+import CUWithdrawLimitPage from "@/pages/WithdrawLimit/CUWithdrawLimitPage";
+import WithdrawLimitPage from "@/pages/WithdrawLimit/WithdrawLimitPage";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +58,34 @@ export const router = createBrowserRouter([
       {
         path: "update/:id",
         element: <CUShopPage />,
+      },
+    ],
+  },
+  {
+    path: "withdrawal-limits",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "",
+        element: <WithdrawLimitPage />,
+      },
+      {
+        path: "create",
+        element: <CUWithdrawLimitPage />,
+      },
+      {
+        path: "update/:id",
+        element: <CUWithdrawLimitPage />,
+      },
+    ],
+  },
+  {
+    path: "statisticals",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "",
+        element: <StatisticalPage />,
       },
     ],
   },

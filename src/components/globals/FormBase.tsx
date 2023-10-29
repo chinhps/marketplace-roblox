@@ -164,6 +164,7 @@ export default function FormBase({
                         value={value}
                         min={form.min}
                         max={form.max}
+                        placeholder={form.placeholder ?? form.label}
                       />
                     )}
                     defaultValue={form.default}

@@ -110,7 +110,7 @@ export function SildeBar() {
   return (
     <>
       <Box bg="main.item2" overflow="hidden" rounded="md" p="1rem">
-        <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple>
+        <Accordion defaultIndex={[2, 3, 4]} allowMultiple>
           {navbarQuery.data?.data.data.map((sildeItem, index) => (
             <AccordionItem border="none" key={index}>
               <h2>
