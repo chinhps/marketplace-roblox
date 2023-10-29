@@ -123,6 +123,14 @@ class UserController extends Controller
                         'name' => 'Quản lý Event',
                         'link' => '/events',
                     ],
+                    [
+                        'name' => 'Quản lý rút',
+                        'link' => '/withdrawal-limits',
+                    ],
+                    [
+                        'name' => 'Thống kê tháng',
+                        'link' => '/statisticals',
+                    ],
                 ],
             ],
             [

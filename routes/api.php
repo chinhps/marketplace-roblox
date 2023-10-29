@@ -26,6 +26,8 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Webhook\PushDiamondController;
 use App\Http\Controllers\Webhook\WebhookDiamondController;
 use App\Http\Controllers\Webhook\WebhookRechargeController;
+use App\Http\Controllers\WithdrawLimit\WithdrawLimitController;
+use App\Http\Controllers\WithdrawLimit\WithdrawTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,6 +74,15 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'getCurrentInfo']);
 
     Route::middleware(['role:admin'])->group(function () {
+        Route::prefix('withdrawal-limits')->group(function () {
+            Route::get('/', [WithdrawLimitController::class, 'list']);
+            Route::get('/{id}', [WithdrawLimitController::class, 'getId']);
+            Route::post('/upsert', [WithdrawLimitController::class, 'upsert']);
+            Route::delete('/{id}', [WithdrawLimitController::class, 'delete']);
+        });
+        Route::prefix('withdraw-types')->group(function () {
+            Route::get('/all', [WithdrawTypeController::class, 'all']);
+        });
         Route::prefix('plugins')->group(function () {
             Route::get('/', [PluginController::class, 'list']);
             Route::get('/{id}', [PluginController::class, 'getId']);

@@ -46,6 +46,10 @@ use App\Repository\Transaction\TransactionInterface;
 use App\Repository\Transaction\TransactionRepository;
 use App\Repository\User\UserInterface;
 use App\Repository\User\UserRepository;
+use App\Repository\WithdrawLimit\WithdrawLimitInterface;
+use App\Repository\WithdrawLimit\WithdrawLimitRepository;
+use App\Repository\WithdrawType\WithdrawTypeInterface;
+use App\Repository\WithdrawType\WithdrawTypeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -77,6 +81,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TopRechargeVirtualInterface::class, TopRechargeVirtualRepository::class);
         $this->app->bind(AccountInterface::class, AccountRepository::class);
         $this->app->bind(PluginInterface::class, PluginRepository::class);
+        $this->app->bind(WithdrawLimitInterface::class, WithdrawLimitRepository::class);
+        $this->app->bind(WithdrawTypeInterface::class, WithdrawTypeRepository::class);
     }
 
     /**
