@@ -7,9 +7,9 @@ import TableCustom from "@/components/globals/TableCustom";
 import UserInfo from "@/components/globals/UserInfo";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
+import { numberFormat } from "@/utils/function";
 import { Button, Td, Text, Tr, useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import moment from "moment";
 import { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiSearch } from "react-icons/fi";
@@ -45,7 +45,7 @@ export default function WithdrawLimitPage() {
   return (
     <>
       <CardCollection
-        title="QUẢN LÝ GIỚI HẠN RÚT"
+        title="QUẢN LÝ GIỚI HẠN RÚT trong tháng"
         fontSize="25px"
         button={
           <Link to="./create">
@@ -71,9 +71,9 @@ export default function WithdrawLimitPage() {
             "ID",
             "Tên người dùng",
             "Loại chặn",
+            "Đã/Đang rút",
             "Giới hạn",
             "Kích hoạt",
-            "Ngày khởi tạo",
             "Thao tác",
           ]}
         >
@@ -84,9 +84,9 @@ export default function WithdrawLimitPage() {
                 <UserInfo shop={vl.user.shop} user={vl.user} />
               </Td>
               <Td>{vl.withdraw_type.name}</Td>
-              <Td>{vl.withdraw_limit}</Td>
+              <Td>{numberFormat(vl.user_withdraw_sum_value,false)}</Td>
+              <Td>{numberFormat(vl.withdraw_limit,false)}</Td>
               <Td>{vl.active}</Td>
-              <Td>{moment(vl.created_at).format("DD/MM/yyyy HH:mm")}</Td>
               <Td>
                 <ActionList
                   actions={["EDIT", "DELETE"]}

@@ -8,6 +8,7 @@ export interface WithdrawResponse {
   active: "ON" | "OFF";
   created_at: string;
   updated_at: string;
+  user_withdraw_sum_value: number;
   user: UserResponse;
   withdraw_type: WithdrawType;
 }
