@@ -23,7 +23,8 @@ class WithdrawLimitResource extends BaseResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "user" => $this->user,
-            "withdraw_type" => $this->withdrawType
+            "withdraw_type" => $this->withdrawType,
+            "user_withdraw_sum_value" => $this->user_withdraw_sum_value ?? 0
         ];
     }
 }
