@@ -9,6 +9,8 @@ use App\Http\Requests\Withdraw\WithdrawRobuxRequest;
 use App\Repository\History\WithdrawHistory\WithdrawHistoryInterface;
 use App\Repository\Plugin\PluginInterface;
 use App\Repository\Transaction\TransactionInterface;
+use App\Repository\Withdraw\WithdrawLimit\WithdrawLimitInterface;
+use App\Repository\Withdraw\WithdrawType\WithdrawTypeInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +21,9 @@ class WithdrawRobuxController extends Controller
     public function __construct(
         private WithdrawHistoryInterface $withdrawHistoryRepository,
         private TransactionInterface $transactionRepository,
-        private PluginInterface $pluginRepository
+        private PluginInterface $pluginRepository,
+        private WithdrawTypeInterface $withdrawTypeRepository,
+        private WithdrawLimitInterface $withdrawLimitRepository
     ) {
     }
 
@@ -49,18 +53,34 @@ class WithdrawRobuxController extends Controller
         DB::beginTransaction();
 
         try {
+            $withdrawType = $this->withdrawTypeRepository->getByKey("ROBUX");
+            # Check limit withdraw
+            $withdrawalLimit = $this->withdrawLimitRepository->getLimitUser(Auth::user(), $withdrawType);
+            if ($withdrawalLimit) {
+                $limit = $this->withdrawHistoryRepository->checkLimit(Auth::user(), $withdrawType)
+                    + $robux > $withdrawalLimit->withdraw_limit;
+            }
+            # check admin & exist limit withdraw -> cancel
+            # check exist limit & limited
+            $status = statusLimit($withdrawalLimit, isset($limit) && $limit);
             # save to history
             $requestId = rand(100000000, 999999999); # Order ID
             $history = $this->withdrawHistoryRepository->create([
                 "task_number" => $requestId,
                 "withdraw_type" => "ROBUX",
                 "value" => $robux,
-                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
+                "status" => $status,
                 "cost" => 0,
                 "detail" => json_encode([
                     ["key" => "link", "name" => "Đường dẫn", "value" => $linkPass],
                 ])
-            ], user: Auth::user(), shop: Auth::user()->shop);
+            ], user: Auth::user(), shop: Auth::user()->shop, withdrawType: $withdrawType);
+
+            if ($status == "CANCEL") {
+                $this->transactionRepository->createRobux(0, "Rút robux, WITHDRAW LIMIT | ID HTR: {$history->id}");
+                DB::commit();
+                return BaseResponse::msg("Rút Robux thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+            }
             # create minus robux at transaction
             $this->transactionRepository->createRobux($robux * -1, "Rút robux, ID HTR: {$history->id}");
 
@@ -101,23 +121,40 @@ class WithdrawRobuxController extends Controller
         DB::beginTransaction();
 
         try {
+            $withdrawType = $this->withdrawTypeRepository->getByKey("BUY_ROBUX");
+            # Check limit withdraw
+            $withdrawalLimit = $this->withdrawLimitRepository->getLimitUser(Auth::user(), $withdrawType);
+            if ($withdrawalLimit) {
+                $limit = $this->withdrawHistoryRepository->checkLimit(Auth::user(), $withdrawType)
+                    + $robux > $withdrawalLimit->withdraw_limit;
+            }
+            # check admin & exist limit withdraw -> cancel
+            # check exist limit & limited
+            $status = statusLimit($withdrawalLimit, isset($limit) && $limit);
             # save to history
             $requestId = rand(100000000, 999999999); # Order ID
             $history = $this->withdrawHistoryRepository->create([
                 "task_number" => $requestId,
                 "withdraw_type" => "BUY_ROBUX",
                 "value" => $robux,
-                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
+                "status" => $status,
                 "cost" => $cost,
                 "detail" => json_encode([
                     ["key" => "link", "name" => "Đường dẫn", "value" => $linkPass],
                 ])
-            ], user: Auth::user(), shop: Auth::user()->shop);
+            ], user: Auth::user(), shop: Auth::user()->shop, withdrawType: $withdrawType);
+
+            if ($status == "CANCEL") {
+                $this->transactionRepository->createPrice(0, "Mua robux, WITHDRAW LIMIT | ID HTR: {$history->id}");
+                DB::commit();
+                return BaseResponse::msg("Mua Robux thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+            }
+
             # create minus robux at transaction
             $this->transactionRepository->createPrice($price * -1, "Mua robux, ID HTR: {$history->id}");
-
             DB::commit();
             return BaseResponse::msg("Mua Robux thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+
         } catch (\Exception $e) {
             DB::rollBack();
             logReport("withdraw_errors", "Mua robux", $e);

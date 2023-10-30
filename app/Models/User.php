@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Admin::class, 'user_id');
     }
+
+    public function withdrawalLimit(): HasOne
+    {
+        return $this->hasOne(WithdrawalLimit::class, 'user_id');
+    }
 }

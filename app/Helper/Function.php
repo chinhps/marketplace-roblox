@@ -2,12 +2,25 @@
 
 use App\Helper\Crypto;
 use App\Models\ShopList;
+use App\Models\WithdrawalLimit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('logReport')) {
     function logReport($chanel, $note, Exception $error = null)
     {
         Log::channel($chanel)->info("$note | Error: " . ($error != null ? $error->getMessage() : ""));
+    };
+}
+
+if (!function_exists('statusLimit')) {
+    function statusLimit(WithdrawalLimit|null $withdrawalLimit, bool $limit)
+    {
+        # check admin & exist limit withdraw -> cancel
+        # check exist limit & limited
+        $status = ((Auth::user()->admin && !$withdrawalLimit) ? "CANCEL"
+            : (($limit) ? "CANCEL" : "PENDING"));
+        return $status;
     };
 }
 

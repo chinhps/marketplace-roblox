@@ -36,6 +36,10 @@ use App\Repository\Transaction\TransactionInterface;
 use App\Repository\Transaction\TransactionRepository;
 use App\Repository\User\UserInterface;
 use App\Repository\User\UserRepository;
+use App\Repository\Withdraw\WithdrawLimit\WithdrawLimitInterface;
+use App\Repository\Withdraw\WithdrawLimit\WithdrawLimitRepository;
+use App\Repository\Withdraw\WithdrawType\WithdrawTypeInterface;
+use App\Repository\Withdraw\WithdrawType\WithdrawTypeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -62,6 +66,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ServiceCounterInterface::class, ServiceCounterRepository::class);
         $this->app->bind(EventInterface::class, EventRepository::class);
         $this->app->bind(EventHistoryInterface::class, EventHistoryRepository::class);
+        $this->app->bind(WithdrawTypeInterface::class, WithdrawTypeRepository::class);
+        $this->app->bind(WithdrawLimitInterface::class, WithdrawLimitRepository::class);
     }
 
     /**

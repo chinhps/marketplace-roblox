@@ -21,4 +21,9 @@ class WithdrawHistory extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function withdrawType(): BelongsTo
+    {
+        return $this->belongsTo(WithdrawType::class, 'withdraw_type_id');
+    }
 }

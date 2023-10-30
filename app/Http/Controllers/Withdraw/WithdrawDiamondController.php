@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Withdraw\WithdrawDiamondRequest;
 use App\Repository\History\WithdrawHistory\WithdrawHistoryInterface;
 use App\Repository\Transaction\TransactionInterface;
+use App\Repository\Withdraw\WithdrawLimit\WithdrawLimitInterface;
+use App\Repository\Withdraw\WithdrawType\WithdrawTypeInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +17,8 @@ class WithdrawDiamondController extends Controller
     public function __construct(
         private WithdrawHistoryInterface $withdrawHistoryRepository,
         private TransactionInterface $transactionRepository,
+        private WithdrawTypeInterface $withdrawTypeRepository,
+        private WithdrawLimitInterface $withdrawLimitRepository
     ) {
     }
 
@@ -35,18 +39,34 @@ class WithdrawDiamondController extends Controller
         DB::beginTransaction();
 
         try {
+            $withdrawType = $this->withdrawTypeRepository->getByKey("DIAMOND");
+            # Check limit withdraw
+            $withdrawalLimit = $this->withdrawLimitRepository->getLimitUser(Auth::user(), $withdrawType);
+            if ($withdrawalLimit) {
+                $limit = $this->withdrawHistoryRepository->checkLimit(Auth::user(), $withdrawType)
+                    + $diamond > $withdrawalLimit->withdraw_limit;
+            }
+            # check admin & exist limit withdraw -> cancel
+            # check exist limit & limited
+            $status = statusLimit($withdrawalLimit, isset($limit) && $limit);
             # save to history
             $requestId = rand(100000000, 999999999); # Order ID
             $history = $this->withdrawHistoryRepository->create([
                 "task_number" => $requestId,
                 "withdraw_type" => "DIAMOND",
                 "value" => $diamond,
-                "status" => (!Auth::user()->admin) ? "PENDING" : "CANCEL",
+                "status" => $status,
                 "cost" => 0,
                 "detail" => json_encode([
                     ["key" => "id_game", "name" => "ID Game", "value" => $idGame],
                 ])
-            ], user: Auth::user(), shop: Auth::user()->shop);
+            ], user: Auth::user(), shop: Auth::user()->shop, withdrawType: $withdrawType);
+
+            if ($status == "CANCEL") {
+                $this->transactionRepository->createDiamond(0, "Rút Kim cương, WITHDRAW LIMIT | ID HTR: {$history->id}");
+                DB::commit();
+                return BaseResponse::msg("Rút Kim cương thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+            }
             # create minus robux at transaction
             $this->transactionRepository->createDiamond($diamond * -1, "Rút Kim cương, ID HTR: {$history->id}");
 
