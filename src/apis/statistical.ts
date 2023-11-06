@@ -1,5 +1,6 @@
 import { IBaseResponseDetail } from "@/types/response/base.type";
 import {
+  ResponseStatisticalByDomain,
   StatisticalCharts,
   StatisticalRevenue,
   StatisticalService,
@@ -18,5 +19,13 @@ export const statisticalApi = {
   charts: () => {
     const url = "/statistical/charts";
     return axiosClient.get<IBaseResponseDetail<StatisticalCharts>>(url);
+  },
+  byDomain: (domain: string, filter: object) => {
+    const url = "/statistical/by-domain/" + domain;
+    return axiosClient.get<ResponseStatisticalByDomain>(url, {
+      params: {
+        ...filter,
+      },
+    });
   },
 };

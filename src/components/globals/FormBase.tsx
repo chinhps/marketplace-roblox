@@ -105,6 +105,17 @@ export default function FormBase({
                     ...(form.validate ?? null),
                   })}
                 />
+              ) : form.type === "DATE" ? (
+                <Input
+                  variant="auth"
+                  type="date"
+                  disabled={form.disable}
+                  {...register(form.name, {
+                    value: form.default ?? null,
+                    ...(form.validate ?? null),
+                  })}
+                  placeholder={form.placeholder ?? form.label}
+                />
               ) : form.type === "INPUT" ? (
                 <InputGroup>
                   <Input
@@ -129,8 +140,10 @@ export default function FormBase({
                   ) : null}
                   {form.name === "domain" ? (
                     <List as="datalist" id={form.name}>
-                      {shopAllQuery.data?.data.data.map((vl,index) => (
-                        <ListItem key={index} as="option">{vl.domain}</ListItem>
+                      {shopAllQuery.data?.data.data.map((vl, index) => (
+                        <ListItem key={index} as="option">
+                          {vl.domain}
+                        </ListItem>
                       ))}
                     </List>
                   ) : null}

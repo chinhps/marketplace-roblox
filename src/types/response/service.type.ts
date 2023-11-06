@@ -10,6 +10,7 @@ export interface IServiceGameList {
   parent_id: number | null;
   private_form: Array<IFormInput>;
   public_form: Array<IFormInput>;
+  currency_name?: string;
 }
 
 export interface IServiceGameRandomCreate {
@@ -17,8 +18,14 @@ export interface IServiceGameRandomCreate {
   listAccount: string;
 }
 
+export interface IChest {
+  value: number;
+  countChest: number;
+}
+
 export interface IServiceList {
   id: number;
+  service_key: string;
   price: number;
   sale: number;
   notification: string;

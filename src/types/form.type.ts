@@ -15,7 +15,7 @@ export interface IFormInput {
   label: string;
   isRequired?: boolean;
   name: string;
-  type: "SELECT" | "INPUT" | "TEXTAREA" | "NUMBER" | "FILE" | "SWITCH" | "HTML";
+  type: "SELECT" | "INPUT" | "TEXTAREA" | "NUMBER" | "FILE" | "SWITCH" | "HTML" | "DATE";
   preview?: boolean;
   default?: string;
   placeholder?: string;

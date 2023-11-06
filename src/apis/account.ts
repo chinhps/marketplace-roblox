@@ -57,4 +57,12 @@ const randomApi = {
     return axiosClient.delete<IResponseWithMessage>(url);
   },
 };
-export { accountApi, randomApi };
+
+const boxApi = {
+  create: (data: object) => {
+    const url = "/accounts/create-box";
+    return axiosClient.post<IResponseWithMessage>(url, { ...data });
+  },
+};
+
+export { accountApi, randomApi, boxApi };

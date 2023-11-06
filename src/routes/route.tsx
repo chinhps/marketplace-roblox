@@ -31,6 +31,7 @@ import CUGamePassPage from "@/pages/Service/GamePass/CUGamePassPage";
 import StatisticalPage from "@/pages/Statistical/StatisticalPage";
 import CUWithdrawLimitPage from "@/pages/WithdrawLimit/CUWithdrawLimitPage";
 import WithdrawLimitPage from "@/pages/WithdrawLimit/WithdrawLimitPage";
+import CUBoxPage from "@/pages/Service/Box/CUBoxPage";
 
 export const router = createBrowserRouter([
   {
@@ -176,6 +177,15 @@ export const router = createBrowserRouter([
           {
             path: "update/:id",
             element: <CUGamePassPage />,
+          },
+        ],
+      },
+      {
+        path: "boxes",
+        children: [
+          {
+            path: "create",
+            element: <CUBoxPage />,
           },
         ],
       },

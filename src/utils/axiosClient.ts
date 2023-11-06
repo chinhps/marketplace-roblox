@@ -40,12 +40,17 @@ axiosClient.interceptors.response.use(
         description: "Bạn chưa đăng nhập! Vui lòng đăng nhập để tiếp tục...",
       });
     }
+    if (status === 403) {
+      toast({
+        status: "warning",
+        description: "Bạn không đủ quyền để thực hiện!",
+      });
+    }
     if (
       status === 404 ||
       status === 406 ||
       status === 402 ||
       status === 422 ||
-      status === 403 ||
       status === 400 ||
       status === 500
     ) {

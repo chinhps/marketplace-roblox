@@ -55,6 +55,9 @@ export default function ServiceListPage() {
               <MenuItem as={Link} to="./game-pass/create">
                 GamePass
               </MenuItem>
+              <MenuItem as={Link} to="./boxes/create">
+                Rương vật phẩm
+              </MenuItem>
             </MenuList>
           </Menu>
         }
@@ -129,7 +132,7 @@ function TableList() {
       <TableCustom
         thead={[
           "ID",
-          "Note",
+          "Service Key",
           "Giá tiền",
           "Thông tin",
           "Kích hoạt",
@@ -141,17 +144,15 @@ function TableList() {
         {serviceListQuery.data?.data.data.map((vl) => (
           <Tr key={vl.id}>
             <Td>#{vl.id}</Td>
-            <Td>
-              <Link to="./service-detail/123">
-                <Text color="blue.600">{vl.note}</Text>
-              </Link>
-            </Td>
+            <Td>{vl.service_key}</Td>
             <Td>
               <Badge colorScheme="purple">Sale: {vl.sale}%</Badge>
               <Text>{numberFormat(vl.price)}</Text>
             </Td>
-
             <Td>
+              <Text color="blue.600" noOfLines={1} w="200px">
+                {vl.note}
+              </Text>
               {vl.information &&
                 Object.keys(vl.information).map((vl2, index) => (
                   <Text key={index}>
