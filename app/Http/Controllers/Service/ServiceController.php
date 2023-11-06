@@ -261,7 +261,7 @@ class ServiceController extends Controller
                 serviceOdds: $serviceOdds,
                 giftForUser: $giftForUser,
                 currentLoopLocal: $currentLoop,
-                checkGuard: true
+                checkGuard: Auth::user()->admin ? false : true
             );
             if (!$handleGiftWithLoop) {
                 DB::rollBack();
@@ -438,7 +438,7 @@ class ServiceController extends Controller
             }
 
             # ADMIN OR GHOST
-            if (!$checkGuard) {
+            if (!$checkGuard || Auth::user()->admin) {
                 $currentGift = $giftForUser->random();
             }
 

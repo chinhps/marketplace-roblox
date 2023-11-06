@@ -34,7 +34,7 @@ class ServiceDetailRepository implements ServiceDetailInterface
                         "note",
                         // "information",
                         "game_id"
-                    )->with(['game_list', 'serviceCouter']);
+                    )->with(['game_list', 'serviceCounter']);
                 },
                 'serviceImage' => function ($query) {
                     $query->select(

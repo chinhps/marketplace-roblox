@@ -16,9 +16,11 @@ class ServiceResource extends JsonResource
             "price" => $this->service->price,
             "thumb" => $this->serviceImage->thumb,
             "gameType" => $this->service->game_list->game_key,
-            "counter" => $this->service->game_list->game_key == "ACCOUNT" || $this->service->game_list->game_key == "RANDOM" ?
+            "counter" => $this->service->game_list->game_key == "ACCOUNT" ||
+                $this->service->game_list->game_key == "RANDOM" ||
+                $this->service->game_list->game_key == "BOX" ?
                 $this->service->accounts_count  :
-                $this->serviceCounter->value ?? 0,
+                $this->service->serviceCounter->value ?? 0,
             "slug" => $this->slug ?? 0,
             "counterText" => "AUTO",
             "more" => json_decode($this->service->information, true),

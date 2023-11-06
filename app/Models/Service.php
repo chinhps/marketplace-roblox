@@ -23,9 +23,9 @@ class Service extends Model
         return $this->hasOne(GameCurrency::class, 'id', 'game_currency_id');
     }
 
-    public function serviceCouter(): HasOne
+    public function serviceCounter(): HasOne
     {
-        return $this->hasOne(ServiceCounter::class, 'service_id', 'id');
+        return $this->hasOne(ServiceCounter::class, 'service_id');
     }
 
     public function serviceTurns(): BelongsToMany

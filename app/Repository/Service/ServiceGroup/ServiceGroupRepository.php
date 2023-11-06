@@ -39,7 +39,7 @@ class ServiceGroupRepository implements ServiceGroupInterface
                                 "information",
                                 "game_id",
                                 "parent_id"
-                            )->with(['game_list', 'serviceCouter'])->withCount(['accounts' => function ($query) {
+                            )->with(['game_list', 'serviceCounter'])->withCount(['accounts' => function ($query) {
                                 $query->where('status', 'NOTSELL');
                             }]); //->where('parent_id', null);
                         },

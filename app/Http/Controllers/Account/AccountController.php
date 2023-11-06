@@ -82,6 +82,7 @@ class AccountController extends Controller
         $detailPrivates = json_decode($accountDetailPrivate->detail_private, true);
 
         # CHECK KEY SERVICE ACCOUNT 
+        # BOX
         if ($accountDetailPrivate->service->game_list->game_key === "BOX") {
             try {
                 $note = "Mua Box, Sử dụng: {$accountDetailPrivate->service->note}, #ACCOUNT: {$accountDetailPrivate->id}";
@@ -93,6 +94,8 @@ class AccountController extends Controller
                 return BaseResponse::msg($e->getMessage(), 403);
             }
         }
+
+        # ACCOUNT
         try {
             $note = "Mua Tài khoản, Sử dụng: {$accountDetailPrivate->service->note}, #ACCOUNT: {$accountDetailPrivate->id}";
             $this->handleBuyAccount($accountDetailPrivate, $note);
