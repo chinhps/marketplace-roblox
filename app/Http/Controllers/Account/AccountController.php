@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\AccountCreateRequest;
 use App\Http\Requests\Account\RandomCreateRequest;
+use App\Http\Requests\Service\ServiceBoxCreateRequest;
 use App\Http\Resources\Account\AccountListResource;
 use App\Repository\Account\AccountInterface;
 use App\Repository\Service\ServiceInterface;
@@ -71,6 +72,54 @@ class AccountController extends Controller
         } catch (\Exception $e) {
             return BaseResponse::msg($e->getMessage(), 500);
         }
+    }
+
+    public function upsertBox(ServiceBoxCreateRequest $request)
+    {
+        $validated = $request->validated();
+        $chests = $validated['chests'];
+        $service = $this->serviceRepository->get($validated['service_id']);
+
+        $dataChests = [];
+
+        foreach ($chests as $chest) {
+            for ($i = 0; $i < $chest['countChest']; $i++) {
+                $dataChests[] = [
+                    "text" => "Nhận được {$service->currency->currency_name}, Số lượng",
+                    "value" => $chest['value']
+                ];
+            }
+        }
+        shuffle($dataChests);
+        DB::beginTransaction();
+        try {
+            foreach ($dataChests as $accountItem) {
+                $this->accountRepository->updateOrInsert(null, [
+                    "prioritize" => 1,
+                    "detail_public" => json_encode([]),
+                    "detail_private" => json_encode([
+                        [
+                            "key" => $service->currency->currency_key,
+                            "name" => $accountItem['text'],
+                            "value" => $accountItem['value']
+                        ]
+                    ]),
+                    "price" => $service->price,
+                    "active" => "YES",
+                    "status" => "NOTSELL",
+                    "note" => "",
+                    "thumb" => null,
+                    "images" => null,
+                ], admin: Auth::user(), service: $service);
+            }
+            DB::commit();
+            return BaseResponse::msg("Đã thêm mới thành công, SL:" . count($dataChests));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return BaseResponse::msg("Có lỗi đã xảy ra vui lòng kiểm tra lại! Không lưu bất kì tài khoản nào", 500);
+        }
+
+        return  $dataChests;
     }
 
     public function upsertRandom(RandomCreateRequest $request)

@@ -48,6 +48,15 @@ if (!function_exists('queryRepository')) {
                 $subquery->where('name', 'like', '%' . $filter['admin_filter'] . '%');
             });
         }
+        if (isset($filter['between'])) {
+            $model->whereBetween(
+                $filter['between']['column'],
+                [
+                    $filter['between']['between'][0],
+                    $filter['between']['between'][1]
+                ]
+            );
+        }
         if (!isset($filter['sort'])) {
             $model->orderBy('id', 'desc');
         }

@@ -3,7 +3,10 @@
 namespace App\Repository\Shop;
 
 use App\Models\ShopList;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ShopRepository implements ShopInterface
 {
@@ -22,7 +25,12 @@ class ShopRepository implements ShopInterface
 
     public function all()
     {
-        return $this->model->orderBy('stt', 'desc')->get();
+        $user = Auth::user();
+        $data = $this->model;
+        if (Gate::allows('koc', $user)) {
+            $data = $data->where('domain', $user->shop->domain);
+        }
+        return $data->orderBy('stt', 'desc')->get();
     }
 
     public function get(float $id)

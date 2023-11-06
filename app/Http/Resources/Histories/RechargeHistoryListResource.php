@@ -4,6 +4,8 @@ namespace App\Http\Resources\Histories;
 
 use App\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class RechargeHistoryListResource extends BaseResource
 {
@@ -19,7 +21,7 @@ class RechargeHistoryListResource extends BaseResource
             "user_id" => $this->user_id,
             "shop_id" => $this->shop_id,
             "recharge_id" => $this->recharge_id,
-            "detail" => json_decode($this->detail, true),
+            "detail" => (Gate::allows('koc', Auth::user())) ? [] : json_decode($this->detail, true),
             "refund" => $this->refund,
             "price" => $this->price,
             "task_number" => $this->task_number,

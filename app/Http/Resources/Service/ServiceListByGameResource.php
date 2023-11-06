@@ -22,6 +22,7 @@ class ServiceListByGameResource extends JsonResource
             "note" => $this->note,
             "active" => $this->active,
             "parent_id" => $this->parent_id,
+            "currency_name" => $this->currency->currency_name ?? "Không xác định",
             "private_form" => json_decode($this->private_form, true) ?? [],
             "public_form" => json_decode($this->public_form, true) ?? [],
         ];

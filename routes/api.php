@@ -65,6 +65,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         Route::get('/service', [StatisticalController::class, 'service']);
         Route::get('/revenue', [StatisticalController::class, 'revenue']);
         Route::get('/charts', [StatisticalController::class, 'charts']);
+        Route::get('/by-domain/{domain}', [StatisticalController::class, 'byDomain'])->middleware(['role:admin,koc']);
     });
 
     # navbar
@@ -72,6 +73,10 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
 
     # Get infor current user
     Route::get('/user', [AuthController::class, 'getCurrentInfo']);
+
+    Route::prefix('shop-list')->group(function () {
+        Route::get('/all', [ShopController::class, 'all']);
+    });
 
     Route::middleware(['role:admin'])->group(function () {
         Route::prefix('withdrawal-limits')->group(function () {
@@ -90,7 +95,6 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('shop-list')->group(function () {
             Route::get('/', [ShopController::class, 'list']);
-            Route::get('/all', [ShopController::class, 'all']);
             Route::get('/{id}', [ShopController::class, 'getId']);
             Route::post('/upsert', [ShopController::class, 'upsert']);
         });
@@ -168,6 +172,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::delete('/{id}', [AccountController::class, 'delete']);
             Route::post('/upsert', [AccountController::class, 'upsertAccount']);
             Route::post('/create-random', [AccountController::class, 'upsertRandom']);
+            Route::post('/create-box', [AccountController::class, 'upsertBox']);
         });
     });
     Route::middleware(['role:admin,support,koc,ctv'])->group(function () {
@@ -193,6 +198,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
                         Route::get('/', [EventHistoryController::class, 'list']);
                     });
                     Route::prefix('withdraw')->group(function () {
+                        // Route::post('/update-all', [WithdrawHistoryController::class, 'updateStatusAll']);
                         Route::get('/', [WithdrawHistoryController::class, 'list']);
                         Route::post('/export-robux', [WithdrawHistoryController::class, 'exportRobux']);
                         Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);

@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Statistical;
 
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
+use App\Models\GameList;
+use App\Models\PurchaseHistory;
+use App\Models\Service;
+use App\Models\WithdrawHistory;
+use App\Repository\Shop\ShopInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +16,97 @@ use Illuminate\Support\Facades\Gate;
 
 class StatisticalController extends Controller
 {
+
+    public function __construct(
+        public ShopInterface $shopRepository
+    ) {
+    }
+
+    public function byDomain($domain, Request $request)
+    {
+
+        if ($request->start_date != "" and $request->end_date != "") {
+            $var = $request->start_date;
+            $date = str_replace('/', '-', $var);
+            $started_at = date('Y-m-d', strtotime($date));
+            $var1 = $request->end_date;
+            $date1 = str_replace('/', '-', $var1);
+            $ended_at = date('Y-m-d', strtotime($date1 . " +1 days"));
+        } else {
+            $started_at = date('Y-m-01');
+            $ended_at = date('Y-m-t', strtotime(date('Y-m-t') . " +1 days"));
+        }
+
+        $shop = $this->shopRepository->getByDomain($domain);
+
+        $user = Auth::user();
+        if (Gate::allows('koc', $user)) {
+            if ($user->shop->domain != $domain) {
+                return BaseResponse::msg("Bạn không có quyền kiểm tra tên miền này!", 404);
+            }
+        }
+
+        if (!$shop) {
+            return BaseResponse::msg("Không tồn tại domain này!", 404);
+        }
+
+        $purchaseIds = PurchaseHistory::where('shop_id', $shop->id)
+            // Thêm where theo tháng tại đây
+            ->whereBetween('updated_at', [$started_at, $ended_at])
+            ->pluck('account_id')->toArray();
+
+        $gameListIds = GameList::whereIn('game_key', ['ACCOUNT', 'RANDOM'])->pluck('id')->toArray();
+
+        $queryServiceAccount = function ($query) use ($purchaseIds) {
+            $query->where('status', 'SOLD')->whereIn('id', $purchaseIds);
+        };
+
+        $serviceAccounts = Service::withSum(['accounts' => $queryServiceAccount], 'price')
+            ->withCount(['accounts' => $queryServiceAccount])
+            ->whereHas('accounts', $queryServiceAccount)
+            ->with('game_list')
+            ->whereIn('game_id', $gameListIds)->get();
+
+        # 'DIAMOND'
+        $withdrawHistoriesDiamond = WithdrawHistory::where('shop_id', $shop->id)
+            ->whereIn('withdraw_type', ['DIAMOND'])
+            ->where('status', 'SUCCESS')
+            ->selectRaw('withdraw_type,value as parcel, COUNT(value) as total')
+            // Thêm where theo tháng tại đây
+            ->whereBetween('updated_at', [$started_at, $ended_at])
+            ->groupBy('withdraw_type', 'value')
+            ->get();
+
+
+        # 'GAMEPASS'
+        $withdrawHistoriesGamePass = WithdrawHistory::where('shop_id', $shop->id)
+            ->whereIn('withdraw_type', ['GAMEPASS'])
+            ->where('status', 'SUCCESS')
+            ->selectRaw('withdraw_type, SUM(cost) as total')
+            // Thêm where theo tháng tại đây
+            ->whereBetween('updated_at', [$started_at, $ended_at])
+            ->groupBy('withdraw_type')
+            ->get();
+
+        # 'ROBUX', 'BUY_ROBUX'
+        $withdrawHistoriesRobux = WithdrawHistory::where('shop_id', $shop->id)
+            ->whereIn('withdraw_type', ['ROBUX', 'BUY_ROBUX'])
+            ->where('status', 'SUCCESS')
+            ->selectRaw('withdraw_type, SUM(value) as total')
+            // Thêm where theo tháng tại đây
+            ->whereBetween('updated_at', [$started_at, $ended_at])
+            ->groupBy('withdraw_type')
+            ->get();
+
+        return [
+            'withdraws' => [
+                "gamepass" => $withdrawHistoriesGamePass,
+                "robux" => $withdrawHistoriesRobux,
+                "diamond" => $withdrawHistoriesDiamond
+            ],
+            'accounts' => $serviceAccounts
+        ];
+    }
 
     public function charts()
     {

@@ -19,6 +19,13 @@ class WithdrawHistoryRepository implements WithdrawHistoryInterface
         return $data->paginate($limit);
     }
 
+    public function all(array $filter = [])
+    {
+        $data = $this->model->with(['user', 'shop']);
+        $data = queryRepository($data, $filter);
+        return $data->get();
+    }
+
     public function get(float $id)
     {
         return $this->model->with(['user', 'shop'])->find($id);

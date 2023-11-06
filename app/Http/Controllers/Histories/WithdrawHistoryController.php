@@ -95,6 +95,34 @@ class WithdrawHistoryController extends Controller
         }
     }
 
+    public function updateStatusAll()
+    {
+        $filter = [];
+        $filter['query'][] = ['status', "PENDING"];
+        $filter['between'] = [
+            "column" => "created_at",
+            "between" => ['2023-10-01', '2023-11-01']
+        ];
+
+        $withdraws = $this->withdrawHistoryRepository->all($filter);
+        DB::beginTransaction();
+        try {
+            $status = "CANCEL";
+            foreach ($withdraws as $withdraw) {
+                $this->updateWithdrawStatus($withdraw->id, "CANCEL");
+                # IF STATUS = FALSE THEN REFUND FOR USER
+                if ($status == "CANCEL") {
+                    $this->refundForWithdrawType($withdraw);
+                }
+            }
+
+            DB::commit();
+            return BaseResponse::msg("Chuyển {$withdraws->count()} đơn sang trạng thái {$status}");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return BaseResponse::msg("Có lỗi xảy ra vui lòng liên hệ admin!", 500);
+        }
+    }
 
     private function updateWithdrawStatus($id, $status)
     {

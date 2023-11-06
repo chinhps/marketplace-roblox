@@ -19,6 +19,7 @@ class ServiceListResource extends BaseResource
             "price" => $this->price,
             "sale" => $this->sale,
             "notification" => $this->notification,
+            "service_key" => $this->service_key,
             "information" => json_decode($this->information, true),
             "note" => $this->note,
             "active" => $this->active,

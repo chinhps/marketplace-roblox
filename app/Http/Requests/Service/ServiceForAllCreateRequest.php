@@ -92,12 +92,12 @@ class ServiceForAllCreateRequest extends BaseRequest
                 'dataOdds.oddsAdmin.*.description' => 'required|string',
                 'dataOdds.oddsUser.*' => 'required|array', // Change to *.* to support nested arrays
                 'dataOdds.oddsUser.*.id' => 'required|numeric',
-                'dataOdds.oddsUser.*.description' => 'required|string',
+                // 'dataOdds.oddsUser.*.description' => 'required|string',
                 'dataOdds.listGift.*' => 'required|array', // Change to *.* to support nested arrays
                 'dataOdds.listGift.*.image' => 'required|file|image',
                 'dataOdds.listGift.*.isRandom' => 'required|boolean',
                 'dataOdds.listGift.*.isVip' => 'required|boolean',
-                'dataOdds.listGift.*.message' => 'required|string',
+                // 'dataOdds.listGift.*.message' => 'required|string',
                 'dataOdds.listGift.*.percent' => 'required|numeric',
                 'dataOdds.listGift.*.typeGift' => 'required|string',
                 'dataOdds.listGift.*.value' => 'required',

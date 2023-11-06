@@ -75,6 +75,15 @@ class UserController extends Controller
                     ],
                 ],
                 [
+                    'name' => 'Plugins',
+                    'children' => [
+                        [
+                            'name' => 'Thống kê tháng',
+                            'link' => '/statisticals',
+                        ],
+                    ],
+                ],
+                [
                     'name' => 'Lịch sử dịch vụ',
                     'children' => [
                         [
