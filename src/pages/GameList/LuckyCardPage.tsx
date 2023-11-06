@@ -90,7 +90,7 @@ function GamePlay({
   /****----------------
    *      HOOK
   ----------------****/
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, watch } = useForm();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isFlip, setIsFlip] = useState<boolean>(false);
   const cardsRef = useRef<HTMLDivElement>({} as HTMLDivElement);
@@ -143,14 +143,11 @@ function GamePlay({
    *      HANDLE
   ----------------****/
   // Play try
-  const onSubmitTry: SubmitHandler<FieldValues> = async (
-    numrolllop,
-    elementTaget
-  ) => {
+  const onSubmitTry: SubmitHandler<FieldValues> = async (_, elementTaget) => {
     elementSelectedGlobal = elementTaget?.target;
     await mutation.mutateAsync({
       type: "FAKE",
-      numrolllop: Number(numrolllop),
+      numrolllop: Number(1),
     });
   };
   // Play real
@@ -164,6 +161,8 @@ function GamePlay({
   // Handle Click Button
   const handleClickRealFake = (type: "REAL" | "FAKE") => {
     handleFlipCard();
+    console.log(234);
+
     // Change type roll outside function because not rerender
     typeRoll = type;
   };
@@ -226,6 +225,7 @@ function GamePlay({
           isSubmitting: mutation.isLoading,
           onSubmit,
           register,
+          watch,
           handleTry: () => handleClickRealFake("FAKE"),
           handleClickSubmitCustom: () => handleClickRealFake("REAL"),
           service_price: dataService?.price ?? 0,

@@ -65,6 +65,8 @@ export function hiddenPriceByGameType(gameType: string) {
 
 export function textCounterService(gameType: string) {
   switch (gameType) {
+    case "BOX":
+      return "Hiện có:";
     case "ACCOUNT":
       return "Hiện có:";
     case "RANDOM":

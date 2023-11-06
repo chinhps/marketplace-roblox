@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import { breakpoints } from "./foundations/breakpoints";
 import { sizes } from "./sizes";
-import { globalStyles } from "./styles/globalStylesMeorein";
+import { globalStyles } from "./styles/globalStyles";
 import { buttonStyles } from "./components/button";
 import { inputStyles } from "./components/input";
 import { menuTheme } from "./components/menu";

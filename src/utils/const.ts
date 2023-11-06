@@ -33,10 +33,10 @@ export const listOption = [
         lable: "Rút Robux",
         link: "/profile/withdraw/withdraw-robux",
       },
-      {
-        lable: `Mua Robux 120h`,
-        link: "/profile/withdraw/buy-robux",
-      },
+      // {
+      //   lable: `Mua Robux 120h`,
+      //   link: "/profile/withdraw/buy-robux",
+      // },
     ],
   },
   {

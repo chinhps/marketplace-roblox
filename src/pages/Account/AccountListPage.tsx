@@ -55,7 +55,7 @@ export default function AccountListPage() {
   return (
     <>
       <Box as="header" mt="1rem" px={{ base: 5, lg: 0 }}>
-        <Text size="sm">
+        <Text size="sm" color="white.100">
           Danh mục
         </Text>
         <Heading

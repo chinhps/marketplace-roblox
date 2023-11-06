@@ -169,7 +169,7 @@ export default function ViewAccountPage() {
             {accountDetailQuery.isLoading ? (
               <Skeleton w="100%" height="100px" />
             ) : (
-              <Box w="100%" p={5} bg="black.100" rounded="md">
+              <Box w="100%" p={5} bg="white.999" rounded="md">
                 <Text as="b" mb={2}>
                   Thông tin
                 </Text>

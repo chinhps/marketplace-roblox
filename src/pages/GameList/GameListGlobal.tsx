@@ -106,10 +106,7 @@ export function HeadingService({
           </HStack>
         )}
 
-        <HStack
-          justifyContent={typeof price !== "undefined" ? "right" : "center"}
-          w="100%"
-        >
+        <HStack justifyContent={{ base: "center", lg: "right" }} w="100%">
           <Button variant="action" onClick={onOpen}>
             {textBtn}
           </Button>
