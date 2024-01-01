@@ -17,6 +17,9 @@ class TopRechargeController extends Controller
 
     public function getTopRechargeList(TopRechargeRequest $request)
     {
+
+        $timeObj = (new \DateTime(date('Y-m-d')))->modify('-1 month');
+
         $validated = $request->validated();
         $domain = $validated['domain'];
 
@@ -27,8 +30,8 @@ class TopRechargeController extends Controller
                 $year =  $timeNow->year;
                 break;
             case "last-month":
-                $month = date("m", strtotime("first day of previous month"));
-                $year =  $timeNow->year;
+                $month = $timeObj->format('m');
+                $year = $timeObj->format('Y');
                 break;
         }
         $dataTop = collect([

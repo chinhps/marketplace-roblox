@@ -27,6 +27,7 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
         $history = ServiceHistory::where('user_id', $user->id)
             ->where('service_id', $service->id)
             ->whereMonth('created_at', date('m')) // only current month
+            ->whereYear('created_at', date('Y'))
             ->sum('quantity');
         return $history;
     }
