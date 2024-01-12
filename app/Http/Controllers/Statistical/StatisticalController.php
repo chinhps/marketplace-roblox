@@ -204,11 +204,11 @@ class StatisticalController extends Controller
 
         $user = Auth::user();
         if (!Gate::allows('admin', $user)) {
-            $purchase = $purchase->where('shop_id', $user->user_id);
-            $service = $service->where('shop_id', $user->user_id);
-            $recharge = $recharge->where('shop_id', $user->user_id);
-            $withdraw = $withdraw->where('shop_id', $user->user_id);
-            $users = $users->where('shop_id', $user->user_id);
+            $purchase = $purchase->where('shop_id', $user->shop_id);
+            $service = $service->where('shop_id', $user->shop_id);
+            $recharge = $recharge->where('shop_id', $user->shop_id);
+            $withdraw = $withdraw->where('shop_id', $user->shop_id);
+            $users = $users->where('shop_id', $user->shop_id);
         }
 
         return BaseResponse::data([

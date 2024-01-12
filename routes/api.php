@@ -50,6 +50,7 @@ Route::prefix('webhook')->group(function () {
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
     # Logout
     Route::middleware(['decryptToken:sanctum'])->prefix('logout')->group(function () {
         # Logout current device
@@ -73,6 +74,10 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
 
     # Get infor current user
     Route::get('/user', [AuthController::class, 'getCurrentInfo']);
+
+    Route::prefix('services')->group(function () {
+        Route::get('/all-list', [ServiceController::class, 'listAll']);
+    });
 
     Route::prefix('shop-list')->group(function () {
         Route::get('/all', [ShopController::class, 'all']);
@@ -100,7 +105,6 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('services')->group(function () {
             Route::get('/', [ServiceController::class, 'list']);
-            Route::get('/all-list', [ServiceController::class, 'listAll']);
             Route::get('/{id}', [ServiceController::class, 'getId']);
             Route::delete('/{id}', [ServiceController::class, 'delete']);
             Route::post('/update', [ServiceController::class, 'update']);

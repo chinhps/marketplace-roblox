@@ -55,11 +55,7 @@ class UserController extends Controller
                             'link' => '/history/purchases',
                         ],
                     ],
-                ],
-                [
-                    'name' => 'Trợ giúp',
-                    'link' => '/abc',
-                ],
+                ]
             ]);
         }
 
@@ -99,11 +95,7 @@ class UserController extends Controller
                             'link' => '/history/recharges',
                         ]
                     ],
-                ],
-                [
-                    'name' => 'Trợ giúp',
-                    'link' => '/abc',
-                ],
+                ]
             ]);
         }
 
@@ -201,11 +193,7 @@ class UserController extends Controller
                         'link' => '/top-recharge',
                     ],
                 ],
-            ],
-            [
-                'name' => 'Trợ giúp',
-                'link' => '/abc',
-            ],
+            ]
         ];
 
         return BaseResponse::data($data);

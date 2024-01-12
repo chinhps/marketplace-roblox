@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return BaseResponse::data([
+                "msg" => "Đăng xuất thành công!"
+            ]);
+        } catch (\Exception) {
+            return BaseResponse::data([
+                "msg" => "Đăng xuất thất bại!"
+            ], 500);
+        }
+    }
+
     public function getCurrentInfo(Request $request)
     {
         $user = $request->user();
