@@ -33,10 +33,6 @@ export const listOption = [
         lable: "Rút Robux",
         link: "/profile/withdraw/withdraw-robux",
       },
-      // {
-      //   lable: `Mua Robux 120h`,
-      //   link: "/profile/withdraw/buy-robux",
-      // },
     ],
   },
   {
@@ -62,11 +58,56 @@ export const listOption = [
   },
 ];
 
+export const listOptionProfile = insertObjectAtPosition(
+  listOption,
+  {
+    lable: "Dịch vụ",
+    children: [
+      {
+        lable: "Gamepass",
+        link: "/service-game-pass/gift-gamepass-blox-fruits",
+      },
+      {
+        lable: `Mua Robux 120h`,
+        link: "/profile/withdraw/buy-robux",
+      },
+    ],
+  },
+  3
+);
+
 export const ATM_DISCOUNT = 0.9;
 export const TIMEOUT_SLEEP = 3; // second
 export const token = () => {
   return localStorage.getItem("auth._token.local");
 };
+
+function insertObjectAtPosition(
+  array: {
+    lable: string;
+    children: {
+      lable: string;
+      link: string;
+    }[];
+  }[],
+  object: {
+    lable: string;
+    children: {
+      lable: string;
+      link: string;
+    }[];
+  },
+  position: number
+) {
+  if (position < 0) {
+    position = 0;
+  } else if (position > array.length) {
+    position = array.length;
+  }
+  const newArray = [...array];
+  newArray.splice(position, 0, object);
+  return newArray;
+}
 
 export const customToast: UseToastOptions = {
   position: "top",

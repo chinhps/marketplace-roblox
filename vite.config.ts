@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react-swc';
 import terser from '@rollup/plugin-terser';
 
 export default defineConfig({
-  // envDir: './ENV',
+  envDir: './ENV',
   cacheDir: '.vite-cache',
   build: {
     chunkSizeWarningLimit: 1000,

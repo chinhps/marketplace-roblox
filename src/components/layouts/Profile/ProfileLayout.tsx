@@ -25,7 +25,7 @@ import {
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { handleCopy, numberFormat } from "@/utils/price";
-import { listOption } from "@/utils/const";
+import { listOptionProfile } from "@/utils/const";
 import IsAuthentication from "@/guards/IsAuthentication";
 import { useUserData } from "@/hooks/UserDataProvider";
 import { useState } from "react";
@@ -107,7 +107,7 @@ function SideBar() {
       </HStack>
       {isDesktop && <Divider my={5} />}
       {isDesktop || openMenu ? (
-        <Accordion defaultIndex={[0, 1, 2, 3]} allowMultiple mt={2}>
+        <Accordion defaultIndex={[0, 1, 2, 3, 4]} allowMultiple mt={2}>
           <ListSideBar />
         </Accordion>
       ) : null}
@@ -118,7 +118,7 @@ function SideBar() {
 function ListSideBar() {
   return (
     <>
-      {listOption.map((option, index) => (
+      {listOptionProfile.map((option, index) => (
         <AccordionItem border="none" key={index}>
           <AccordionButton>
             <Box as="b" flex="1" color="ocean.200" textAlign="left">

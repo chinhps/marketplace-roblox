@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { FaCaretRight, FaMoneyBill, FaUserAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function SelectNumloop({
   service_price,
@@ -56,14 +57,17 @@ export function HeadingService({
   children,
   price,
   notification,
+  linkHistory,
   textBtn = "Thể lệ",
 }: {
   children: string | undefined;
   price?: number;
   notification: React.ReactElement | string;
   textBtn?: string;
+  linkHistory?: string;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -110,7 +114,9 @@ export function HeadingService({
           <Button variant="action" onClick={onOpen}>
             {textBtn}
           </Button>
-          <Button variant="action">Lịch sử</Button>
+          <Button variant="action" onClick={() => navigate(linkHistory ?? "./")}>
+            Lịch sử
+          </Button>
         </HStack>
       </Flex>
     </>

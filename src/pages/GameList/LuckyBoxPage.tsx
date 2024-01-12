@@ -39,6 +39,7 @@ export default function LuckyBoxPage() {
     <>
       <HeadingService
         price={serviceInfoQuery.data?.data.data.price ?? 0}
+        linkHistory="/profile/history/service"
         notification={<Box dangerouslySetInnerHTML={{ __html: serviceInfoQuery.data?.data.data.notification ?? "" }} />}
       >
         {serviceInfoQuery.data?.data.data.service_image.name}

@@ -53,6 +53,7 @@ export default function LuckyCardPage() {
     <>
       <HeadingService
         price={serviceInfoQuery.data?.data.data.price ?? 0}
+        linkHistory="/profile/history/service"
         notification={
           <Box
             dangerouslySetInnerHTML={{

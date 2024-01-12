@@ -103,6 +103,7 @@ export default function GamePassPage() {
     <>
       <HeadingService
         textBtn="Hướng dẫn"
+        linkHistory="/profile/history/withdraw"
         notification={
           <Box
             dangerouslySetInnerHTML={{

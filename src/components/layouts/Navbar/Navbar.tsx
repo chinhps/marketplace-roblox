@@ -134,7 +134,7 @@ const DesktopNav = () => {
                   _hover={{
                     textDecoration: "none",
                     color: "red",
-                    borderBottom: "2px",
+                    borderBottom: "1px",
                   }}
                 >
                   <Text>{navItem.label}</Text>
