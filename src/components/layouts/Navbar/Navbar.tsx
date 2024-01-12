@@ -12,12 +12,14 @@ import {
   Link,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { useIsFetching } from "@tanstack/react-query";
+import { useIsFetching, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { Link as ReactLink } from "react-router-dom";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { SildeBar } from "../DefaultLayout";
+import { AuthApi } from "@/apis/auth";
 
 export default function Navbar() {
   const isFetching = useIsFetching();
@@ -77,6 +79,16 @@ export default function Navbar() {
 
 function DropdownNav() {
   const [isDropdown, setIsDropdown] = useState(false);
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const logoutMutate = useMutation({
+    mutationFn: () => AuthApi.logout(),
+    onSuccess: ({ data }) => {
+      toast({ description: data.data.msg, status: "success" });
+      navigate("/auth/login");
+    },
+  });
 
   return (
     <>
@@ -90,7 +102,7 @@ function DropdownNav() {
           fontWeight="500"
           onClick={() => setIsDropdown((prev) => !prev)}
         >
-          Hi, Chinh
+          Hi, Admin
         </Text>
         {isDropdown && (
           <Box
@@ -102,7 +114,9 @@ function DropdownNav() {
             right={0}
             p="1rem"
           >
-            <Link color="white">Đăng xuất</Link>
+            <Link color="white" onClick={() => logoutMutate.mutate()}>
+              Đăng xuất
+            </Link>
           </Box>
         )}
       </Flex>
