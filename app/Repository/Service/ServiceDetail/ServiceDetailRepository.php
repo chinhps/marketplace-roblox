@@ -21,6 +21,11 @@ class ServiceDetailRepository implements ServiceDetailInterface
         return $this->model->with(['serviceImage', 'serviceGroup', 'serviceOdds', 'shop_list'])->paginate($limit);
     }
 
+    public function get(float $id)
+    {
+        return $this->model->find($id);
+    }
+
     public function delete(float $id)
     {
         return $this->model->find($id)->delete();
@@ -35,15 +40,22 @@ class ServiceDetailRepository implements ServiceDetailInterface
         ServiceImage $serviceImage,
         ?ServiceOdds $serviceOdds
     ) {
-        $serviceDetail = new ServiceDetail();
-        $serviceDetail->fill($params);
+
+        if (!$id) {
+            $serviceDetail = new ServiceDetail();
+            $serviceDetail->fill($params);
+        }
+        if ($id) {
+            $serviceDetail = $this->model->find($id);
+            $serviceDetail->fill($params);
+        }
 
         $serviceDetail->service()->associate($service);
         $serviceDetail->serviceGroup()->associate($serviceGroup);
         $serviceDetail->serviceImage()->associate($serviceImage);
         $serviceDetail->serviceOdds()->associate($serviceOdds);
         $serviceDetail->save();
-        $serviceDetail->shop_list()->attach($domainsId);
+        $serviceDetail->shop_list()->sync($domainsId);
 
         return $serviceDetail;
     }

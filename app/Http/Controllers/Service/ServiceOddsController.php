@@ -16,9 +16,10 @@ class ServiceOddsController extends Controller
     ) {
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return ServiceOddsListResource::collection($this->serviceOddsRepository->list(15));
+        $page = $request->input('page', 15);
+        return ServiceOddsListResource::collection($this->serviceOddsRepository->list($page));
     }
 
     public function getId($id)

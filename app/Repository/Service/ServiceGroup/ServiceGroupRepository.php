@@ -14,6 +14,9 @@ class ServiceGroupRepository implements ServiceGroupInterface
 
     public function list($limit = 15)
     {
+        if ($limit == 0) {
+            return $this->model->get();
+        }
         return $this->model->paginate($limit);
     }
 

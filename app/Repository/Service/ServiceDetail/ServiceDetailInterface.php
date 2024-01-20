@@ -10,6 +10,10 @@ use App\Models\ServiceOdds;
 interface ServiceDetailInterface
 {
     public function list($limit = 15);
+    /**
+     * @return \App\Models\ServiceDetail
+     */
+    public function get(float $id);
     public function delete(float $id);
     public function updateOrInsert(
         float|null $id,

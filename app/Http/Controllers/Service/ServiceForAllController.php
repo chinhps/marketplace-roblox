@@ -43,7 +43,7 @@ class ServiceForAllController extends Controller
         foreach ($validated['dataForm'] as $key => $value) {
             if (strpos($key, 'image_') !== false) {
                 # UPLOAD IMAGE
-                $dataImageDetail = uploadImageQueue($value[0]);
+                $dataImageDetail = is_string($value[0]) ? $value[0] : uploadImageQueue($value[0]);
                 $imagesDetail[] = $dataImageDetail;
             }
         }
@@ -53,7 +53,9 @@ class ServiceForAllController extends Controller
         try {
 
             # UPLOAD IMAGE THUMB
-            $imageThumb = uploadImageQueue($validated['dataForm']['thumb_service_image'][0]);
+            $imageThumb = is_string($validated['dataForm']['thumb_service_image'][0]) ?
+                $validated['dataForm']['thumb_service_image'][0] :
+                uploadImageQueue($validated['dataForm']['thumb_service_image'][0]);
 
             $dataServiceImage = [
                 "name" => $validated["dataForm"]['name_service_image'],
@@ -66,10 +68,14 @@ class ServiceForAllController extends Controller
                     "image_5" => ($imagesDetail[4]) ?? null,
                 ]),
             ];
-
             # CREATE SERVICE IMAGE #####################################
-            $serviceImage = $this->serviceImageRepository->updateOrInsert(null,  $dataServiceImage);
-
+            $serviceImage = $this->serviceImageRepository->updateOrInsert(
+                isset($validated['idServiceDetail']) ?
+                    $this->serviceDetailRepository->get(
+                        $validated['idServiceDetail']
+                    )->service_image_id : null,
+                $dataServiceImage
+            );
             /**
              * CUSTOM SERVICE
              */
@@ -106,7 +112,7 @@ class ServiceForAllController extends Controller
             ];
             # CREATE SERVICE ###############################
             $service = $this->servicelRepository->updateOrInsert(
-                null,
+                isset($validated['idService']) ? $validated['idService'] : null,
                 $dataService,
                 gameCurrency: $gameCurrencyService ?? null,
                 gameList: $this->gameListRepository->getByGameKey($validated['typeService'])
@@ -170,7 +176,7 @@ class ServiceForAllController extends Controller
 
             # CREATE SERVICE DETAIL ###############################
             $this->serviceDetailRepository->updateOrInsert(
-                null,
+                isset($validated['idServiceDetail']) ? $validated['idServiceDetail'] : null,
                 [
                     "prioritize" => 1,
                     "excluding" => $validated['except'] ? "ON" : "OFF",
@@ -178,13 +184,16 @@ class ServiceForAllController extends Controller
                 ],
                 domainsId: $domainsId,
                 service: $service,
-                serviceGroup: $this->servicelGroupRepository->get(1), // demo
+                serviceGroup: $this->servicelGroupRepository->get($validated['idGroup']),
                 serviceImage: $serviceImage,
                 serviceOdds: isset($serviceOdds) ? $serviceOdds : null
             );
 
             DB::commit();
-            return BaseResponse::msg("Tạo mới thành công! Tỷ lệ, Bộ ảnh, Dịch vụ");
+            return BaseResponse::msg(
+                (isset($validated['idServiceDetail']) ? "Cập nhật" : "Tạo mới") .
+                    " thành công! Tỷ lệ, Bộ ảnh, Dịch vụ"
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             return BaseResponse::msg("Có lỗi: " . $e->getMessage(), 500);

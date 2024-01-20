@@ -29,6 +29,8 @@ class ServiceListResource extends BaseResource
             "service_details_count" => $this->service_details_count,
             "currency" => $this->currency,
             "service_couter" => $this->serviceCouter,
+            "service_details" => $this->serviceDetails,
+            "game_list" => $this->game_list
         ];
     }
 }

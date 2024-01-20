@@ -26,7 +26,8 @@ class ServiceOddsListResource extends BaseResource
             "odds_user_type" => $data->odds_user_type,
             "odds_user" => $data->odds_user,
             "created_at" => $data->created_at,
-            "countUse" => $data->service_details_count ?? null
+            "countUse" => $data->service_details_count ?? null,
+            "note" => $data->note
         ];
     }
 }

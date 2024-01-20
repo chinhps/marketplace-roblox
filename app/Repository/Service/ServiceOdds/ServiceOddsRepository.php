@@ -14,6 +14,9 @@ class ServiceOddsRepository implements ServiceOddsInterface
 
     public function list($limit = 15)
     {
+        if ($limit == 0) {
+            return $this->model->withCount('serviceDetails')->get();
+        }
         return $this->model->withCount('serviceDetails')->paginate($limit);
     }
 

@@ -105,9 +105,9 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('services')->group(function () {
             Route::get('/', [ServiceController::class, 'list']);
-            Route::get('/{id}', [ServiceController::class, 'getId']);
             Route::delete('/{id}', [ServiceController::class, 'delete']);
             Route::post('/update', [ServiceController::class, 'update']);
+            Route::get('/{id}/{idDetail}', [ServiceController::class, 'getId']);
         });
         Route::prefix('services-detail-list')->group(function () {
             Route::get('/', [ServiceDetailController::class, 'list']);

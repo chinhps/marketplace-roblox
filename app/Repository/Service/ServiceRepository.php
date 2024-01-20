@@ -17,7 +17,7 @@ class ServiceRepository implements ServiceInterface
 
     public function list($limit = 15, array $filter = [])
     {
-        $query = $this->model->with(['currency', 'serviceCouter'])->withCount('serviceDetails');
+        $query = $this->model->with(['currency', 'serviceCouter', 'serviceDetails', 'game_list'])->withCount('serviceDetails');
         $query = queryRepository($query, $filter);
         return $query->paginate($limit);
     }
@@ -30,9 +30,20 @@ class ServiceRepository implements ServiceInterface
         return $query->get();
     }
 
-    public function get(float $id)
+    public function get(float $id, float|null $idDetail = null)
     {
-        return $this->model->with('currency')->find($id);
+        return $this->model->with([
+            'currency',
+            'game_list',
+            'serviceDetails' => function ($query) use ($idDetail) {
+                $query->where('id', $idDetail)->with([
+                    'serviceOdds.serviceGifts',
+                    'serviceImage',
+                    'serviceGroup',
+                    'shop_list'
+                ]);
+            }
+        ])->find($id);
     }
 
     public function delete(float $id)

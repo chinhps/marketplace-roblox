@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Service;
 
 use App\Http\Requests\BaseRequest;
+use App\Rules\UrlOrFileImage;
 
 class ServiceForAllCreateRequest extends BaseRequest
 {
@@ -24,25 +25,28 @@ class ServiceForAllCreateRequest extends BaseRequest
         $data = $this->all();
         $modifiedData = $this->mergeArrays(json_decode($data['dataDefault'], true), $data);
         $this->replace($modifiedData);
-        
+
         $rules = [
             'dataForm.name_service_image' => 'required|string',
             'dataForm.note_service' => 'required|string',
             'dataForm.sale_service' => 'required|numeric|min:0',
             'dataForm.active_service' => 'required|boolean',
             'dataForm.notification_service' => 'required|string',
-            'dataForm.thumb_service_image.*' => 'required|file|image',
-            'dataForm.image_1.*' => 'nullable|file|image',
-            'dataForm.image_2.*' => 'nullable|file|image',
-            'dataForm.image_3.*' => 'nullable|file|image',
-            'dataForm.image_4.*' => 'nullable|file|image',
-            'dataForm.image_5.*' => 'nullable|file|image',
+            'dataForm.thumb_service_image.*' =>  ["required", new UrlOrFileImage],
+            'dataForm.image_1.*' =>  ["nullable", new UrlOrFileImage],
+            'dataForm.image_2.*' =>  ["nullable", new UrlOrFileImage],
+            'dataForm.image_3.*' =>  ["nullable", new UrlOrFileImage],
+            'dataForm.image_4.*' =>  ["nullable", new UrlOrFileImage],
+            'dataForm.image_5.*' =>  ["nullable", new UrlOrFileImage],
             // ==========================
             'dataOdds' => 'nullable',
             // ==========================
             'dataExcept.*' => 'string',
             'except' => 'boolean',
             'typeService' => 'required|string',
+            'idService' => 'nullable|exists:services,id',
+            'idServiceDetail' => 'nullable|exists:service_details,id',
+            'idGroup' => 'required|exists:service_groups,id',
         ];
 
         if (

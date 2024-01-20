@@ -19,6 +19,12 @@ class ServiceImageRepository implements ServiceImageInterface
 
     public function updateOrInsert(float|null $id, array $params)
     {
+        if ($id) {
+            $model = $this->model->find($id);
+            $model->fill($params);
+            $model->save();
+            return $model;
+        }
         return $this->model->create($params);
     }
 }
