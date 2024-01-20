@@ -6,6 +6,7 @@ import {
 } from "@/types/response/base.type";
 import {
   IServiceDetailResponse,
+  IServiceEdit,
   IServiceGameList,
   IServiceList,
   ServiceGroup,
@@ -23,6 +24,10 @@ export const serviceApi = {
         "content-type": "multipart/form-data",
       },
     });
+  },
+  get: (id: number, idDetail: number) => {
+    const url = `/services/${id}/${idDetail}`;
+    return axiosClient.get<IBaseResponseDetail<IServiceEdit>>(url);
   },
   serviceGameList: (game_key: string) => {
     const url = "/services/all-list";

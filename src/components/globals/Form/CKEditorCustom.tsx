@@ -14,7 +14,6 @@ function CKEditorCustom({
       <CKEditor
         editor={ClassicEditor}
         data={value}
-        
         onChange={(_, editor) => {
           const data = editor.getData();
           onChange(data);

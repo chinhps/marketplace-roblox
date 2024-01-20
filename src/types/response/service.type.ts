@@ -38,6 +38,16 @@ export interface IServiceList {
   service_details_count: number;
   currency: Currency | null;
   service_couter: SericeCounter | null;
+  service_details?: Array<IServiceDetailResponse>;
+  game_list: {
+    id: number;
+    game_key: string;
+    game_name: string;
+  };
+}
+
+export interface IServiceEdit extends IServiceList {
+  service_detail: IServiceDetailResponse;
 }
 
 export interface IServiceDetailResponse {
@@ -47,7 +57,7 @@ export interface IServiceDetailResponse {
   service_odds_id: number;
   service_image_id: number;
   prioritize: number;
-  excluding: string;
+  excluding: "ON" | "OFF";
   created_at: string;
   slug: string;
   service_image: ServiceImage | null;
@@ -59,9 +69,7 @@ export interface IServiceDetailResponse {
 interface ServiceImage {
   id: number;
   thumb: string;
-  images: {
-    [key: string]: string;
-  };
+  images: string;
   name: string;
   created_at: string;
 }
@@ -83,6 +91,22 @@ export interface ServiceOdds {
   odds_user: string;
   created_at: string;
   countUse: number | null;
+  service_gifts: Array<Gift>;
+  note: string | null;
+}
+
+interface Gift {
+  id: number;
+  odds_id: number;
+  game_currency_id: number;
+  gift_type: "FIXED" | "RANDOM";
+  image: string | null;
+  value1: number;
+  value2: number | null;
+  vip: "YES" | "NO";
+  cost: number;
+  percent_random: number;
+  text_custom: string | null;
 }
 
 export interface Shop {

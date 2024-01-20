@@ -2,7 +2,6 @@ import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
 import { IFormInput } from "@/types/form.type";
 import {
-  Box,
   Button,
   Divider,
   FormControl,
@@ -26,22 +25,22 @@ import {
   IServiceMutation,
   IServiceType,
 } from "@/types/service.type";
-import { Link } from "react-router-dom";
-import { FiPlus, FiSlack, FiUser, FiUsers } from "react-icons/fi";
+import { Link, useParams } from "react-router-dom";
+import { FiPlus, FiSlack, FiTool, FiUser, FiUsers } from "react-icons/fi";
 import InputTag from "@/components/globals/Form/InputTag";
 import ModelBase from "@/components/globals/Model/ModelBase";
 import FileCustom from "@/components/globals/Form/FileCustom";
 import InputNumberCustom from "@/components/globals/Form/InputNumberCustom";
 import InputExcept from "@/components/globals/Form/InputExcept";
-import { useMutation } from "@tanstack/react-query";
-import { serviceApi } from "@/apis/service";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { serviceApi, serviceGroupApi, serviceOddsApi } from "@/apis/service";
 import { objectToFormData } from "@/utils/function";
 import { handleImageByService, initialFormState } from "@/utils/service";
 
 const initialFormStateGifts: IGiftAdd = {
   image: {} as File,
   isRandom: false,
-  isVip: false,
+  isVip: true,
   message: "",
   percent: 0,
   typeGift: "NOT",
@@ -59,7 +58,9 @@ export default function CUServicePage() {
   /****----------------
    *      HOOK
   ----------------****/
+  const { id, idDetail } = useParams();
   const toast = useToast();
+  const [formValue, setFormValue] = useState({});
   const [dataDomainExcept, setDataDomainExcept] =
     useState<Array<string | number>>();
   const [dataFormState, setDataFormState] = useState<IFormInput[]>(() =>
@@ -69,6 +70,7 @@ export default function CUServicePage() {
   const [dataOdds, setDataOdds] = useState<IOddsAdd>();
   const [except, setExcept] = useState<boolean>(true);
   const [idTypeOdds, setIdTypeOdds] = useState<number>(0);
+  const [idGroup, setIdGroup] = useState<number>();
 
   const serviceMutation = useMutation({
     mutationFn: ({ formData, data }: IServiceMutation) =>
@@ -80,6 +82,63 @@ export default function CUServicePage() {
       });
     },
   });
+  const groupListQuery = useQuery({
+    queryKey: ["service-group-list"],
+    queryFn: () => serviceGroupApi.list({ page: 0, filter: {} }),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  useQuery({
+    queryKey: ["service-detail", id],
+    queryFn: () => serviceApi.get(Number(id), Number(idDetail)),
+    cacheTime: 5 * 1000,
+    enabled: !!id,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: ({ data }) => {
+      handleChangeService(data.data.game_list.game_key);
+      setIdGroup(data.data.service_detail.service_group_id);
+      setExcept(data.data.service_detail.excluding === "ON");
+      setDataDomainExcept(
+        data.data.service_detail.shop_list?.map((shopObj) => shopObj.domain)
+      );
+      if (data.data.service_detail.service_odds_id !== 0) {
+        setIdTypeOdds(data.data.service_detail.service_odds_id);
+      }
+      setFormValue({
+        name_service_image: data.data.service_detail.service_image?.name,
+        note_service: data.data.note,
+        price_service: data.data.price,
+        sale_service: data.data.sale,
+        active_service: data.data.active === "ON",
+        notification_service: data.data.notification,
+        thumb_service_image: [data.data.service_detail.service_image?.thumb],
+
+        image_1: [
+          JSON.parse(data.data.service_detail.service_image?.images ?? "")
+            .image_1,
+        ],
+        image_2: [
+          JSON.parse(data.data.service_detail.service_image?.images ?? "")
+            .image_2,
+        ],
+        image_3: [
+          JSON.parse(data.data.service_detail.service_image?.images ?? "")
+            .image_3,
+        ],
+      });
+      if (data.data.game_list.game_key === "LINKTO") {
+        setFormValue((prev) => {
+          return {
+            ...prev,
+            link_to: data.data.information.link_to,
+          };
+        });
+      }
+    },
+  });
   /****----------------
   *      END-HOOK
   ----------------****/
@@ -87,17 +146,17 @@ export default function CUServicePage() {
   /****----------------
    *      Handle
   ----------------****/
-  const handleChangeService = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTypeService(e.target.value);
-    setDataFormState([
-      ...initialFormState,
-      ...handleImageByService(e.target.value),
-    ]);
+  const handleChangeService = (value: string) => {
+    setTypeService(value);
+    setDataFormState([...initialFormState, ...handleImageByService(value)]);
   };
 
   const onSubmit: SubmitHandler<any> = (data) => {
     const formData = new FormData();
     const form = {
+      idService: id ?? null,
+      idServiceDetail: idDetail ?? null,
+      idGroup: idGroup,
       dataForm: data,
       dataOdds: dataOdds ?? null,
       typeService: typeService,
@@ -117,7 +176,11 @@ export default function CUServicePage() {
   return (
     <>
       <CardCollection
-        title={"Thêm dịch vụ #" + typeService}
+        title={
+          id
+            ? `Chỉnh sửa dịch vụ #${id} ` + typeService
+            : "Tạo mới dịch vụ " + typeService
+        }
         fontSize="25px"
         button={
           <Link to="../../">
@@ -128,11 +191,26 @@ export default function CUServicePage() {
         }
       >
         <FormControl isRequired mb="1rem">
+          <FormLabel>Nhóm dịch vụ</FormLabel>
+          <Select
+            variant="auth"
+            onChange={(e) => setIdGroup(Number(e.target.value))}
+            value={idGroup ?? ""}
+          >
+            {groupListQuery.data?.data.data.map((vl) => (
+              <option key={vl.id} value={vl.id}>
+                {vl.name} | Kích hoạt: {vl.active}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl isRequired mb="1rem">
           <FormLabel>Chọn loại dịch vụ</FormLabel>
           <Select
             variant="auth"
             placeholder="Loại Chọn loại dịch vụ"
-            onChange={handleChangeService}
+            onChange={(e) => handleChangeService(e.target.value)}
+            value={typeService ?? ""}
           >
             <option value="LUCKY_BOX">Mở hộp may mắn</option>
             <option value="LUCKY_CARD">Lật thẻ bài</option>
@@ -144,13 +222,12 @@ export default function CUServicePage() {
             <option value="RANDOM">Random tài khoản (Dạng tài khoản)</option>
           </Select>
         </FormControl>
-
         <InputExcept
           except={except}
           setExcept={setExcept}
+          data={dataDomainExcept}
           onChange={(data) => setDataDomainExcept(data)}
         />
-
         {(typeService === IServiceType.LUCKY_BOX ||
           typeService === IServiceType.LUCKY_CARD ||
           typeService === IServiceType.WHEEL) && (
@@ -160,11 +237,11 @@ export default function CUServicePage() {
             setIdTypeOdds={setIdTypeOdds}
           />
         )}
-
         {typeService !== "" && (
           <FormBase
+            dataDefault={formValue}
             dataForm={dataFormState}
-            textBtn="Thêm mới ngay"
+            textBtn={id ? "Cập nhật" : "Thêm mới"}
             onSubmit={onSubmit}
             CustomComponent={CustomStyle}
           />
@@ -221,7 +298,13 @@ function GiftAdd({
 
   useEffect(() => {
     onChange(formState, id);
+    handleChangeCustom("message")(
+      typeof formState.value !== "object" ? formState.value : ""
+    );
   }, [formState]);
+  useEffect(() => {
+    handleChangeCustom("typeGift")(giftType);
+  }, [giftType]);
 
   return (
     <>
@@ -235,7 +318,10 @@ function GiftAdd({
                 <Text fontWeight="bold">
                   VIP(Chỉ admin mới có thể quay trúng quà VIP)
                 </Text>
-                <Switch onChange={handleChange("isVip")} />
+                <Switch
+                  onChange={handleChange("isVip")}
+                  defaultChecked={true}
+                />
               </HStack>
             </HStack>
             <HStack>
@@ -292,16 +378,6 @@ function GiftAdd({
               )}
             </FormControl>
             <FormControl isRequired mb="1rem">
-              <FormLabel>Note</FormLabel>
-              <Input
-                value={
-                  typeof formState.value !== "object" ? formState.value : ""
-                }
-                onChange={handleChange("message")}
-                variant="auth"
-              />
-            </FormControl>
-            <FormControl isRequired mb="1rem">
               <FormLabel>Tỷ lệ (%)</FormLabel>
               <InputNumberCustom
                 handleChange={handleChangeCustom("percent")}
@@ -343,7 +419,6 @@ function ModelAddOdds({
       ]);
       return;
     }
-
     setListGift(
       listGift.slice(0, listGift.length - (listGift.length - countGiftNew))
     );
@@ -493,6 +568,13 @@ function AddNewOdds({
 }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
+  const oddsAll = useQuery({
+    queryKey: ["odds-all"],
+    queryFn: () => serviceOddsApi.list({ page: 0, filter: {} }),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   return (
     <>
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
@@ -502,23 +584,24 @@ function AddNewOdds({
         <FormLabel>Tỷ lệ</FormLabel>
         <HStack>
           <Select
-            onChange={(e) => setIdTypeOdds(Number(e.target.value))}
             variant="auth"
-            fontSize="sm"
-            fontWeight="500"
-            size="lg"
+            value={idTypeOdds ?? ""}
+            onChange={(e) => setIdTypeOdds(Number(e.target.value))}
           >
             <option value="0"> --- Tạo mới tỷ lệ --- </option>
+            {oddsAll.data?.data.data.map((odd) => (
+              <option key={odd.id} value={odd.id}>
+                {odd.note ?? "Chưa đặt tên #" + odd.id}
+              </option>
+            ))}
           </Select>
           {idTypeOdds === 0 && (
-            <Box>
-              <IconButton
-                onClick={onOpen}
-                size="lg"
-                aria-label="Add new"
-                icon={<FiPlus />}
-              />
-            </Box>
+            <IconButton
+              onClick={onOpen}
+              size="lg"
+              aria-label="Add new"
+              icon={idTypeOdds ? <FiTool /> : <FiPlus />}
+            />
           )}
         </HStack>
       </FormControl>

@@ -5,10 +5,12 @@ export default function InputExcept({
   onChange,
   except,
   setExcept,
+  data,
 }: {
   onChange: (value: (string | number)[]) => void;
   except: boolean;
   setExcept: (status: (prev: boolean) => boolean) => void;
+  data?: Array<string | number>;
 }) {
   return (
     <>
@@ -29,7 +31,7 @@ export default function InputExcept({
             Chuyển chế độ
           </Button>
         </HStack>
-        <InputTag onChange={onChange} />
+        <InputTag name="domain" onChange={onChange} values={data} />
       </FormControl>
     </>
   );

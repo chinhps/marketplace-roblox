@@ -1,10 +1,12 @@
 import ActionList from "@/components/globals/ActionList";
 import CardCollection from "@/components/globals/CardCollection";
 import TableCustom from "@/components/globals/TableCustom";
-import { numberFormat } from "@/utils/function";
+import { handleCopy, numberFormat } from "@/utils/function";
 import {
   Badge,
   Button,
+  HStack,
+  IconButton,
   Menu,
   MenuButton,
   MenuItem,
@@ -18,10 +20,11 @@ import {
   Td,
   Text,
   Tr,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { FiPlus, FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { FiEdit, FiPlus, FiSearch } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
 import OddsList from "./Odds/OddsList";
 import ServiceGroupList from "./ServiceGroup/ServiceGroupList";
 import { ServiceDetailTableList } from "./ServiceDetail/ServiceDetailList";
@@ -33,6 +36,8 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import FormBase from "@/components/globals/FormBase";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
+import ModelBase from "@/components/globals/Model/ModelBase";
+import { IServiceDetailResponse } from "@/types/response/service.type";
 
 export default function ServiceListPage() {
   return (
@@ -64,7 +69,7 @@ export default function ServiceListPage() {
       >
         <Text>Quản lý dịch vụ, ấn vào tên để có thể xem chi tiết.</Text>
 
-        <Tabs position="relative" variant="unstyled">
+        <Tabs position="relative" variant="unstyled" isLazy={true}>
           <TabList>
             <Tab>Danh sách Dịch vụ</Tab>
             <Tab>Tất cả game đang hiển thị</Tab>
@@ -97,9 +102,18 @@ function TableList() {
   /****----------------
    *      HOOK
   ----------------****/
+  const toast = useToast();
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState({});
-  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modelDataServiceDetail, setModelDataServiceDetail] = useState<
+    | {
+        gameType: string;
+        details: Array<IServiceDetailResponse>;
+      }
+    | undefined
+  >();
   const serviceListQuery = useQuery({
     queryKey: ["service-list", filter, page],
     queryFn: () => serviceApi.list({ page, filter }),
@@ -127,6 +141,31 @@ function TableList() {
 
   return (
     <>
+      <ModelBase
+        size="lg"
+        isOpen={isOpen}
+        onClose={onClose}
+        children={
+          <HStack flexWrap="wrap">
+            {/* <Button leftIcon={<FiPlus />}>Thêm mới</Button> */}
+            {modelDataServiceDetail?.details.map((detail) => (
+              <Button
+                key={detail.id}
+                onClick={() => {
+                  handleCopy(detail.slug);
+                  navigate(
+                    modelDataServiceDetail.gameType === "GAMEPASS"
+                      ? `./game-pass/update/${detail.service_id}/${detail.id}`
+                      : `./update/service/${detail.service_id}/${detail.id}`
+                  );
+                }}
+              >
+                {detail.id}: {detail.slug}
+              </Button>
+            ))}
+          </HStack>
+        }
+      />
       <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
 
       <TableCustom
@@ -174,13 +213,26 @@ function TableList() {
             <Td>{vl.currency?.currency_name ?? "Không có"}</Td>
             <Td>{vl.service_details_count}</Td>
             <Td>
-              <ActionList
-                actions={[
-                  // "EDIT",
-                  "DELETE",
-                ]}
-                onClickExits={() => handleDeleteService(vl.id)}
-              />
+              <HStack>
+                <IconButton
+                  aria-label="Change"
+                  colorScheme="orange"
+                  variant="outline"
+                  onClick={() => {
+                    onOpen();
+                    setModelDataServiceDetail({
+                      gameType: vl.game_list.game_key,
+                      details: vl.service_details ?? [],
+                    });
+                  }}
+                  icon={<FiEdit />}
+                />
+                <ActionList
+                  actions={["DELETE"]}
+                  linkUpdate={"./update/service/" + vl.id}
+                  onClickExits={() => handleDeleteService(vl.id)}
+                />
+              </HStack>
             </Td>
           </Tr>
         ))}

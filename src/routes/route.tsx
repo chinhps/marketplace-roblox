@@ -175,7 +175,7 @@ export const router = createBrowserRouter([
             element: <CUGamePassPage />,
           },
           {
-            path: "update/:id",
+            path: "update/:id/:idDetail",
             element: <CUGamePassPage />,
           },
         ],
@@ -194,6 +194,15 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "service",
+            element: <CUServicePage />,
+          },
+        ],
+      },
+      {
+        path: "update",
+        children: [
+          {
+            path: "service/:id/:idDetail",
             element: <CUServicePage />,
           },
         ],
