@@ -43,7 +43,7 @@ class ServiceForAllController extends Controller
         foreach ($validated['dataForm'] as $key => $value) {
             if (strpos($key, 'image_') !== false) {
                 # UPLOAD IMAGE
-                $dataImageDetail = is_string($value[0]) ? $value[0] : uploadImageQueue($value[0]);
+                $dataImageDetail = (is_string($value[0]) || $value[0] == null) ? $value[0] : uploadImageQueue($value[0]);
                 $imagesDetail[] = $dataImageDetail;
             }
         }
@@ -53,9 +53,10 @@ class ServiceForAllController extends Controller
         try {
 
             # UPLOAD IMAGE THUMB
-            $imageThumb = is_string($validated['dataForm']['thumb_service_image'][0]) ?
-                $validated['dataForm']['thumb_service_image'][0] :
-                uploadImageQueue($validated['dataForm']['thumb_service_image'][0]);
+            $thumb = $validated['dataForm']['thumb_service_image'][0];
+            $imageThumb = (is_string($thumb) || $thumb == null) ?
+                $thumb :
+                uploadImageQueue($thumb);
 
             $dataServiceImage = [
                 "name" => $validated["dataForm"]['name_service_image'],
@@ -105,7 +106,7 @@ class ServiceForAllController extends Controller
                 "price" => $priceService ?? 9999999,
                 "excluding" => "OFF",
                 "notification" => $validated["dataForm"]['notification_service'],
-                "active" => $validated["dataForm"]['active_service'],
+                "active" => $validated["dataForm"]['active_service'] ? "ON" : "OFF",
                 "sale" => $validated["dataForm"]["sale_service"],
                 "information" => json_encode($information ?? ['hastag' => "percent50"]),
                 "service_key" => Str::random(15),
