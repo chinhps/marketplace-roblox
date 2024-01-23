@@ -115,7 +115,7 @@ export default function CUServicePage() {
         active_service: data.data.active === "ON",
         notification_service: data.data.notification,
         thumb_service_image: [data.data.service_detail.service_image?.thumb],
-
+        currency: data.data.currency?.id,
         image_1: [
           JSON.parse(data.data.service_detail.service_image?.images ?? "")
             .image_1,
@@ -161,7 +161,7 @@ export default function CUServicePage() {
       dataOdds: dataOdds ?? null,
       typeService: typeService,
       dataExcept: dataDomainExcept,
-      idTypeOdds: idTypeOdds,
+      idTypeOdds: idTypeOdds ?? 0,
       except: except,
     };
     objectToFormData(formData, form);
