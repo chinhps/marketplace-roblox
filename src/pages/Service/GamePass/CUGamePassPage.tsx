@@ -1,10 +1,16 @@
 import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
-import { Button, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Select,
+  useToast,
+} from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
-import { gamePassApi } from "@/apis/service";
+import { gamePassApi, serviceApi, serviceGroupApi } from "@/apis/service";
 import { IFormInput } from "@/types/form.type";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { objectToFormData } from "@/utils/function";
@@ -60,7 +66,7 @@ export default function CUGamePassPage() {
   /****----------------
    *      HOOK
   ----------------****/
-  const { id } = useParams();
+  const { id, idDetail } = useParams();
   const toast = useToast();
   const [except, setExcept] = useState<boolean>(true);
   const [dataDomainExcept, setDataDomainExcept] =
@@ -69,7 +75,9 @@ export default function CUGamePassPage() {
     structuredClone(initialFormState)
   );
   const [formValue, setFormValue] = useState({});
-  const navigate = useNavigate();
+  const [idGroup, setIdGroup] = useState<number>();
+  const [idOdds, setIdOdds] = useState<number>();
+
   const gamePassMutation = useMutation({
     mutationFn: (dataForm: FormData) => gamePassApi.create(dataForm),
     onSuccess: ({ data }) => {
@@ -77,22 +85,41 @@ export default function CUGamePassPage() {
         status: "success",
         description: data.msg,
       });
-      navigate("../../");
+      gamepassQuery.refetch();
     },
   });
-  useQuery({
-    queryKey: ["game-pass-detail", id],
-    queryFn: () => gamePassApi.get(Number(id)),
+  const groupListQuery = useQuery({
+    queryKey: ["service-group-list"],
+    queryFn: () => serviceGroupApi.list({ page: 0, filter: {} }),
+    cacheTime: 5 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const gamepassQuery = useQuery({
+    queryKey: ["game-pass-detail", id, idDetail],
+    queryFn: () => serviceApi.get(Number(id), Number(idDetail)),
     cacheTime: 5 * 1000,
     enabled: !!id,
     retry: false,
     refetchOnWindowFocus: false,
     onSuccess: ({ data }) => {
+      setExcept(data.data.service_detail.excluding === "ON");
+      setIdGroup(data.data.service_detail.service_group_id);
+      setIdOdds(data.data.service_detail.service_odds_id);
+      setDataDomainExcept(
+        data.data.service_detail.shop_list?.map((shopObj) => shopObj.domain)
+      );
       setFormValue({
-        prioritize: data.data.prioritize,
-        name: data.data.name,
+        name_gamepass: data.data.service_detail.service_image?.name,
         active: data.data.active,
-        image: [data.data.image],
+        exemple: data.data.notification,
+        parcels: data.data.service_detail.service_odds?.service_gifts
+          .map(
+            (gift) =>
+              `${gift.text_custom}|${gift.value1}|${gift.cost}|${gift.id}\n`
+          )
+          .join(""),
+        image: [data.data.service_detail.service_image?.thumb],
       });
     },
   });
@@ -105,6 +132,9 @@ export default function CUGamePassPage() {
     objectToFormData(formData, {
       id: id ?? "",
       dataDomainExcept,
+      idGroup: idGroup,
+      idServiceDetail: idDetail ?? null,
+      idOdds: idOdds,
       except,
       ...data,
     });
@@ -124,6 +154,20 @@ export default function CUGamePassPage() {
           </Link>
         }
       >
+        <FormControl isRequired mb="1rem">
+          <FormLabel>Nhóm dịch vụ</FormLabel>
+          <Select
+            variant="auth"
+            onChange={(e) => setIdGroup(Number(e.target.value))}
+            value={idGroup ?? ""}
+          >
+            {groupListQuery.data?.data.data.map((vl) => (
+              <option key={vl.id} value={vl.id}>
+                {vl.name} | Kích hoạt: {vl.active}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
         <InputExcept
           except={except}
           setExcept={setExcept}
