@@ -8,6 +8,8 @@ use App\Models\ServiceOdds;
 
 interface ServiceGiftInterface
 {
+    public function list($limit = 15, $filter = []);
+    public function delete($ids = []);
     /**
      * @return \App\Models\ServiceGift
      */

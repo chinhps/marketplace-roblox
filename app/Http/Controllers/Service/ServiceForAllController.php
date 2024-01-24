@@ -113,7 +113,7 @@ class ServiceForAllController extends Controller
             ];
             # CREATE SERVICE ###############################
             $service = $this->servicelRepository->updateOrInsert(
-                isset($validated['idService']) ? $validated['idService'] : null,
+                $validated['idService'] ?? null,
                 $dataService,
                 gameCurrency: $gameCurrencyService ?? null,
                 gameList: $this->gameListRepository->getByGameKey($validated['typeService'])
@@ -177,7 +177,7 @@ class ServiceForAllController extends Controller
 
             # CREATE SERVICE DETAIL ###############################
             $this->serviceDetailRepository->updateOrInsert(
-                isset($validated['idServiceDetail']) ? $validated['idServiceDetail'] : null,
+                $validated['idServiceDetail'] ?? null,
                 [
                     "prioritize" => 1,
                     "excluding" => $validated['except'] ? "ON" : "OFF",

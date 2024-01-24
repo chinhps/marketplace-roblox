@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Service;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceGamePassRequest;
+use App\Http\Resources\Service\ServiceEditResource;
 use App\Repository\Game\GameCurrency\GameCurrencyInterface;
 use App\Repository\Game\GameList\GameListInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
@@ -33,21 +34,15 @@ class ServiceGamePassController extends Controller
     ) {
     }
 
-
-    public function getId($id)
-    {
-    }
-
-    public function delete($id)
-    {
-    }
-
     public function upsert(ServiceGamePassRequest $request)
     {
         $validated = $request->validated();
 
         # UPLOAD IMAGE THUMB
-        $imageThumb = uploadImageQueue($validated['image'][0]);
+        $imageThumb = (is_string($validated['image'][0]) || $validated['image'][0] == null) ?
+            $validated['image'][0] :
+            uploadImageQueue($validated['image'][0]);
+
         DB::beginTransaction();
 
         try {
@@ -57,7 +52,10 @@ class ServiceGamePassController extends Controller
                 "thumb" => $imageThumb,
                 "images" => "[]",
             ];
-            $serviceImage = $this->serviceImageRepository->updateOrInsert(null,  $dataServiceImage);
+            $serviceImage = $this->serviceImageRepository->updateOrInsert(isset($validated['idServiceDetail']) ?
+                $this->serviceDetailRepository->get(
+                    $validated['idServiceDetail']
+                )->service_image_id : null,  $dataServiceImage);
 
             $dataService = [
                 "note" => $validated["name_gamepass"],
@@ -71,14 +69,14 @@ class ServiceGamePassController extends Controller
             ];
             # CREATE SERVICE ###################################
             $service = $this->servicelRepository->updateOrInsert(
-                $validated['id'],
+                $validated['id'] ?? null,
                 $dataService,
                 gameCurrency: null,
                 gameList: $this->gameListRepository->getByGameKey("GAMEPASS")
             );
 
             # CREATE ODDS SERVICE ############################
-            $serviceOdds = $this->serviceOddsRepository->updateOrInsert(null, [
+            $serviceOdds = $this->serviceOddsRepository->updateOrInsert($validated['idOdds'] ?? null, [
                 "odds_admin_type" => "FIXED",
                 "odds_user_type" => "FIXED",
                 "odds_admin" => "[]",
@@ -88,10 +86,20 @@ class ServiceGamePassController extends Controller
             $parcels = explode("\n", $validated['parcels']);
             $gameCurrency = $this->gameCurrencyRepository->getByKey("NOT");
 
+            # Get all id parcel post
+            $parcelIds = [];
+            # all current id parcels
+            $parcelDiffIds = $this->serviceGiftRepository->list(0, [
+                ["odds_id", $serviceOdds->id]
+            ])->pluck("id");
+
             foreach ($parcels as $parcel) {
                 $infoParcel = explode("|", $parcel);
+                if (isset($infoParcel[3])) {
+                    $parcelIds[] = (int)$infoParcel[3]; # add parcel id post
+                }
                 # CREATE GIFT SERVICE ###########################
-                $this->serviceGiftRepository->updateOrInsert(null, [
+                $this->serviceGiftRepository->updateOrInsert($infoParcel[3] ?? null, [
                     "gift_type" => "FIXED",
                     "vip" => "NO",
                     "image" => null,
@@ -103,13 +111,16 @@ class ServiceGamePassController extends Controller
                 ], serviceOdds: $serviceOdds, gameCurrency: $gameCurrency);
             }
 
+            # use array diff => delete id not found in parcels post
+            $this->serviceGiftRepository->delete($parcelDiffIds->diff($parcelIds));
+
             /**
              * @var array
              */
             $domainsId = $this->shopRepository->getByListDomain($validated['dataExcept'] ?? [])->pluck('id')->toArray();
             # CREATE SERVICE DETAIL #########################
             $this->serviceDetailRepository->updateOrInsert(
-                null,
+                $validated['idServiceDetail'] ?? null,
                 [
                     "prioritize" => 1,
                     "excluding" => $validated['except'] == 'true' ? "ON" : "OFF",
@@ -117,13 +128,13 @@ class ServiceGamePassController extends Controller
                 ],
                 domainsId: $domainsId,
                 service: $service,
-                serviceGroup: $this->servicelGroupRepository->get(1), // demo
+                serviceGroup: $this->servicelGroupRepository->get($validated['idGroup']),
                 serviceImage: $serviceImage,
                 serviceOdds: $serviceOdds
             );
 
             DB::commit();
-            return BaseResponse::msg("Tạo mới thành công Gamepass!");
+            return BaseResponse::msg((isset($validated['id']) ? "Cập nhật" : "Tạo mới") . " thành công Gamepass!");
         } catch (\Exception $e) {
             DB::rollBack();
             return BaseResponse::msg("Có lỗi: " . $e->getMessage(), 500);

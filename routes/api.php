@@ -120,8 +120,6 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::post('/upsert', [ServiceGroupController::class, 'upsert']);
         });
         Route::prefix('game-pass')->group(function () {
-            Route::get('/{id}', [ServiceGamePassController::class, 'getId']);
-            Route::delete('/{id}', [ServiceGamePassController::class, 'delete']);
             Route::post('/upsert', [ServiceGamePassController::class, 'upsert']);
         });
         Route::prefix('services-odds-list')->group(function () {

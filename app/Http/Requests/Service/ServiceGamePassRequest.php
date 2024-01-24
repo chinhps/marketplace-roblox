@@ -23,7 +23,10 @@ class ServiceGamePassRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            "id" => "nullable|exists:service_groups,id",
+            "id" => "nullable|exists:services,id",
+            "idServiceDetail" => "nullable|exists:service_details,id",
+            "idGroup" => "required|exists:service_groups,id",
+            "idOdds" => "required|exists:service_odds,id",
             "dataDomainExcept.*" => "required|string",
             "name_gamepass" => "required|string",
             "except" => "required",
