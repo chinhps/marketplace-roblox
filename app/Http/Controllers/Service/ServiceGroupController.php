@@ -18,8 +18,8 @@ class ServiceGroupController extends Controller
 
     public function list(Request $request)
     {
-        $page = $request->input('page', 15);
-        return ServiceGroupListResource::collection($this->serviceGroupRepository->list($page));
+        $limit = $request->input('limit', 15);
+        return ServiceGroupListResource::collection($this->serviceGroupRepository->list($limit));
     }
 
     public function getId($id)

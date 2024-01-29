@@ -24,7 +24,7 @@ class ServiceRepository implements ServiceInterface
 
     public function listServiceByGameList(string $gameKey)
     {
-        $query = $this->model->with("currency")->whereHas('game_list', function (Builder $query) use ($gameKey) {
+        $query = $this->model->with("currency")->where("active", "ON")->whereHas('game_list', function (Builder $query) use ($gameKey) {
             $query->where('game_key', $gameKey);
         });
         return $query->get();
