@@ -10,6 +10,7 @@ const axiosClient = axios.create({
     "X-Requested-With": "XMLHttpRequest",
     "content-type": "application/json",
   },
+  withCredentials: false,
   paramsSerializer: (params) => queryString.stringify(params),
 });
 axiosClient.interceptors.request.use(

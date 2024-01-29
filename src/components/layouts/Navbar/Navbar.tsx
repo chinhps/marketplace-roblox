@@ -32,9 +32,19 @@ import { Link as ReactLink } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
 import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
+// import axiosClient from "@/utils/axiosClient";
+// import { useEffect } from "react";
 
 export default function Navbar() {
   const { isOpen, onToggle, onClose } = useDisclosure();
+  // const csrf = async () => {
+  //   await axiosClient.get("/sanctum/csrf-cookie");
+  // };
+  // useEffect(() => {
+  //   if (typeof import.meta.env.VITE_APP_CSRF !== "undefined") {
+  //     csrf();
+  //   }
+  // }, []);
 
   return (
     <Box as="nav" position="fixed" top={0} left={0} right={0} zIndex={10}>
