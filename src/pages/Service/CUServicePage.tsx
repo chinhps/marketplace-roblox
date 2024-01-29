@@ -83,8 +83,8 @@ export default function CUServicePage() {
     },
   });
   const groupListQuery = useQuery({
-    queryKey: ["service-group-list"],
-    queryFn: () => serviceGroupApi.list({ page: 0, filter: {} }),
+    queryKey: ["service-group-all"],
+    queryFn: () => serviceGroupApi.list({ page: 0, filter: { limit: 0 } }),
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
@@ -570,7 +570,7 @@ function AddNewOdds({
 
   const oddsAll = useQuery({
     queryKey: ["odds-all"],
-    queryFn: () => serviceOddsApi.list({ page: 0, filter: {} }),
+    queryFn: () => serviceOddsApi.list({ page: 0, filter: { limit: 0 } }),
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,

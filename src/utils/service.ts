@@ -63,8 +63,12 @@ export const handleImageByService = (type: string) => {
         type: "SELECT",
         selects: [
           {
-            label: "Kim cương",
+            label: "Không có đơn vị",
             value: "1",
+          },
+          {
+            label: "Kim cương",
+            value: "2",
           },
           {
             label: "Robux",

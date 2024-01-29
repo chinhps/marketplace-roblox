@@ -19,7 +19,16 @@ export default function AuthLayout() {
     >
       <Flex justifyContent={{ base: "center", lg: "flex-start" }}>
         <Link to="/">
-          <Img src="http://chính.vn/images/logo.png" alt="logo" />
+          <Img
+            h={100}
+            w={250}
+            objectFit="contain"
+            src={
+              import.meta.env.VITE_APP_LOGO_URL ??
+              "https://i.imgur.com/Owoq65A.png"
+            }
+            alt="logo"
+          />
         </Link>
       </Flex>
       <Flex justifyContent="center">{memoizedOutlet}</Flex>

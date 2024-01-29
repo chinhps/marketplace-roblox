@@ -56,7 +56,10 @@ export default function Navbar() {
             <Box p="0.5rem">
               <Link as={ReactLink} to="/">
                 <Image
-                  src="http://chính.vn/images/logo.png"
+                  src={
+                    import.meta.env.VITE_APP_LOGO_URL ??
+                    "https://i.imgur.com/Owoq65A.png"
+                  }
                   w="120px"
                   alt="logo"
                 />

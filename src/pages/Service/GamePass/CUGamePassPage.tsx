@@ -89,8 +89,8 @@ export default function CUGamePassPage() {
     },
   });
   const groupListQuery = useQuery({
-    queryKey: ["service-group-list"],
-    queryFn: () => serviceGroupApi.list({ page: 0, filter: {} }),
+    queryKey: ["service-group-all"],
+    queryFn: () => serviceGroupApi.list({ page: 0, filter: { limit: 0 } }),
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
