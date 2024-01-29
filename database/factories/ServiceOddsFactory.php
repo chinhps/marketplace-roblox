@@ -21,6 +21,7 @@ class ServiceOddsFactory extends Factory
             "odds_admin" => json_encode([1, 2, 1, 2, 1, 2, 1, 2, 1, 2]),
             "odds_user_type" => $this->faker->randomElement(['FIXED', 'RANDOM']),
             "odds_user" => json_encode([1, 2, 1, 2, 1, 2, 1, 2, 1, 2]),
+            "note" => $this->faker->text(10)
         ];
     }
 }
