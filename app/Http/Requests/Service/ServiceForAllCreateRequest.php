@@ -29,6 +29,7 @@ class ServiceForAllCreateRequest extends BaseRequest
         $rules = [
             'dataForm.name_service_image' => 'required|string',
             'dataForm.note_service' => 'required|string',
+            'dataForm.prioritize' => 'required|numeric',
             'dataForm.sale_service' => 'required|numeric|min:0',
             'dataForm.active_service' => 'required|boolean',
             'dataForm.notification_service' => 'required|string',

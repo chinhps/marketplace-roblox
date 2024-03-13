@@ -109,8 +109,11 @@ class ServiceForAllController extends Controller
                 "active" => $validated["dataForm"]['active_service'] ? "ON" : "OFF",
                 "sale" => $validated["dataForm"]["sale_service"],
                 "information" => json_encode($information ?? ['hastag' => "percent50"]),
-                "service_key" => Str::random(15),
+                // "service_key" => Str::random(15),
             ];
+            if (!isset($validated['idService'])) {
+                $dataService["service_key"] = Str::random(15);
+            }
             # CREATE SERVICE ###############################
             $service = $this->servicelRepository->updateOrInsert(
                 $validated['idService'] ?? null,
@@ -179,7 +182,7 @@ class ServiceForAllController extends Controller
             $this->serviceDetailRepository->updateOrInsert(
                 $validated['idServiceDetail'] ?? null,
                 [
-                    "prioritize" => 1,
+                    "prioritize" => $validated["dataForm"]["prioritize"],
                     "excluding" => $validated['except'] ? "ON" : "OFF",
                     "slug" => Str::slug($validated["dataForm"]["name_service_image"])
                 ],
