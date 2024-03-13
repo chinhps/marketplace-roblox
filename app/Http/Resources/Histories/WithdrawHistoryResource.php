@@ -22,7 +22,7 @@ class WithdrawHistoryResource extends BaseResource
             "detail" => collect(json_decode($this->detail, true))->map(function ($vl) {
                 return [
                     "name" => $vl['name'],
-                    "value" => substr($vl['value'], 0, 10) . '...'
+                    "value" => $vl['value']
                 ];
             }),
             "created_at" => $this->created_at,
