@@ -4,7 +4,7 @@ import FormBase from "@/components/globals/FormBase";
 import TableCustom from "@/components/globals/TableCustom";
 import { CustomStyleFilter } from "@/components/layouts/DefaultLayout";
 import { IFormInput, IFormSearchProps } from "@/types/form.type";
-import { numberFormat } from "@/utils/function";
+import { handleCopy, numberFormat } from "@/utils/function";
 import { Badge, Td, Text, Tr, useToast } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FiCornerUpRight, FiSearch } from "react-icons/fi";
@@ -138,6 +138,12 @@ export function TableListRechargeHistory({
                   {detail.name}: {detail.value}
                 </Text>
               ))}
+              <Text>
+                IP:{" "}
+                <Badge colorScheme="blue" onClick={() => handleCopy(vl.ip)}>
+                  {vl.ip}
+                </Badge>
+              </Text>
             </Td>
             <Td>
               {vl.refund === "yes" ? (
