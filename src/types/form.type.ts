@@ -1,6 +1,7 @@
 import { SubmitHandler } from "react-hook-form";
 
 export interface IFormBase {
+  isSubmitCustom?: boolean;
   dataForm: Array<IFormInput>;
   textBtn: string;
   CustomComponent?: any;

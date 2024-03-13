@@ -19,7 +19,7 @@ import { IFormBase } from "@/types/form.type";
 import { FileCustomRHF } from "./Form/FileCustom";
 import InputNumberCustom from "./Form/InputNumberCustom";
 import { handleCopy } from "@/utils/function";
-import CKEditorCustom from "./Form/CKEditorCustom";
+import CKEditorCustom from "./Form/QuillEditorCustom";
 import { useQuery } from "@tanstack/react-query";
 import shopApi from "@/apis/shop";
 
@@ -31,6 +31,7 @@ export default function FormBase({
   hiddenLable,
   dataDefault,
   icon,
+  isSubmitCustom
 }: IFormBase) {
   const {
     control,
@@ -177,7 +178,6 @@ export default function FormBase({
                         value={value}
                         min={form.min}
                         max={form.max}
-                        placeholder={form.placeholder ?? form.label}
                       />
                     )}
                     defaultValue={form.default}
@@ -222,7 +222,7 @@ export default function FormBase({
           ) : (
             <Button
               gridArea="button"
-              isLoading={isSubmitting}
+              isLoading={isSubmitCustom ?? isSubmitting}
               fontSize="md"
               type="submit"
               variant="outlineRed"
