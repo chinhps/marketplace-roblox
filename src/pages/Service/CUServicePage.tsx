@@ -112,6 +112,7 @@ export default function CUServicePage() {
         note_service: data.data.note,
         price_service: data.data.price,
         sale_service: data.data.sale,
+        prioritize: data.data.service_detail.prioritize,
         active_service: data.data.active === "ON",
         notification_service: data.data.notification,
         thumb_service_image: [data.data.service_detail.service_image?.thumb],
@@ -196,6 +197,7 @@ export default function CUServicePage() {
             variant="auth"
             onChange={(e) => setIdGroup(Number(e.target.value))}
             value={idGroup ?? ""}
+            placeholder="-- Chọn nhóm dịch vụ --"
           >
             {groupListQuery.data?.data.data.map((vl) => (
               <option key={vl.id} value={vl.id}>
@@ -239,6 +241,7 @@ export default function CUServicePage() {
         )}
         {typeService !== "" && (
           <FormBase
+            isSubmitCustom={serviceMutation.isLoading}
             dataDefault={formValue}
             dataForm={dataFormState}
             textBtn={id ? "Cập nhật" : "Thêm mới"}
@@ -619,7 +622,7 @@ function CustomStyle({ children }: { children: React.ReactNode }) {
         templateAreas={`
           "name_service_image note_service"
           "price_service sale_service"
-          "active_service active_service"
+          "active_service prioritize"
           "notification_service notification_service"
           ". ."
           ". ."

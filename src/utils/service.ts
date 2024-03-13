@@ -3,6 +3,13 @@ import { IServiceType } from "@/types/service.type";
 
 export const initialFormState: Array<IFormInput> = [
   {
+    label: "Ưu tiên",
+    name: "prioritize",
+    type: "NUMBER",
+    isRequired: true,
+    gridAreaName: "prioritize",
+  },
+  {
     label: "Tên dịch vụ",
     name: "name_service_image",
     type: "INPUT",
@@ -28,7 +35,7 @@ export const initialFormState: Array<IFormInput> = [
     label: "Giảm giá (%)",
     name: "sale_service",
     type: "NUMBER",
-    default: "0",
+    default: "50",
     gridAreaName: "sale_service",
     min: 0,
     max: 100,
