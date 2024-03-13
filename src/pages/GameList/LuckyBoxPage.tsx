@@ -118,7 +118,7 @@ function GamePlay({
           opacity={1}
           cursor="pointer"
           m="auto"
-          w="400px"
+          // w="400px"
           alt={dataService?.service_image.name + " by chinh.dev"}
           src={image}
         />

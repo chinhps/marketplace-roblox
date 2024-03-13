@@ -110,7 +110,7 @@ function PopupHome() {
       <ModelBase
         isOpen={isOpen}
         onClose={onClose}
-        size="3xl"
+        size="xl"
         TextData={
           <Box
             dangerouslySetInnerHTML={{
