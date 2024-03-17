@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  backend:
+    image: laravel-app
+    container_name: backend-client-shop
+    ports:
+      - 8082:80
+    volumes:
+      - .:/app
+    networks:
+      - mysql-shop-roblox-network
+  mysql-shop:
+    image: mysql:8.0
+    container_name: mysql-client-shop
+    ports:
+      - 3308:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=Chinh@12345
+    volumes:
+      - mysql-shop-volume:/var/lib/mysql
+      - mysql-shop-volume-config:/etc/mysql
+    networks:
+      - mysql-shop-roblox-network
+networks:
+  mysql-shop-roblox-network:
+    name: mysql-shop-roblox-network
+volumes:
+  mysql-shop-volume:
+  mysql-shop-volume-config:

@@ -2,8 +2,8 @@
    RewriteEngine On
 	php_value max_file_uploads 200
 	php_value upload_max_filesize 3048M
-    php_value post_max_size 3048M
-    php_value max_execution_time 6000
+   php_value post_max_size 3048M
+   php_value max_execution_time 6000
    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 <IfModule mod_deflate.c>
