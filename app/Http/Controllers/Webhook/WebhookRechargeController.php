@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Webhook;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Repository\Histories\RechargeHistory\RechargeHistoryInterface;
+use App\Repository\Plugin\PluginInterface;
 use App\Repository\TopRecharge\TopRechargeInterface;
 use App\Repository\Transaction\TransactionInterface;
 use Exception;
@@ -16,7 +17,8 @@ class WebhookRechargeController extends Controller
     public function __construct(
         private RechargeHistoryInterface $rechargeHistoryRepository,
         private TransactionInterface $transactionRepository,
-        private TopRechargeInterface $topRechargeRepository
+        private TopRechargeInterface $topRechargeRepository,
+        private PluginInterface $pluginRepository
     ) {
     }
 
@@ -159,6 +161,18 @@ class WebhookRechargeController extends Controller
                 note: "Nạp tiền thành công! ID: {$rechargeHistory->id}"
             );
 
+            # extra price with promotion
+            $extraRecharge = $this->pluginRepository->getByKey("extra_recharge");
+            $priceExtra =  (int)($extraRecharge["price" . ($rechargeHistory->price / 1000)] ?? 0);
+            if ($priceExtra > 0) {
+                # create transaction
+                $this->transactionRepository->createPrice(
+                    user: $rechargeHistory->user,
+                    value: $priceExtra,
+                    note: "Extra price! ID: {$rechargeHistory->id}"
+                );
+            }
+
             # create or update Top Recharge
             # Check user exists this month
             $topRechargeExists = $this->topRechargeRepository->exists([
@@ -175,7 +189,7 @@ class WebhookRechargeController extends Controller
             return BaseResponse::msg("Thẻ thành công, 1", 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            logReport("recharge_webhook", "Error save transaction and top recharge | ID HTR: {$rechargeHistory->id}");
+            logReport("recharge_webhook", "Error save transaction and top recharge | ID HTR: {$rechargeHistory->id}", $e);
             return BaseResponse::msg("Error save transaction and top recharge", 500);
         }
     }
