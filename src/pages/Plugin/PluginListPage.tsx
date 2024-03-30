@@ -72,7 +72,7 @@ export function TableListPlugin({ data }: { data: PluginResponse[] }) {
             <Td>
               {vl.data_public?.map((detail, index) => (
                 <Text key={index} w="300px" overflow="hidden">
-                  {detail.name}: {detail.value}
+                  {detail.name}: {detail.value.toString()}
                 </Text>
               ))}
             </Td>
