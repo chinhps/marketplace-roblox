@@ -103,6 +103,14 @@ export const serviceOddsApi = {
       },
     });
   },
+  create: (dataForm: FormData) => {
+    const url = "/services-gift/upsert";
+    return axiosClient.post(url, dataForm, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+  },
   get: (id: number) => {
     const url = "/services-odds-list/" + id;
     return axiosClient.get<IBaseResponseDetail<ServiceOdds>>(url);

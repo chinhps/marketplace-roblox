@@ -93,6 +93,7 @@ export interface ServiceOdds {
   countUse: number | null;
   service_gifts?: Array<Gift>;
   note: string | null;
+  service_details?: Array<IServiceDetailResponse>
 }
 
 interface Gift {

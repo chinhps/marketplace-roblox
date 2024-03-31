@@ -9,20 +9,22 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { gamePassApi, serviceGroupApi, serviceOddsApi } from "@/apis/service";
+import { serviceOddsApi } from "@/apis/service";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { objectToFormData } from "@/utils/function";
+import FormBase from "@/components/globals/FormBase";
+import { IFormInput } from "@/types/form.type";
 
 export default function UpdateGiftPage() {
   /****----------------
    *      HOOK
   ----------------****/
   const toast = useToast();
-  const [formValue, setFormValue] = useState({});
+  const [formInit, setFormInit] = useState<Array<IFormInput>>([]);
   const [idOdds, setIdOdds] = useState<number>();
 
-  const gamePassMutation = useMutation({
-    mutationFn: (dataForm: FormData) => gamePassApi.create(dataForm),
+  const giftsMutation = useMutation({
+    mutationFn: (dataForm: FormData) => serviceOddsApi.create(dataForm),
     onSuccess: ({ data }) => {
       toast({
         status: "success",
@@ -38,6 +40,9 @@ export default function UpdateGiftPage() {
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
+    onSuccess: () => {
+      setFormInit([]);
+    },
   });
 
   const oddsDetailQuery = useQuery({
@@ -47,7 +52,18 @@ export default function UpdateGiftPage() {
     retry: false,
     enabled: !!idOdds,
     refetchOnWindowFocus: false,
-    onSuccess: ({ data }) => {},
+    onSuccess: ({ data }) => {
+      setFormInit(
+        data.data.service_gifts?.map((gift) => {
+          return {
+            label: gift.text_custom ?? "Không tồn tại",
+            name: "gift." + gift.id,
+            type: "FILE",
+            default: gift.image ?? "",
+          };
+        }) ?? []
+      );
+    },
   });
   /****----------------
    *      END-HOOK
@@ -59,7 +75,7 @@ export default function UpdateGiftPage() {
       idOdds: idOdds,
       ...data,
     });
-    gamePassMutation.mutate(formData);
+    giftsMutation.mutate(formData);
   };
 
   return (
@@ -84,11 +100,16 @@ export default function UpdateGiftPage() {
           >
             {oddsListQuery.data?.data.data.map((vl) => (
               <option key={vl.id} value={vl.id}>
-                123
+                #{vl.id} | {vl.service_details?.map((detail) => detail.slug)}
               </option>
             ))}
           </Select>
         </FormControl>
+        <FormBase
+          dataForm={formInit}
+          onSubmit={onSubmit}
+          textBtn="CẬP NHẬT NGAY"
+        />
       </CardCollection>
     </>
   );

@@ -31,7 +31,7 @@ export default function FormBase({
   hiddenLable,
   dataDefault,
   icon,
-  isSubmitCustom
+  isSubmitCustom,
 }: IFormBase) {
   const {
     control,
@@ -89,7 +89,7 @@ export default function FormBase({
                   render={({ field: { onChange, value } }) => (
                     <FileCustomRHF
                       onChange={onChange}
-                      value={value}
+                      value={value ?? (form.default ? [form.default] : null)}
                       multiple={form?.multiple}
                     />
                   )}
