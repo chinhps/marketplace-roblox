@@ -91,7 +91,7 @@ export interface ServiceOdds {
   odds_user: string;
   created_at: string;
   countUse: number | null;
-  service_gifts: Array<Gift>;
+  service_gifts?: Array<Gift>;
   note: string | null;
 }
 

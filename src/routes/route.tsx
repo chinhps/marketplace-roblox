@@ -32,6 +32,7 @@ import StatisticalPage from "@/pages/Statistical/StatisticalPage";
 import CUWithdrawLimitPage from "@/pages/WithdrawLimit/CUWithdrawLimitPage";
 import WithdrawLimitPage from "@/pages/WithdrawLimit/WithdrawLimitPage";
 import CUBoxPage from "@/pages/Service/Box/CUBoxPage";
+import UpdateGiftPage from "@/pages/Service/Gift/UpdateGiftPage";
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +120,10 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ServiceListPage />,
+      },
+      {
+        path: "update-image-gamepass",
+        element: <UpdateGiftPage />,
       },
       {
         path: "accounts",

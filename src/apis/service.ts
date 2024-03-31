@@ -103,6 +103,10 @@ export const serviceOddsApi = {
       },
     });
   },
+  get: (id: number) => {
+    const url = "/services-odds-list/" + id;
+    return axiosClient.get<IBaseResponseDetail<ServiceOdds>>(url);
+  },
   delete: (id: number) => {
     const url = "/services-odds-list/" + id;
     return axiosClient.delete<IResponseWithMessage>(url);

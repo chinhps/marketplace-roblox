@@ -63,6 +63,9 @@ export default function ServiceListPage() {
               <MenuItem as={Link} to="./boxes/create">
                 Rương vật phẩm
               </MenuItem>
+              <MenuItem as={Link} to="./update-image-gamepass">
+                Cập nhật hình ảnh quà
+              </MenuItem>
             </MenuList>
           </Menu>
         }
