@@ -13,6 +13,7 @@ use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Service\ServiceDetailController;
 use App\Http\Controllers\Service\ServiceForAllController;
 use App\Http\Controllers\Service\ServiceGamePassController;
+use App\Http\Controllers\Service\ServiceGiftController;
 use App\Http\Controllers\Service\ServiceGroupController;
 use App\Http\Controllers\Service\ServiceOddsController;
 use App\Http\Controllers\Shop\ShopController;
@@ -130,6 +131,9 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
         });
         Route::prefix('services-for-all')->group(function () {
             Route::post('/upsert', [ServiceForAllController::class, 'upsert']);
+        });
+        Route::prefix('services-gift')->group(function () {
+            Route::post('/upsert', [ServiceGiftController::class, 'upsert']);
         });
         Route::prefix('admins')->group(function () {
             Route::get('/', [AdminController::class, 'list']);

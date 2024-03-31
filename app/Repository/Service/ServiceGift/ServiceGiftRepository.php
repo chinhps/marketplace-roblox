@@ -27,14 +27,18 @@ class ServiceGiftRepository implements ServiceGiftInterface
         return $this->model->whereIn('id', $ids)->delete();
     }
 
-    public function updateOrInsert(float|null $id, array $params, ServiceOdds $serviceOdds, GameCurrency $gameCurrency)
+    public function updateOrInsert(float|null $id, array $params, ?ServiceOdds $serviceOdds = null, ?GameCurrency $gameCurrency = null)
     {
         $newGift = new ServiceGift();
         if ($id) {
             $newGift = $this->model->find($id);
         }
-        $newGift->serviceOdds()->associate($serviceOdds);
-        $newGift->gameCurrency()->associate($gameCurrency);
+        if($serviceOdds) {
+            $newGift->serviceOdds()->associate($serviceOdds);
+        }
+        if($gameCurrency) {
+            $newGift->gameCurrency()->associate($gameCurrency);
+        }
         $newGift->fill($params);
         $newGift->save();
         return $newGift;

@@ -1,16 +1,18 @@
 version: '3.8'
+networks:
+  shop-roblox-network:
+    name: shop-roblox-network
 services:
-  backend-admin:
-    image: laravel-admin-app:v1.0
+  backend-admin-roblox:
+    image: chinhps/laravel-image:v8.2
     container_name: backend-admin-shop
     ports:
       - 9092:80
     volumes:
-      - /app:/var/www/html/app
-      - .env:/var/www/html/.env
+      - .:/var/www/html
     networks:
-      - mysql-shop-roblox-network
-  mysql-shop:
+      - shop-roblox-network
+  mysql-shop-roblox:
     image: mysql:8.0
     container_name: mysql-admin-shop
     ports:
@@ -21,10 +23,7 @@ services:
       - mysql-shop-volume:/var/lib/mysql
       - mysql-shop-volume-config:/etc/mysql
     networks:
-      - mysql-shop-roblox-network
-networks:
-  mysql-shop-roblox-network:
-    external: true
+      - shop-roblox-network
 volumes:
   mysql-shop-volume:
     name: backend_mysql-shop-volume

@@ -22,7 +22,7 @@ class ServiceOddsRepository implements ServiceOddsInterface
 
     public function get(float $id)
     {
-        return $this->model->with('serviceGifts')->find($id);
+        return $this->model->with(['serviceGifts', 'serviceDetails'])->find($id);
     }
 
     public function delete(float $id)

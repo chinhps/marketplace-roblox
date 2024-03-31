@@ -36,6 +36,7 @@ class ServiceOddsListResource extends BaseResource
             "countUse" => $data->service_details_count ?? null,
             "note" => $data->note,
             "service_gifts" => $showGifts ? $data->serviceGifts : [],
+            "service_details" => $data->serviceDetails
         ];
     }
 }
