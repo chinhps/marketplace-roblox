@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class ServiceOddsListResource extends BaseResource
 {
+
+    public function __construct(
+        private $data,
+        private $showGifts = false
+    ) {
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,10 +21,10 @@ class ServiceOddsListResource extends BaseResource
      */
     public function toArray(Request $request): array
     {
-        return self::convert($this);
+        return self::convert($this->data, $this->showGifts);
     }
 
-    public static function convert($data): array
+    public static function convert($data, $showGifts): array
     {
         return [
             "id" => $data->id,
@@ -27,7 +34,8 @@ class ServiceOddsListResource extends BaseResource
             "odds_user" => $data->odds_user,
             "created_at" => $data->created_at,
             "countUse" => $data->service_details_count ?? null,
-            "note" => $data->note
+            "note" => $data->note,
+            "service_gifts" => $showGifts ? $data->serviceGifts : [],
         ];
     }
 }

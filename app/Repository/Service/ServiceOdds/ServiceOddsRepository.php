@@ -15,14 +15,14 @@ class ServiceOddsRepository implements ServiceOddsInterface
     public function list($limit = 15)
     {
         if ($limit == 0) {
-            return $this->model->withCount('serviceDetails')->get();
+            return $this->model->withCount('serviceDetails')->with('serviceDetails')->get();
         }
-        return $this->model->withCount('serviceDetails')->paginate($limit);
+        return $this->model->withCount('serviceDetails')->with('serviceDetails')->paginate($limit);
     }
 
     public function get(float $id)
     {
-        return $this->model->find($id);
+        return $this->model->with('serviceGifts')->find($id);
     }
 
     public function delete(float $id)

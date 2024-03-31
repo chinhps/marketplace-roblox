@@ -24,7 +24,7 @@ class ServiceOddsController extends Controller
 
     public function getId($id)
     {
-        return new ServiceOddsListResource($this->serviceOddsRepository->get($id));
+        return new ServiceOddsListResource($this->serviceOddsRepository->get($id), true);
     }
 
     public function delete($id)
