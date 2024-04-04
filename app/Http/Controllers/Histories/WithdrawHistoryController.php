@@ -138,6 +138,9 @@ class WithdrawHistoryController extends Controller
             case "GAMEPASS":
                 $this->refundPrice($withdrawCurrent, $withdrawCurrent->value);
                 break;
+            case "UNIT":
+                $this->refundPrice($withdrawCurrent, $withdrawCurrent->value);
+                break;
             case "ROBUX":
                 $this->refundRobux($withdrawCurrent);
                 break;
