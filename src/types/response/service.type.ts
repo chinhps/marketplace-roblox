@@ -91,9 +91,9 @@ export interface ServiceOdds {
   odds_user: string;
   created_at: string;
   countUse: number | null;
-  service_gifts?: Array<Gift>;
+  service_gifts: Array<Gift>;
   note: string | null;
-  service_details?: Array<IServiceDetailResponse>
+  service_details?: Array<IServiceDetailResponse>;
 }
 
 interface Gift {
@@ -132,4 +132,11 @@ interface SericeCounter {
   value: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface ServiceGamePassUpsert {
+  msg: string;
+  id_odds: number;
+  id_service_detail: number;
+  type: "UPDATE" | "CREATE";
 }

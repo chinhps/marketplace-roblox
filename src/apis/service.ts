@@ -9,6 +9,7 @@ import {
   IServiceEdit,
   IServiceGameList,
   IServiceList,
+  ServiceGamePassUpsert,
   ServiceGroup,
   ServiceOdds,
 } from "@/types/response/service.type";
@@ -132,10 +133,14 @@ export const gamePassApi = {
   },
   create: (dataForm: FormData) => {
     const url = "/game-pass/upsert";
-    return axiosClient.post<IResponseWithMessage>(url, dataForm, {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    });
+    return axiosClient.post<IBaseResponseDetail<ServiceGamePassUpsert>>(
+      url,
+      dataForm,
+      {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      }
+    );
   },
 };
