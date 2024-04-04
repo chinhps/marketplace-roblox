@@ -72,7 +72,9 @@ class ServiceGamePassController extends Controller
                 $validated['id'] ?? null,
                 $dataService,
                 gameCurrency: null,
-                gameList: $this->gameListRepository->getByGameKey("GAMEPASS")
+                gameList: $this->gameListRepository->getByGameKey(
+                    $validated['gamepass_image'] === "NO" ? "GAMEPASS" : "GAMEPASS_IMAGE"
+                )
             );
 
             # CREATE ODDS SERVICE ############################
@@ -119,7 +121,7 @@ class ServiceGamePassController extends Controller
              */
             $domainsId = $this->shopRepository->getByListDomain($validated['dataExcept'] ?? [])->pluck('id')->toArray();
             # CREATE SERVICE DETAIL #########################
-            $this->serviceDetailRepository->updateOrInsert(
+            $serviceDetail = $this->serviceDetailRepository->updateOrInsert(
                 $validated['idServiceDetail'] ?? null,
                 [
                     "prioritize" => 1,
@@ -134,7 +136,12 @@ class ServiceGamePassController extends Controller
             );
 
             DB::commit();
-            return BaseResponse::msg((isset($validated['id']) ? "Cập nhật" : "Tạo mới") . " thành công Gamepass!");
+            return BaseResponse::data([
+                "type" => (isset($validated['id']) ? "UPDATE" : "CREATE"),
+                "msg" => (isset($validated['id']) ? "Cập nhật" : "Tạo mới") . " thành công Gamepass!",
+                "id_odds" => $serviceOdds->id,
+                "id_service_detail" => $serviceDetail->id
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return BaseResponse::msg("Có lỗi: " . $e->getMessage(), 500);

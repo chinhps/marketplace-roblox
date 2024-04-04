@@ -15,9 +15,9 @@ class ServiceGiftController extends Controller
     ) {
     }
 
-    public function upsert(ServiceGiftRequest $data)
+    public function upsert(ServiceGiftRequest $request)
     {
-        $validated = $data->validated();
+        $validated = $request->validated();
         try {
             DB::beginTransaction();
             # UPLOAD IMAGE THUMB
