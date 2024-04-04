@@ -157,7 +157,8 @@ function TableList() {
                 onClick={() => {
                   handleCopy(detail.slug);
                   navigate(
-                    modelDataServiceDetail.gameType === "GAMEPASS"
+                    modelDataServiceDetail.gameType === "GAMEPASS" ||
+                      modelDataServiceDetail.gameType === "GAMEPASS_IMAGE"
                       ? `./game-pass/update/${detail.service_id}/${detail.id}`
                       : `./update/service/${detail.service_id}/${detail.id}`
                   );
