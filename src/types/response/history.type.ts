@@ -93,4 +93,5 @@ export enum WithdrawType {
   DIAMOND = "DIAMOND",
   BUY_ROBUX = "BUY_ROBUX",
   GAMEPASS = "GAMEPASS",
+  UNIT = "UNIT",
 }

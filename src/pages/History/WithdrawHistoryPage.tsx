@@ -160,6 +160,8 @@ function TableListWithdrawHistory({
               <Badge colorScheme="pink">Mua Robux</Badge>
             ) : vl.withdraw_type === "GAMEPASS" ? (
               <Badge colorScheme="yellow">GAMEPASS</Badge>
+            ) : vl.withdraw_type === "UNIT" ? (
+              <Badge colorScheme="blue">UNIT</Badge>
             ) : (
               <Badge colorScheme="gray">Không xác định</Badge>
             )}
