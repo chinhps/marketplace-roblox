@@ -32,7 +32,7 @@ class ServiceDetailListResource extends BaseResource
                 "created_at" => $this->serviceImage->created_at,
             ] : null,
             "service_group" => $this->serviceGroup ? ServiceGroupListResource::convert($this->serviceGroup) : null,
-            "service_odds" => $this->serviceOdds ? ServiceOddsListResource::convert($this->serviceOdds) : null,
+            "service_odds" => $this->serviceOdds ? ServiceOddsListResource::convert($this->serviceOdds, false) : null,
             "shop_list" => $this->shop_list->map(function ($shop) {
                 return [
                     "id" => $shop->id,
