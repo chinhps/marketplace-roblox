@@ -18,6 +18,22 @@ import InputExcept from "@/components/globals/Form/InputExcept";
 
 const initialFormState: IFormInput[] = [
   {
+    label: "Loại Gamepass",
+    name: "gamepass_image",
+    type: "SELECT",
+    isRequired: true,
+    selects: [
+      {
+        label: "Không hình ảnh",
+        value: "NO",
+      },
+      {
+        label: "Có hình ảnh",
+        value: "YES",
+      },
+    ],
+  },
+  {
     label: "Tên hiển thị",
     name: "name_gamepass",
     type: "INPUT",
@@ -83,9 +99,11 @@ export default function CUGamePassPage() {
     onSuccess: ({ data }) => {
       toast({
         status: "success",
-        description: data.msg,
+        description: data.data.msg,
       });
-      gamepassQuery.refetch();
+      if (data.data.type === "UPDATE") {
+        gamepassQuery.refetch();
+      }
     },
   });
   const groupListQuery = useQuery({
@@ -133,8 +151,8 @@ export default function CUGamePassPage() {
       id: id ?? "",
       dataDomainExcept,
       idGroup: idGroup,
-      idServiceDetail: idDetail ?? null,
-      idOdds: idOdds,
+      idServiceDetail: idDetail ?? "",
+      idOdds: idOdds ?? "",
       except,
       ...data,
     });
