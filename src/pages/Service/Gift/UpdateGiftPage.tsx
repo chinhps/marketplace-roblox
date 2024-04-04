@@ -84,7 +84,7 @@ export default function UpdateGiftPage() {
         title="Cập nhật hình ảnh quà"
         fontSize="25px"
         button={
-          <Link to="../../">
+          <Link to="../">
             <Button colorScheme="red" variant="outline">
               Trở về
             </Button>
@@ -108,6 +108,7 @@ export default function UpdateGiftPage() {
         <FormBase
           dataForm={formInit}
           onSubmit={onSubmit}
+          isSubmitCustom={giftsMutation.isLoading}
           textBtn="CẬP NHẬT NGAY"
         />
       </CardCollection>
