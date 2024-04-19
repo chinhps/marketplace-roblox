@@ -34,6 +34,9 @@ class ServiceHistoryRepository implements ServiceHistoryInterface
 
     public function list()
     {
-        return ServiceHistory::where('user_id', Auth::user()->id)->with('service')->paginate(10);
+        return ServiceHistory::where('user_id', Auth::user()->id)
+            ->orderBy('id', 'desc')
+            ->with('service')
+            ->paginate(10);
     }
 }

@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  backend:
-    image: laravel-app
+  backend-client:
+    image: laravel-app:v1.0
     container_name: backend-client-shop
     ports:
       - 8082:80
     volumes:
-      - .:/app
+      - .:/var/www/html
     networks:
       - mysql-shop-roblox-network
   mysql-shop:

@@ -59,7 +59,8 @@ class GamePassController extends Controller
         DB::beginTransaction();
 
         try {
-            $withdrawType = $this->withdrawTypeRepository->getByKey("GAMEPASS");
+            $gamepassType = $validated['gamepass_type'];
+            $withdrawType = $this->withdrawTypeRepository->getByKey($gamepassType);
             # Check limit withdraw
             $withdrawalLimit = $this->withdrawLimitRepository->getLimitUser(Auth::user(), $withdrawType);
             if ($withdrawalLimit) {
@@ -73,7 +74,7 @@ class GamePassController extends Controller
             $requestId = rand(1000000000, 9999999999); # Order ID
             $history = $this->withdrawHistoryRepository->create([
                 "task_number" => $requestId,
-                "withdraw_type" => "GAMEPASS",
+                "withdraw_type" => $gamepassType,
                 "value" => $parcel->value1,
                 "status" => $status,
                 "cost" => $parcel->cost,
@@ -101,19 +102,19 @@ class GamePassController extends Controller
             if ($status == "CANCEL") {
                 $this->transactionRepository->createPrice(
                     0,
-                    "Mua GamePass, WITHDRAW LIMIT | ID Gamepass: {$parcel->id}, ID HTR: {$history->id}"
+                    "Mua {$gamepassType}, WITHDRAW LIMIT | ID {$gamepassType}: {$parcel->id}, ID HTR: {$history->id}"
                 );
                 DB::commit();
-                return BaseResponse::msg("Mua GamePass thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+                return BaseResponse::msg("Mua thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
             }
             # create minus price at transaction
             $this->transactionRepository->createPrice(
                 $parcel->value1 * -1,
-                "Mua GamePass, ID Gamepass: {$parcel->id}, ID HTR: {$history->id}"
+                "Mua {$gamepassType}, ID {$gamepassType}: {$parcel->id}, ID HTR: {$history->id}"
             );
 
             DB::commit();
-            return BaseResponse::msg("Mua GamePass thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
+            return BaseResponse::msg("Mua thành công! Bạn có thể kiểm tra tiến độ trong Lịch sử rút/mua");
         } catch (\Exception $e) {
             DB::rollBack();
             logReport("withdraw_errors", "Mua Gamepass", $e);

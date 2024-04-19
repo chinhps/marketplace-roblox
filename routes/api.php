@@ -9,6 +9,7 @@ use App\Http\Controllers\Histories\WithdrawHistoryController;
 use App\Http\Controllers\Plugin\PluginController;
 use App\Http\Controllers\Recharge\RechargeController;
 use App\Http\Controllers\Service\ServiceController;
+use App\Http\Controllers\Service\UnitController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\TopRecharge\TopRechargeController;
 use App\Http\Controllers\User\AuthController;
@@ -74,6 +75,7 @@ Route::prefix('accounts')->group(function () {
 Route::prefix('services')->group(function () {
     Route::get('/', [ServiceController::class, 'serviceList']);
     Route::get('/view/{slug}', [ServiceController::class, 'serviceDetail']);
+    Route::get('/unit/{slug}', [UnitController::class, 'UnitView']);
     Route::get('/detail-list/{slug}', [ServiceController::class, 'serviceDetailAccountList']);
     Route::get('/recommends/{slug}', [ServiceController::class, 'recommendsService']);
     // Route::get('/histories/{slug}', []);

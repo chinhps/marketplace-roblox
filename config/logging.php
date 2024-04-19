@@ -65,6 +65,12 @@ return [
             'level' => 'debug',
         ],
 
+        'recharge_client_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/recharge_client_logs.log'),
+            'level' => 'debug',
+        ],
+
         'recharge_errors' => [
             'driver' => 'single',
             'path' => storage_path('logs/recharge_errors.log'),

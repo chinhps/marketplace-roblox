@@ -25,7 +25,8 @@ class RechargeRequest extends BaseRequest
             'card_type' => 'required|max:15|in:Viettel,Vinaphone,Mobifone',
             'amount' => 'required|numeric|in:10000,20000,30000,50000,100000,200000,300000,500000,1000000',
             'pin' => 'required|numeric',
-            'serial' => 'required|numeric'
+            'serial' => 'required|numeric',
+            'h' => 'nullable|boolean'
         ];
     }
 
@@ -40,7 +41,8 @@ class RechargeRequest extends BaseRequest
             'pin.required' => 'Chưa nhập mã thẻ',
             'pin.numeric' => 'có gì sai! vui lòng liên hệ admin',
             'serial.required' => 'Chưa nhập seri thẻ',
-            'serial.numeric' => 'có gì sai! vui lòng liên hệ admin'
+            'serial.numeric' => 'có gì sai! vui lòng liên hệ admin',
+            'h' => 'có gì sai! vui lòng liên hệ admin'
         ];
     }
 }

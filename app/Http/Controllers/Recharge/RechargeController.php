@@ -41,6 +41,11 @@ class RechargeController extends Controller
             return BaseResponse::msg("Thẻ đã tồn tại trong hệ thống!", 403);
         }
 
+        $client = $request->headers->all();
+        # Check selenium
+        $isSelenium = $validated['h'] ?? null;
+        logReport("recharge_client_logs", $serial . "|" . json_encode($isSelenium) . "|" . json_encode($client));
+
         DB::beginTransaction();
 
         $requestId = rand(100000000, 999999999); # Order ID

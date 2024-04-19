@@ -22,6 +22,7 @@ class BuyGamePassRequest extends BaseRequest
     public function rules(): array
     {
         return array_merge($this->domainRules()['rules'], [
+            "gamepass_type" => "exists:withdraw_types,type_key",
             "id_parcel" => "required|exists:service_gifts,id",
             "username_roblox" => "required|string",
             "password_roblox" => "required|string",
