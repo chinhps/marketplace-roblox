@@ -9,6 +9,7 @@ import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { lazy } from "react";
 import LoginPage from "@/pages/Auth/LoginPage";
 import RegisterPage from "@/pages/Auth/RegisterPage";
+import UnitSellPage from "@/pages/GamePass/UnitSellPage";
 
 // Lazy load
 const AccountListPage = lazy(() => import("@/pages/Account/AccountListPage"));
@@ -212,10 +213,9 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ":slug",
-            element:  <TitleSeo
-            title="Mua Game Pass"
-            ComponentPage={GamePassPage}
-          />,
+            element: (
+              <TitleSeo title="Mua Game Pass" ComponentPage={GamePassPage} />
+            ),
           },
         ],
       },
@@ -229,6 +229,21 @@ export const router = createBrowserRouter([
       {
         path: ":slug",
         element: <CategoryPage />,
+      },
+    ],
+  },
+  {
+    path: "service",
+    element: <HomeLayout banner={false} />,
+    children: [
+      {
+        path: "units",
+        children: [
+          {
+            path: ":slug",
+            element: <UnitSellPage />,
+          },
+        ],
       },
     ],
   },

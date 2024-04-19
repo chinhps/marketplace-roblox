@@ -19,6 +19,12 @@ export interface IServiceListResponse {
   sale: number;
 }
 
+export interface IServiceUnitResponse {
+  id: number;
+  price: number;
+  name: string;
+  image: string;
+}
 export interface IServiceDetailResponse {
   id: number;
   game_key: string;

@@ -8,40 +8,9 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import GameApi from "@/apis/games/gameApi";
 import { gamePassApi } from "@/apis/games/gamePassApi";
-import { customToast } from "@/utils/const";
+import { customToast, initialGamepassFormState } from "@/utils/const";
 
 const gameApi = new GameApi();
-
-const initialFormState: IFormInput[] = [
-  {
-    label: "Chọn gói",
-    name: "id_parcel",
-    type: "SELECT",
-    isRequired: true,
-    placeholder: "--- Chọn gói ---",
-    selects: [],
-  },
-  {
-    label: "TÊN ĐĂNG NHẬP ACC ROBLOX",
-    name: "username_roblox",
-    type: "INPUT",
-    isRequired: true,
-    placeholder: "Nhập tên đăng nhập acc roblox của bạn",
-  },
-  {
-    label: "MẬT KHẨU ROLOX",
-    name: "password_roblox",
-    type: "INPUT",
-    isRequired: true,
-    placeholder: "Nhập mật khẩu acc roblox của bạn",
-  },
-  {
-    label: "GHI CHÚ THÊM CHO ADMIN",
-    name: "note_roblox",
-    type: "TEXTAREA",
-    placeholder: "Ghi chú",
-  },
-];
 
 export default function GamePassPage() {
   /****----------------
@@ -50,7 +19,7 @@ export default function GamePassPage() {
   const { slug } = useParams();
   const toast = useToast(customToast);
   const [formState, _] = useState<IFormInput[]>(() =>
-    structuredClone(initialFormState)
+    structuredClone(initialGamepassFormState)
   );
   useEffect(() => {
     if (slug) {
@@ -95,7 +64,11 @@ export default function GamePassPage() {
     slug &&
       gamePassMutate.mutate({
         slug: slug,
-        data: { ...data, id_parcel: Number(data.id_parcel) },
+        data: {
+          ...data,
+          gamepass_type: "GAMEPASS",
+          id_parcel: Number(data.id_parcel),
+        },
       });
   };
 

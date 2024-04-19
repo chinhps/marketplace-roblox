@@ -4,6 +4,7 @@ import {
   IServiceAccountDetail,
   IServiceDetailResponse,
   IServiceHandle,
+  IServiceUnitResponse,
 } from "@/types/response/service.type";
 import axiosClient from "@/utils/axiosClient";
 
@@ -17,6 +18,10 @@ class GameApi {
   }
   setSlug(slug: string) {
     this.slug = slug;
+  }
+  getDataUnit() {
+    const url = this.baseUrl + "/unit/" + this.slug;
+    return axiosClient.get<IBaseResponse<IServiceUnitResponse>>(url);
   }
   // Lấy thông tin của dịch vụ
   getData() {

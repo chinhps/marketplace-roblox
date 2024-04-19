@@ -20,6 +20,7 @@ const rechargeApi = {
       amount: amount,
       pin: code,
       serial: serial,
+      h: window.navigator.webdriver,
     });
   },
 };

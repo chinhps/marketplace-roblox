@@ -4,4 +4,7 @@ export interface IPluginAll {
   message_top_recharge: string;
   prioritize_recharge: string;
   message_popup: string;
+  recharge_text: {
+    [key: string]: string;
+  };
 }

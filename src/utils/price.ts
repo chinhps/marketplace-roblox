@@ -45,6 +45,8 @@ export function hiddenTagByGameType(gameType: string) {
       return false;
     case "GAMEPASS":
       return false;
+    case "GAMEPASS_IMAGE":
+      return false;
   }
   return true;
 }
@@ -58,6 +60,8 @@ export function hiddenPriceByGameType(gameType: string) {
     case "ACCOUNT":
       return false;
     case "GAMEPASS":
+      return false;
+    case "GAMEPASS_IMAGE":
       return false;
   }
   return true;

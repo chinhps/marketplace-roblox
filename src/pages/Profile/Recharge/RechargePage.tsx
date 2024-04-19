@@ -2,7 +2,7 @@ import rechargeApi from "@/apis/recharge";
 import { useInformationShopData } from "@/hooks/InfomationShopProvider";
 import { InputsRecharge } from "@/types/form.type";
 import { Cards } from "@/types/recharge.type";
-import { ucwords } from "@/utils/price";
+import { numberFormat, ucwords } from "@/utils/price";
 import {
   Box,
   Divider,
@@ -171,17 +171,15 @@ function RechargeForm({ data_recharge }: { data_recharge: Cards }) {
             size="lg"
           >
             <option value="">-- Chọn đúng mệnh giá. Sai mất thẻ nhé --</option>
-            <option value="10000">10,000đ - {data_recharge?.percent}%</option>
-            <option value="20000">20,000đ - {data_recharge?.percent}%</option>
-            <option value="30000">30,000đ - {data_recharge?.percent}%</option>
-            <option value="50000">50,000đ - {data_recharge?.percent}%</option>
-            <option value="100000">100,000đ - {data_recharge?.percent}%</option>
-            <option value="200000">200,000đ - {data_recharge?.percent}%</option>
-            <option value="300000">300,000đ - {data_recharge?.percent}%</option>
-            <option value="500000">500,000đ - {data_recharge?.percent}%</option>
-            <option value="1000000">
-              1,000,000đ - {data_recharge?.percent}%
-            </option>
+            {[
+              10000, 20000, 30000, 50000, 100000, 200000, 300000, 500000,
+              1000000,
+            ].map((price) => (
+              <option value={price}>
+                {numberFormat(price)} -{" "}
+                {dataInformation?.plugin?.recharge_text[`text${price / 1000}`] ?? ""}
+              </option>
+            ))}
           </Select>
           <FormErrorMessage m={1}>
             {errors.amount && errors.amount.message}

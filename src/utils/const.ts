@@ -1,3 +1,4 @@
+import { IFormInput } from "@/types/form.type";
 import { UseToastOptions } from "@chakra-ui/react";
 
 export const encryptionKey = import.meta.env.VITE_APP_ENCRYPT_KEY;
@@ -65,7 +66,7 @@ export const listOptionProfile = insertObjectAtPosition(
     children: [
       {
         lable: "Gamepass",
-        link: "/service-game-pass/gift-gamepass-blox-fruits",
+        link: "/service-game-pass/gamepass-blox-fruits",
       },
       {
         lable: `Mua Robux 120h`,
@@ -119,3 +120,38 @@ export const styleTextShadow = {
   color: "var(--color-text-header-account)",
   // textShadow: "0 0 30px black", // Điều chỉnh giá trị để tạo hiệu ứng bóng chữ
 };
+
+export const initialServiceUnitFormState: IFormInput[] = [
+  {
+    label: "TÊN ĐĂNG NHẬP ACC ROBLOX",
+    name: "username_roblox",
+    type: "INPUT",
+    isRequired: true,
+    placeholder: "Nhập tên đăng nhập acc roblox của bạn",
+  },
+  {
+    label: "MẬT KHẨU ROBLOX",
+    name: "password_roblox",
+    type: "INPUT",
+    isRequired: true,
+    placeholder: "Nhập mật khẩu acc roblox của bạn",
+  },
+  {
+    label: "GHI CHÚ THÊM CHO ADMIN",
+    name: "note_roblox",
+    type: "TEXTAREA",
+    placeholder: "Tên 3 trò chơi gần nhất...",
+  },
+];
+
+export const initialGamepassFormState: IFormInput[] = [
+  {
+    label: "Chọn gói",
+    name: "id_parcel",
+    type: "SELECT",
+    isRequired: true,
+    placeholder: "--- Chọn gói ---",
+    selects: [],
+  },
+  ...initialServiceUnitFormState,
+];

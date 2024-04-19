@@ -65,14 +65,14 @@ export default function AccountListPage() {
           mb={5}
           sx={styleTextShadow}
         >
-          {accountQuery.isLoading ? (
+          {serviceInfoQuery.isLoading ? (
             <Skeleton height="40px" width="40%" rounded="md" />
           ) : (
             serviceInfoQuery.data?.data.data.service_image.name
           )}
         </Heading>
         <Box mb="1rem">
-          {accountQuery.isLoading ? (
+          {serviceInfoQuery.isLoading ? (
             <Skeleton height="20px" width="30%" rounded="md" />
           ) : (
             <Box
@@ -85,7 +85,7 @@ export default function AccountListPage() {
             />
           )}
         </Box>
-        {!accountQuery.isLoading &&
+        {!serviceInfoQuery.isLoading &&
         serviceInfoQuery.data?.data.data.game_type === "ACCOUNT" ? (
           <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
         ) : null}

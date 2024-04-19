@@ -96,7 +96,7 @@ export default function Account({
         >
           <Tag value={"MS " + data.id} />
         </Flex>
-        <Box as="figure" height="150px" overflow="hidden">
+        <Box as="figure" overflow="hidden">
           <Link to={data.thumb ? "/accounts/view/" + data.id : "./"}>
             <Img
               src={data.thumb ?? thumbService}
@@ -106,29 +106,35 @@ export default function Account({
             />
           </Link>
         </Box>
-        <Flex py={3} px={4} gap={2} alignItems="center" overflow="hidden">
-          <Icon as={FiGift} color="red.500" fontSize="18px" />
-          <Text
-            fontSize=".85rem"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            overflow="hidden"
-          >
-            {data.note}
-          </Text>
-        </Flex>
-        <Box as="header">
-          <Divider borderColor="ocean.300" />
-          <List px={3} py={2} fontSize=".85rem">
-            {data.detail.map((detail) => (
-              <ListItem key={detail.key}>
-                <ListIcon as={FiChevronRight} color="green.500" />
-                <Text as="b">{detail.name}:</Text> {detail.value}
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-        <Divider borderColor="ocean.300" />
+
+        {data.detail.length > 0 && (
+          <>
+            <Flex py={3} px={4} gap={2} alignItems="center" overflow="hidden">
+              <Icon as={FiGift} color="red.500" fontSize="18px" />
+              <Text
+                fontSize=".85rem"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+              >
+                {data.note}
+              </Text>
+            </Flex>
+            <Box as="header">
+              <Divider borderColor="ocean.300" />
+              <List px={3} py={2} fontSize=".85rem">
+                {data.detail.map((detail) => (
+                  <ListItem key={detail.key}>
+                    <ListIcon as={FiChevronRight} color="green.500" />
+                    <Text as="b">{detail.name}:</Text> {detail.value}
+                  </ListItem>
+                ))}
+              </List>
+              <Divider borderColor="ocean.300" />
+            </Box>
+          </>
+        )}
+
         <Box as="section" textAlign="center" py={2}>
           <Text fontWeight="bold" fontSize="18px" color="red.400">
             {numberFormat(data.price)}

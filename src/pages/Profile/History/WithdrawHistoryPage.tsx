@@ -68,7 +68,7 @@ export default function WithdrawHistoryPage() {
                     {numberFormat(vl.value, false)}
                   </Text>
                   {vl.detail.map((dt, index) => (
-                    <Text key={index}>
+                    <Text key={index} maxW="270px" textOverflow="ellipsis" overflow="hidden">
                       {dt.name}: {dt.value}
                     </Text>
                   ))}

@@ -25,7 +25,7 @@ import {
 import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { handleCopy, numberFormat } from "@/utils/price";
-import { listOptionProfile } from "@/utils/const";
+import { listOption } from "@/utils/const";
 import IsAuthentication from "@/guards/IsAuthentication";
 import { useUserData } from "@/hooks/UserDataProvider";
 import { useState } from "react";
@@ -118,7 +118,7 @@ function SideBar() {
 function ListSideBar() {
   return (
     <>
-      {listOptionProfile.map((option, index) => (
+      {listOption.map((option, index) => (
         <AccordionItem border="none" key={index}>
           <AccordionButton>
             <Box as="b" flex="1" color="ocean.200" textAlign="left">
