@@ -29,6 +29,8 @@ class ServiceGamePassRequest extends BaseRequest
             "idOdds" => "nullable|exists:service_odds,id",
             "dataDomainExcept.*" => "required|string",
             "name_gamepass" => "required|string",
+            "prioritize" => 'numeric',
+            "unit_type" => 'required|string',
             "gamepass_image" => "required|string|in:YES,NO",
             "except" => "required",
             "active" => "required|in:ON,OFF",

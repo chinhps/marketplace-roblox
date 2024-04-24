@@ -64,7 +64,7 @@ class ServiceGamePassController extends Controller
                 "notification" => $validated["exemple"],
                 "active" => $validated["active"],
                 "sale" => 50,
-                "information" => json_encode(['hastag' => "percent50"]),
+                "information" => json_encode(['unit_type' => $validated['unit_type']]),
                 "service_key" => Str::random(15),
             ];
             # CREATE SERVICE ###################################
@@ -104,7 +104,6 @@ class ServiceGamePassController extends Controller
                 $this->serviceGiftRepository->updateOrInsert($infoParcel[3] ?? null, [
                     "gift_type" => "FIXED",
                     "vip" => "NO",
-                    "image" => null,
                     "value1" => $infoParcel[1],
                     "value2" => 0,
                     "cost" => $infoParcel[2],
@@ -124,7 +123,7 @@ class ServiceGamePassController extends Controller
             $serviceDetail = $this->serviceDetailRepository->updateOrInsert(
                 $validated['idServiceDetail'] ?? null,
                 [
-                    "prioritize" => 1,
+                    "prioritize" => $validated['prioritize'],
                     "excluding" => $validated['except'] == 'true' ? "ON" : "OFF",
                     "slug" => Str::slug($validated["name_gamepass"])
                 ],

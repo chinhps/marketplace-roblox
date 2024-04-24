@@ -66,4 +66,13 @@ class AccountRepository implements AccountInterface
 
         return $data;
     }
+
+    public function updatePriceRandom(Service $service, float $price)
+    {
+        $data = $this->model
+            ->where('service_id', $service->id)
+            ->where('status', 'NOTSELL')
+            ->update(['price' => $price]);
+        return $data;
+    }
 }

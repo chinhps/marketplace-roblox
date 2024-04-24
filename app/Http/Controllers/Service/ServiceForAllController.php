@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Service\ServiceForAllCreateRequest;
 use App\Jobs\UploadFileAPI;
+use App\Repository\Account\AccountInterface;
 use App\Repository\Game\GameCurrency\GameCurrencyInterface;
 use App\Repository\Game\GameList\GameListInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
@@ -24,20 +25,21 @@ class ServiceForAllController extends Controller
     public function __construct(
         private ServiceDetailInterface $serviceDetailRepository,
         private ServiceOddsInterface $serviceOddsRepository,
-        private ServiceInterface $servicelRepository,
+        private ServiceInterface $serviceRepository,
         private ServiceGroupInterface $servicelGroupRepository,
         private GameListInterface $gameListRepository,
         private ServiceImageInterface $serviceImageRepository,
         private ShopInterface $shopRepository,
         private ServiceGiftInterface $serviceGiftRepository,
-        private GameCurrencyInterface $gameCurrencyRepository
+        private GameCurrencyInterface $gameCurrencyRepository,
+        private AccountInterface $accountRepository,
     ) {
     }
 
     public function upsert(ServiceForAllCreateRequest $request)
     {
         $validated = $request->validated();
-
+        $msg = "Thông báo: ";
         $imagesDetail = [];
 
         foreach ($validated['dataForm'] as $key => $value) {
@@ -115,12 +117,23 @@ class ServiceForAllController extends Controller
                 $dataService["service_key"] = Str::random(15);
             }
             # CREATE SERVICE ###############################
-            $service = $this->servicelRepository->updateOrInsert(
+            $service = $this->serviceRepository->updateOrInsert(
                 $validated['idService'] ?? null,
                 $dataService,
                 gameCurrency: $gameCurrencyService ?? null,
                 gameList: $this->gameListRepository->getByGameKey($validated['typeService'])
             );
+
+            /**  
+             * CHANGE PRICE RANDOM ACCOUNT
+             */
+            if ($validated['typeService'] === "RANDOM" && $validated['idService'] && $priceService) {
+                $this->accountRepository->updatePriceRandom($service, $priceService);
+                $msg .= "Cập nhật giá thành công cho tài khoản liên quan";
+            }
+            /**
+             * END CHANGE PRICE RANDOM ACCOUNT
+             */
 
             if (!is_null($validated['dataOdds'])) {
                 # CREATE SERVICE ODDS #######################################
@@ -196,7 +209,7 @@ class ServiceForAllController extends Controller
             DB::commit();
             return BaseResponse::msg(
                 (isset($validated['idServiceDetail']) ? "Cập nhật" : "Tạo mới") .
-                    " thành công! Tỷ lệ, Bộ ảnh, Dịch vụ"
+                    " thành công! Tỷ lệ, Bộ ảnh, Dịch vụ " . $msg
             );
         } catch (\Exception $e) {
             DB::rollBack();
