@@ -2,6 +2,46 @@ import { IFormInput } from "@/types/form.type";
 import { IDetail2P } from "@/types/response/base.type";
 import { createStandaloneToast } from "@chakra-ui/react";
 
+export function withdrawTypeToText(type: string) {
+  switch (type) {
+    case "DIAMOND":
+      return {
+        text: "Rút kim cương",
+        color: "purple",
+      };
+    case "ROBUX":
+      return {
+        text: "Rút Robux",
+        color: "orange",
+      };
+    case "BUY_ROBUX":
+      return {
+        text: "Mua Robux",
+        color: "pink",
+      };
+    case "GAMEPASS":
+      return {
+        text: "GAMEPASS",
+        color: "yellow",
+      };
+    case "UNIT":
+      return {
+        text: "UNIT",
+        color: "blue",
+      };
+    case "GEMS":
+      return {
+        text: "GEMS",
+        color: "blue",
+      };
+    default:
+      return {
+        text: "Không xác định",
+        color: "gray",
+      };
+  }
+}
+
 export const numberFormat = (price: number, currency: boolean = true) => {
   const format = new Intl.NumberFormat("vi-VN", {
     style: currency ? "currency" : undefined,
@@ -111,7 +151,7 @@ export const handleCopy = async (text: string) => {
 
 export const downloadRes = (fetchData: BlobPart, name: string): void => {
   const blob = new Blob([fetchData]);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
   link.download = name;
   link.click();

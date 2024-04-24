@@ -18,6 +18,13 @@ import InputExcept from "@/components/globals/Form/InputExcept";
 
 const initialFormState: IFormInput[] = [
   {
+    label: "Ưu tiên",
+    name: "prioritize",
+    type: "NUMBER",
+    isRequired: true,
+    gridAreaName: "prioritize",
+  },
+  {
     label: "Loại Gamepass",
     name: "gamepass_image",
     type: "SELECT",
@@ -30,6 +37,22 @@ const initialFormState: IFormInput[] = [
       {
         label: "Có hình ảnh",
         value: "YES",
+      },
+    ],
+  },
+  {
+    label: "Unit Type",
+    name: "unit_type",
+    type: "SELECT",
+    isRequired: true,
+    selects: [
+      {
+        label: "GEMS",
+        value: "GEMS",
+      },
+      {
+        label: "UNIT",
+        value: "UNIT",
       },
     ],
   },
@@ -131,6 +154,8 @@ export default function CUGamePassPage() {
         name_gamepass: data.data.service_detail.service_image?.name,
         active: data.data.active,
         exemple: data.data.notification,
+        prioritize: data.data.service_detail.prioritize,
+        // gamepass_image: data.data.game_list.game_key,
         parcels: data.data.service_detail.service_odds?.service_gifts
           .map(
             (gift) =>
@@ -178,6 +203,7 @@ export default function CUGamePassPage() {
             variant="auth"
             onChange={(e) => setIdGroup(Number(e.target.value))}
             value={idGroup ?? ""}
+            placeholder="--- Chọn nhóm dịch vụ ---"
           >
             {groupListQuery.data?.data.data.map((vl) => (
               <option key={vl.id} value={vl.id}>

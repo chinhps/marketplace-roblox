@@ -35,6 +35,7 @@ import {
   downloadRes,
   nameStatus,
   numberFormat,
+  withdrawTypeToText,
 } from "@/utils/function";
 import moment from "moment";
 
@@ -152,26 +153,19 @@ function TableListWithdrawHistory({
             <UserInfo shop={vl.shop} user={vl.user} />
           </Td>
           <Td>
-            {vl.withdraw_type === "DIAMOND" ? (
-              <Badge colorScheme="purple">Rút kim cương</Badge>
-            ) : vl.withdraw_type === "ROBUX" ? (
-              <Badge colorScheme="orange">Rút Robux</Badge>
-            ) : vl.withdraw_type === "BUY_ROBUX" ? (
-              <Badge colorScheme="pink">Mua Robux</Badge>
-            ) : vl.withdraw_type === "GAMEPASS" ? (
-              <Badge colorScheme="yellow">GAMEPASS</Badge>
-            ) : vl.withdraw_type === "UNIT" ? (
-              <Badge colorScheme="blue">UNIT</Badge>
-            ) : (
-              <Badge colorScheme="gray">Không xác định</Badge>
-            )}
+            <Badge colorScheme={withdrawTypeToText(vl.withdraw_type).color}>
+              {withdrawTypeToText(vl.withdraw_type).text}
+            </Badge>
+
             <HStack mt=".5rem">
               <Badge colorScheme="purple">
                 Giá trị: {numberFormat(vl.value, false)}
               </Badge>
-              <Badge colorScheme="blue">
-                Cost: {numberFormat(vl.cost, false)}
-              </Badge>
+              {vl.withdraw_type === "GAMEPASS" && (
+                <Badge colorScheme="blue">
+                  Cost: {numberFormat(vl.cost, false)}
+                </Badge>
+              )}
             </HStack>
             <Box mt=".5rem">
               {vl.detail.map((detail, index) => (
