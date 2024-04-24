@@ -17,6 +17,7 @@ class ServiceDetailResource extends JsonResource
         return [
             "id" => $this->id,
             "game_key" => $this->service->game_list->game_key,
+            "unit_type" => json_decode($this->service->information, true)['unit_type'] ?? "UNIT",
             "service_image" => [
                 "name" => $this->serviceImage->name,
                 "images" => json_decode($this->serviceImage->images, true)

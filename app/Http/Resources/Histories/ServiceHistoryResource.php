@@ -20,11 +20,11 @@ class ServiceHistoryResource extends BaseResource
             "service_name" => $this->service->note,
             "price" => $this->service->price,
             "default" => json_decode($this->detail, true)['default'] ?? "Không xác định",
-            // "detail" => collect(json_decode($this->detail, true)['details'])->map(function ($vl) {
-            //     return [
-            //         "name" => $vl['name']
-            //     ];
-            // }),
+            "detail" => collect(json_decode($this->detail, true)['details'])->map(function ($vl) {
+                return [
+                    "name" => $vl['msg'] ?? ""
+                ];
+            }),
             "created_at" => $this->created_at
         ];
     }
