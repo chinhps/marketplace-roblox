@@ -28,6 +28,7 @@ export interface IServiceUnitResponse {
 export interface IServiceDetailResponse {
   id: number;
   game_key: string;
+  unit_type?: string;
   service_image: {
     name: string;
     images: {

@@ -22,7 +22,7 @@ export default function UnitSellPage() {
   }, []);
   const serviceInfoQuery = useQuery({
     queryKey: ["service", slug],
-    queryFn: () => gameApi.getDataAccount(),
+    queryFn: () => gameApi.getData(),
     enabled: !!slug,
     cacheTime: 5 * 1000,
     retry: false,
@@ -87,6 +87,9 @@ export default function UnitSellPage() {
               <ServiceUnit
                 key={unit.id}
                 id={unit.id}
+                gamepass_type={
+                  serviceInfoQuery.data?.data.data.unit_type ?? "UNIT"
+                }
                 price={unit.price}
                 thumb={unit.image}
                 unitName={unit.name}

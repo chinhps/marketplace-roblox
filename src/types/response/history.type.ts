@@ -30,7 +30,13 @@ export interface IWithdrawHistory {
   refund: boolean;
   value: number;
   status: "PENDING" | "SUCCESS" | "CANCEL" | "PROCESSING";
-  withdraw_type: "ROBUX" | "DIAMOND" | "BUY_ROBUX" | "GAMEPASS";
+  withdraw_type:
+    | "ROBUX"
+    | "DIAMOND"
+    | "BUY_ROBUX"
+    | "GAMEPASS"
+    | "UNIT"
+    | "GEMS";
   detail: Array<{
     key: string;
     name: string;
@@ -46,8 +52,8 @@ export interface IServiceHistory {
   service_name: string;
   default: string;
   price: number;
-  // detail: Array<{
-  //     name: string
-  // }>,
+  detail?: Array<{
+    name: string;
+  }>;
   created_at: string;
 }

@@ -64,11 +64,20 @@ export default function WithdrawHistoryPage() {
               <Td>
                 <Stack>
                   <Text>
-                    {vl.withdraw_type == "GAMEPASS" ? "Giá tiền" : "Số lượng"}:{" "}
-                    {numberFormat(vl.value, false)}
+                    {vl.withdraw_type == "GAMEPASS" ||
+                    vl.withdraw_type == "UNIT" ||
+                    vl.withdraw_type == "GEMS"
+                      ? "Giá tiền"
+                      : "Số lượng"}
+                    : {numberFormat(vl.value, false)}
                   </Text>
                   {vl.detail.map((dt, index) => (
-                    <Text key={index} maxW="270px" textOverflow="ellipsis" overflow="hidden">
+                    <Text
+                      key={index}
+                      maxW="270px"
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                    >
                       {dt.name}: {dt.value}
                     </Text>
                   ))}

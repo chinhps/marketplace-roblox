@@ -24,11 +24,13 @@ export default function ServiceUnit({
   thumb,
   unitName,
   price,
+  gamepass_type,
 }: {
   id: number;
   thumb: string;
   unitName: string;
   price: number;
+  gamepass_type: string;
 }) {
   const {
     isOpen: isOpenConfirm,
@@ -52,7 +54,7 @@ export default function ServiceUnit({
     slug &&
       gamePassMutate.mutate({
         slug: slug,
-        data: { ...data, gamepass_type: "UNIT", id_parcel: Number(id) },
+        data: { ...data, gamepass_type: gamepass_type, id_parcel: Number(id) },
       });
   };
   return (

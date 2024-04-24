@@ -1,17 +1,22 @@
 import profileApi from "@/apis/profile";
+import ModelBase from "@/components/global/Model/ModelBase";
 import Paginate from "@/components/global/Paginate/Paginate";
 import TableCustom from "@/components/global/TableCustom/TableCustom";
 import { token } from "@/utils/const";
 import { numberFormat } from "@/utils/price";
 import {
   Box,
+  Button,
   Divider,
   Flex,
   Heading,
+  List,
+  ListItem,
   Stack,
   Td,
   Text,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
@@ -22,6 +27,12 @@ export default function GameHistoryPage() {
    *      HOOK
   ----------------****/
   const [page, setPage] = useState<number>(1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [showGifts, setShowGifts] = useState<
+    Array<{
+      name: string;
+    }>
+  >([]);
   const dataQuery = useQuery({
     queryKey: ["game-history", page],
     queryFn: () => profileApi.historyService({ page }),
@@ -36,6 +47,20 @@ export default function GameHistoryPage() {
 
   return (
     <>
+      <ModelBase
+        isOpen={isOpen}
+        onClose={onClose}
+        TextData={
+          <>
+            <List>
+              {showGifts.map((gift, key) => (
+                <ListItem key={key}>{gift.name}</ListItem>
+              ))}
+            </List>
+          </>
+        }
+        children={null}
+      />
       <Flex flexDirection="column" gap={5}>
         <Box>
           <Heading as="h1" fontSize="25px">
@@ -60,6 +85,16 @@ export default function GameHistoryPage() {
                 <Stack>
                   <>
                     <Text as="b">Quà: {vl.default}</Text>
+                    <Button
+                      w="fit-content"
+                      size="sm"
+                      onClick={() => {
+                        onOpen();
+                        setShowGifts(vl.detail ?? []);
+                      }}
+                    >
+                      Xem phần thưởng
+                    </Button>
                   </>
                   <Text as="b" color="ocean.100">
                     Giá trị: {numberFormat(vl.price ?? 0)}
