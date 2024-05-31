@@ -35,6 +35,7 @@ import {
   downloadRes,
   nameStatus,
   numberFormat,
+  showCost,
   withdrawTypeToText,
 } from "@/utils/function";
 import moment from "moment";
@@ -161,7 +162,7 @@ function TableListWithdrawHistory({
               <Badge colorScheme="purple">
                 Giá trị: {numberFormat(vl.value, false)}
               </Badge>
-              {vl.withdraw_type === "GAMEPASS" && (
+              {showCost(vl.withdraw_type) && (
                 <Badge colorScheme="blue">
                   Cost: {numberFormat(vl.cost, false)}
                 </Badge>

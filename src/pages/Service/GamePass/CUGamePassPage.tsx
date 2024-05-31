@@ -54,6 +54,10 @@ const initialFormState: IFormInput[] = [
         label: "UNIT",
         value: "UNIT",
       },
+      {
+        label: "GAMEPASS",
+        value: "GAMEPASS",
+      },
     ],
   },
   {
