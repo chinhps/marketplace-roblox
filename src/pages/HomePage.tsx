@@ -124,7 +124,7 @@ function StatisticalItem({ text, value }: { text: string; value: number }) {
     <>
       <Center flexDirection="column" my="1rem">
         <Text fontWeight="bold" fontSize="20px" color="main.item">
-          {value}
+          {numberFormat(value, false)}
         </Text>
         <Text fontWeight="500" fontSize="14px" color="main.item">
           {text}
