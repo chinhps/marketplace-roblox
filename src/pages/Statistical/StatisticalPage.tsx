@@ -62,7 +62,7 @@ export default function StatisticalPage() {
               <Button
                 key={vl.id}
                 w="100%"
-                onClick={() => setShop(vl.domain)}
+                onClick={() => vl.domain && setShop(vl.domain)}
                 colorScheme={vl.domain === shop ? "purple" : "gray"}
               >
                 {vl.domain}
