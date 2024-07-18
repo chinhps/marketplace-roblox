@@ -87,8 +87,8 @@ export function TableListServiceHistory({
           <>
             {details.map((detail, index) => (
               <Box key={index} mb="1rem">
-                <Text>Tên: {detail.name}</Text>
-                <Text>ID Gift: {detail.service_gift_id}</Text>
+                <Text>Tên: {detail.name} - ID Gift: {detail.service_gift_id}</Text>
+                <Text>Phần thưởng: {detail.msg}</Text>
               </Box>
             ))}
           </>

@@ -82,26 +82,13 @@ function Statistical() {
   return (
     <>
       <SimpleGrid columns={5}>
-        <StatisticalItem
-          value={statisticalQuery.data?.data.data.purchase ?? 0}
-          text="Mua tài khoản"
-        />
-        <StatisticalItem
-          value={statisticalQuery.data?.data.data.service ?? 0}
-          text="Lượt chơi game"
-        />
-        <StatisticalItem
-          value={statisticalQuery.data?.data.data.recharge ?? 0}
-          text="Nạp thẻ (Thành công)"
-        />
-        <StatisticalItem
-          value={statisticalQuery.data?.data.data.withdraw ?? 0}
-          text="Rút vật phẩm"
-        />
-        <StatisticalItem
-          value={statisticalQuery.data?.data.data.user ?? 0}
-          text="Tài khoản mới"
-        />
+        {statisticalQuery.data?.data.data.map((statis, index) => (
+          <StatisticalItem
+            key={index}
+            value={statis.value ?? 0}
+            text={statis.label}
+          />
+        ))}
       </SimpleGrid>
     </>
   );

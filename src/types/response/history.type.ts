@@ -63,6 +63,7 @@ export interface ServiceHistoryResponse {
 export interface IServiceHistoryDetail {
   name: string;
   service_gift_id: number;
+  msg: string
 }
 
 export interface WithdrawHistoryResponse {

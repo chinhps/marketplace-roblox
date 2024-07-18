@@ -1,4 +1,4 @@
-import { IBaseResponseDetail } from "@/types/response/base.type";
+import { IBaseResponseData, IBaseResponseDetail } from "@/types/response/base.type";
 import {
   ResponseStatisticalByDomain,
   StatisticalCharts,
@@ -10,7 +10,7 @@ import axiosClient from "@/utils/axiosClient";
 export const statisticalApi = {
   service: () => {
     const url = "/statistical/service";
-    return axiosClient.get<IBaseResponseDetail<StatisticalService>>(url);
+    return axiosClient.get<IBaseResponseData<StatisticalService>>(url);
   },
   revenue: () => {
     const url = "/statistical/revenue";

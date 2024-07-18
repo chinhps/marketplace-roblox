@@ -1,9 +1,6 @@
 export interface StatisticalService {
-  purchase: number;
-  service: number;
-  recharge: number;
-  withdraw: number;
-  user: number;
+  label: string;
+  value: number;
 }
 
 export interface StatisticalRevenue {

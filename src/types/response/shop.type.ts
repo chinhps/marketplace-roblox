@@ -1,7 +1,7 @@
 export interface IShopList {
   id: number;
   stt: number;
-  domain: string;
+  domain: string | null;
   shop: string;
   created_at: string;
 }

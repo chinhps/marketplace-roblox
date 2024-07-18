@@ -19,9 +19,11 @@ export default function UserInfo({
           alt="hihi"
         />
         <VStack alignItems="flex-start" gap={0} fontWeight="normal">
-          <Text>
-            Domain: <Badge colorScheme="green">{shop?.domain}</Badge>
-          </Text>
+          {shop?.domain != null && (
+            <Text>
+              Domain: <Badge colorScheme="green">{shop?.domain}</Badge>
+            </Text>
+          )}
           <Text>ID Provider: {user?.provider_id}</Text>
           <Text>User ID: {user?.id}</Text>
           <Text>Tên: {user?.name}</Text>
