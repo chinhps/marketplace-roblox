@@ -9,6 +9,7 @@ use App\Http\Resources\Histories\PurchaseHistoryListResource;
 use App\Repository\Histories\PurchaseHistory\PurchaseHistoryInterface;
 use App\Repository\Transaction\TransactionInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseHistoryController extends Controller
@@ -21,6 +22,7 @@ class PurchaseHistoryController extends Controller
 
     public function list(Request $request)
     {
+        $user = Auth::user();
         $domain = $request->input('domain');
         $name = $request->input('name');
         $admin_id = $request->input('admin_id');
@@ -52,7 +54,8 @@ class PurchaseHistoryController extends Controller
         if ($refund) {
             $filter['query'][] = ['refund', $refund == 1 ? 'YES' : 'NO'];
         }
-        return PurchaseHistoryListResource::collection($this->purchaseHistoryRepository->list(15, $filter));
+        $data = $this->purchaseHistoryRepository->list(15, $filter);
+        return PurchaseHistoryListResource::collection($data, $user);
     }
 
     public function updateRefund($id, PurchaseUpdateRequest $request)

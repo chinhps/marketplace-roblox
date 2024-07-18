@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Gate;
 
 class PurchaseHistoryListResource extends BaseResource
 {
+    public function __construct($resource, private $auth)
+    {
+        parent::__construct($resource);
+    }
     /**
      * Transform the resource into an array.
      *
@@ -28,7 +32,7 @@ class PurchaseHistoryListResource extends BaseResource
             "detail_public" => json_decode($this->detail_public, true),
             "detail_private" => (Gate::allows('koc', Auth::user())) ? [] : json_decode($this->detail_private, true),
             "admin" => $this->admin,
-            "shop" => $this->shop,
+            "shop" =>  Gate::allows('ctv', $this->auth) ? null : $this->shop,
             "user" => $this->user
         ];
     }

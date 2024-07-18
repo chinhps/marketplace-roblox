@@ -125,9 +125,9 @@ class ServiceForAllController extends Controller
             );
 
             /**  
-             * CHANGE PRICE RANDOM ACCOUNT
+             * CHANGE PRICE RANDOM ACCOUNT || BOX
              */
-            if ($validated['typeService'] === "RANDOM" && $validated['idService'] && $priceService) {
+            if (($validated['typeService'] === "RANDOM" || $validated['typeService'] === "BOX") && $validated['idService'] && $priceService) {
                 $this->accountRepository->updatePriceRandom($service, $priceService);
                 $msg .= "Cập nhật giá thành công cho tài khoản liên quan";
             }

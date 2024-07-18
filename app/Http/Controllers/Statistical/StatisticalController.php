@@ -181,6 +181,8 @@ class StatisticalController extends Controller
 
     public function service()
     {
+        $user = Auth::user();
+        $dataResponse = [];
         $purchase = DB::table('purchase_histories')
             ->whereMonth('created_at', date('m'))
             ->whereYear('created_at', date('Y'));
@@ -202,22 +204,32 @@ class StatisticalController extends Controller
             ->whereMonth('created_at', date('m'))
             ->whereYear('created_at', date('Y'));
 
-        $user = Auth::user();
-        if (!Gate::allows('admin', $user)) {
+        if (Gate::allows('koc', $user)) {
             $purchase = $purchase->where('shop_id', $user->shop_id);
             $service = $service->where('shop_id', $user->shop_id);
             $recharge = $recharge->where('shop_id', $user->shop_id);
             $withdraw = $withdraw->where('shop_id', $user->shop_id);
             $users = $users->where('shop_id', $user->shop_id);
         }
-
-        return BaseResponse::data([
-            "purchase" => $purchase->count(),
-            "service" => $service->count(),
-            "recharge" => $recharge->count(),
-            "withdraw" => $withdraw->count(),
-            "user" => $users->count(),
-        ]);
+        if (Gate::allows('koc', $user) || Gate::allows('admin', $user)) {
+            $dataResponse = [[
+                "label" => "Mua tài khoản",
+                "value" => $purchase->count()
+            ], [
+                "label" => "Lượt chơi game",
+                "value" => $service->count()
+            ], [
+                "label" => "Nạp thẻ",
+                "value" => $recharge->count()
+            ], [
+                "label" => "Rút vật phẩm",
+                "value" => $withdraw->count()
+            ], [
+                "label" => "Tài khoản mới",
+                "value" => $users->count()
+            ]];
+        }
+        return BaseResponse::data($dataResponse);
     }
 
     public function revenue()
