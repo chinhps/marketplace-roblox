@@ -240,6 +240,44 @@ class StatisticalController extends Controller
                 "value" => $users->count()
             ]];
         }
+        if (Gate::allows('ctv', $user)) {
+
+            $purchase = DB::table('purchase_histories')
+                ->where('admin_id', $user->id);
+
+            $dataResponse = [[
+                "label" => "Acc đã bán (Hôm nay)",
+                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('d'))->count()
+            ], [
+                "label" => "Giá trị acc (Hôm nay)",
+                "value" => $purchase->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->sum('price')
+            ], [
+                "label" => "Acc đã bán (Tháng)",
+                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count()
+            ], [
+                "label" => "Giá trị acc (Tháng)",
+                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('price')
+            ], [
+                "label" => "Acc đã bán (Tổng)",
+                "value" => $purchase->count()
+            ], [
+                "label" => "Giá trị acc (Tổng)",
+                "value" => $purchase->sum('price')
+            ]];
+
+            $accounts = DB::table('account_list')
+                ->where('status', 'NOTSELL')
+                ->where('admin_id', $user->id);
+            
+            $dataResponse[] = [
+                "label" => "Số acc đang treo",
+                "value" => $accounts->count()
+            ];
+            $dataResponse[] = [
+                "label" => "Giá trị acc đang treo",
+                "value" => $accounts->sum('price')
+            ];
+        }
         return BaseResponse::data($dataResponse);
     }
 
