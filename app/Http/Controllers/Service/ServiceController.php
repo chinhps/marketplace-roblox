@@ -19,6 +19,7 @@ use App\Models\ServiceGift;
 use App\Models\ServiceOdds;
 use App\Repository\Account\AccountInterface;
 use App\Repository\History\ServiceHistory\ServiceHistoryInterface;
+use App\Repository\Plugin\PluginInterface;
 use App\Repository\Service\ServiceCounter\ServiceCounterInterface;
 use App\Repository\Service\ServiceDetail\ServiceDetailInterface;
 use App\Repository\Service\ServiceGroup\ServiceGroupInterface;
@@ -40,7 +41,8 @@ class ServiceController extends Controller
         private UserInterface $userRepository,
         private ServiceHistoryInterface $serviceHistoryRepository,
         private AccountInterface $accountRepository,
-        private ServiceCounterInterface $serviceCounterRepository
+        private ServiceCounterInterface $serviceCounterRepository,
+        private PluginInterface $pluginRepository
     ) {
     }
 
@@ -114,7 +116,8 @@ class ServiceController extends Controller
         # Return response
         if ($serviceDetail->service_odds_id) {
             $this->serviceCounterRepository->increase($serviceDetail->service, rand(3, 8));
-            return new ServiceDetailResource($serviceDetail);
+            $cost = $this->pluginRepository->getByKey("sale_for_numloop");
+            return new ServiceDetailResource($serviceDetail, $cost);
         }
         return new ServiceAccountDetailResource($serviceDetail);
     }
@@ -172,8 +175,12 @@ class ServiceController extends Controller
 
         // ======= CHECK TURN OR PRICE & MINUS IT ======
         try {
+
+            $costData = $this->pluginRepository->getByKey("sale_for_numloop");
+            $cost = isset($costData['cost_'.$numrolllop]) ? $costData['cost_'.$numrolllop] : 1;
+
             # Get price service * numloop = PRICE_SERVICE
-            $priceService = $serviceDetail->service->price * $numrolllop;
+            $priceService = floor(($serviceDetail->service->price / 1000) * $numrolllop * $cost) * 1000;
             # Check turn
             $decrementTurn = false;
             # Check free turn
@@ -280,7 +287,7 @@ class ServiceController extends Controller
         try {
             # Save to history service
             $serviceHistory = $this->serviceHistoryRepository->create(Auth::user(), $serviceDetail->service, $numrolllop, [
-                "default" => "Tổng lượt quay: x$numrolllop | Tổng phần thưởng nhận được: X",
+                "default" => "Tổng lượt quay: x$numrolllop | Tổng phần thưởng nhận được: ". collect($gifts)->sum('value'),
                 "details" => collect($gifts)->map(function ($value) {
                     return [
                         "service_gift_id" => $value['id'],

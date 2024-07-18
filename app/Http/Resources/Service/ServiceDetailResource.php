@@ -7,6 +7,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ServiceDetailResource extends JsonResource
 {
+    public function __construct($resource, private $cost)
+    {
+        parent::__construct($resource);
+    }
     /**
      * Transform the resource into an array.
      *
@@ -25,6 +29,7 @@ class ServiceDetailResource extends JsonResource
             "notification" => $this->service->notification,
             "price" => $this->service->price,
             "sale" => $this->service->sale,
+            "sale_for_numloop" => $this->cost,
             "gifts" => $this->serviceOdds->serviceGifts->pluck('image') ?? [],
             "parcels" => $this->service->game_list->game_key === "GAMEPASS" ?
                 $this->serviceOdds->serviceGifts->map(function ($item) {

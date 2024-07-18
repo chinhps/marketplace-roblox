@@ -86,9 +86,9 @@ class AccountController extends Controller
         if ($accountDetailPrivate->service->game_list->game_key === "BOX") {
             try {
                 $note = "Mua Box, Sử dụng: {$accountDetailPrivate->service->note}, #ACCOUNT: {$accountDetailPrivate->id}";
-                $this->handleBuyBox($accountDetailPrivate, $detailPrivates, $note);
+                $value = $this->handleBuyBox($accountDetailPrivate, $detailPrivates, $note);
                 DB::commit();
-                return BaseResponse::msg("Mua thành công! Phần thưởng đã được thêm vào tài khoản của bạn!", 200);
+                return BaseResponse::msg("Nhận được {$value}! Phần thưởng đã được thêm vào tài khoản của bạn!", 200);
             } catch (\Exception $e) {
                 DB::rollBack();
                 return BaseResponse::msg($e->getMessage(), 403);
@@ -182,7 +182,7 @@ class AccountController extends Controller
                         #ACCOUNT: {$accountDetailPrivate->id}, 
                         #Transaction: {$decrementTurn->id}"
                     );
-                    return true;
+                    return $value;
                 } catch (\Exception $e) {
                     # REPORT
                     throw new Exception("Lỗi xảy ra khi thực hiện quá trình!");
