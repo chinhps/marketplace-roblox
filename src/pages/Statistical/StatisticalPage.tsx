@@ -159,6 +159,25 @@ export default function StatisticalPage() {
               )}
             </Text>
             <Divider my="1rem" />
+            <Heading size="md">UNIT & GEMS</Heading>
+            {statisticalByShopQuery.data?.data.withdraws.units.map(
+              (withdraw, index) => (
+                <Text key={index}>
+                  {withdraw.withdraw_type}: {numberFormat(withdraw.total, true)}
+                </Text>
+              )
+            )}
+            <Text size="md" color="purple" fontWeight="bold">
+              Tổng:{" "}
+              {numberFormat(
+                statisticalByShopQuery.data?.data.withdraws.units.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + currentValue.total,
+                  0
+                ) ?? 0
+              )}
+            </Text>
+            <Divider my="1rem" />
             <Heading size="md">Rút kim cương</Heading>
             {statisticalByShopQuery.data?.data.withdraws.diamond.map(
               (withdraw, index) => (
@@ -227,6 +246,11 @@ export default function StatisticalPage() {
                   (statisticalByShopQuery.data?.data.withdraws.gamepass.reduce(
                     (accumulator, currentValue) =>
                       accumulator + currentValue.total * filter.rateRobux,
+                    0
+                  ) ?? 0) +
+                  (statisticalByShopQuery.data?.data.withdraws.units.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + currentValue.total,
                     0
                   ) ?? 0)
               )}

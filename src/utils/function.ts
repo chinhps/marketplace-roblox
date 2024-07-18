@@ -2,6 +2,18 @@ import { IFormInput } from "@/types/form.type";
 import { IDetail2P } from "@/types/response/base.type";
 import { createStandaloneToast } from "@chakra-ui/react";
 
+export function showCost(type: string) {
+  switch (type) {
+    case "GAMEPASS":
+      return true;
+    case "UNIT":
+      return true;
+    case "GEMS":
+      return true;
+  }
+  return false;
+}
+
 export function withdrawTypeToText(type: string) {
   switch (type) {
     case "DIAMOND":
