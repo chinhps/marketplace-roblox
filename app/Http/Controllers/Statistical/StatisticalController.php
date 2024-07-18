@@ -88,6 +88,16 @@ class StatisticalController extends Controller
             ->groupBy('withdraw_type')
             ->get();
 
+        # 'UNITS & GEMS'
+        $withdrawHistoriesUnits = WithdrawHistory::where('shop_id', $shop->id)
+            ->whereIn('withdraw_type', ['UNIT', 'GEMS'])
+            ->where('status', 'SUCCESS')
+            ->selectRaw('withdraw_type, SUM(cost) as total')
+            // Thêm where theo tháng tại đây
+            ->whereBetween('updated_at', [$started_at, $ended_at])
+            ->groupBy('withdraw_type')
+            ->get();
+
         # 'ROBUX', 'BUY_ROBUX'
         $withdrawHistoriesRobux = WithdrawHistory::where('shop_id', $shop->id)
             ->whereIn('withdraw_type', ['ROBUX', 'BUY_ROBUX'])
@@ -102,7 +112,8 @@ class StatisticalController extends Controller
             'withdraws' => [
                 "gamepass" => $withdrawHistoriesGamePass,
                 "robux" => $withdrawHistoriesRobux,
-                "diamond" => $withdrawHistoriesDiamond
+                "diamond" => $withdrawHistoriesDiamond,
+                "units" => $withdrawHistoriesUnits
             ],
             'accounts' => $serviceAccounts
         ];
