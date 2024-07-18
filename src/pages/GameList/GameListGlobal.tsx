@@ -1,6 +1,6 @@
 import ModelBase from "@/components/global/Model/ModelBase";
 import { GameActionProps, GameSelectNumloop } from "@/types/service.type";
-import { numberFormat } from "@/utils/price";
+import { numberFormat, roundDownToThousand } from "@/utils/price";
 import {
   Button,
   Flex,
@@ -19,6 +19,7 @@ export default function SelectNumloop({
   service_price,
   register,
   hidden,
+  saleForNumloop
 }: GameSelectNumloop) {
   return (
     <Select
@@ -35,19 +36,16 @@ export default function SelectNumloop({
       {...register("numrolllop", { required: "Bạn cần chọn số lần quay" })}
     >
       <option value="1">
-        Chơi 1 lần - Giá {numberFormat(service_price * 1)}
+        Chơi 1 lần - {numberFormat(roundDownToThousand(service_price * 1 * saleForNumloop.cost_1))}
       </option>
       <option value="2">
-        Chơi 3 lần - Giá {numberFormat(service_price * 3)}
+        Chơi 3 lần - {numberFormat(roundDownToThousand(service_price * 3 * saleForNumloop.cost_3))}
       </option>
       <option value="3">
-        Chơi 5 lần - Giá {numberFormat(service_price * 5)}
-      </option>
-      <option value="4">
-        Chơi 7 lần - Giá {numberFormat(service_price * 7)}
+        Chơi 5 lần - {numberFormat(roundDownToThousand(service_price * 5 * saleForNumloop.cost_5))}
       </option>
       <option value="5">
-        Chơi 10 lần - Giá {numberFormat(service_price * 10)}
+        Chơi 10 lần - {numberFormat(roundDownToThousand(service_price * 10 * saleForNumloop.cost_10))}
       </option>
     </Select>
   );
@@ -100,11 +98,11 @@ export function HeadingService({
             w="100%"
           >
             <Button variant="action" gap={2}>
-              <Icon as={FaUserAlt} w="13px" variant="action" />
+              <Icon as={FaUserAlt} w="13px"/>
               Đang chơi: {Math.floor(Math.random() * 50) + 2}
             </Button>
             <Button variant="action" gap={2}>
-              <Icon as={FaMoneyBill} w="13px" variant="action" />
+              <Icon as={FaMoneyBill} w="13px"/>
               {numberFormat(price)}
             </Button>
           </HStack>
@@ -134,6 +132,7 @@ export function GameAction({
   handleClickSubmitCustom,
   watch,
   handleTry,
+  saleForNumloop
 }: GameActionProps) {
   const [isTrying, setIsTrying] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -152,6 +151,7 @@ export function GameAction({
           hidden={hiddenNumloop ?? false}
           register={register}
           service_price={service_price}
+          saleForNumloop={saleForNumloop}
         />
         <HStack gap={2} justifyContent="center">
           <Button

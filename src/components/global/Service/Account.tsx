@@ -106,20 +106,21 @@ export default function Account({
             />
           </Link>
         </Box>
-
+        {data.note !== "" && (
+          <Flex py={3} px={4} gap={2} alignItems="center" overflow="hidden">
+            <Icon as={FiGift} color="red.500" fontSize="18px" />
+            <Text
+              fontSize=".85rem"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              overflow="hidden"
+            >
+              {data.note}
+            </Text>
+          </Flex>
+        )}
         {data.detail.length > 0 && (
           <>
-            <Flex py={3} px={4} gap={2} alignItems="center" overflow="hidden">
-              <Icon as={FiGift} color="red.500" fontSize="18px" />
-              <Text
-                fontSize=".85rem"
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                overflow="hidden"
-              >
-                {data.note}
-              </Text>
-            </Flex>
             <Box as="header">
               <Divider borderColor="ocean.300" />
               <List px={3} py={2} fontSize=".85rem">

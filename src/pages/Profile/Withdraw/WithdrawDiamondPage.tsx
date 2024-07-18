@@ -75,23 +75,23 @@ const dataForm: Array<IFormInput> = [
     isRequired: true,
     selects: [
       {
-        label: "Gói rút 88 Kim Cương (50% nhận được thêm 88 Kim Cương)",
+        label: "Gói rút 88 Kim Cương",
         value: "1",
       },
       {
-        label: "Gói rút 220 Kim Cương (40% nhận được thêm 220 Kim Cương)",
+        label: "Gói rút 220 Kim Cương (50% nhận được thêm 220 Kim Cương)",
         value: "2",
       },
       {
-        label: "Gói rút 440 Kim Cương (30% nhận được thêm 440 Kim Cương)",
+        label: "Gói rút 440 Kim Cương (50% nhận được thêm 440 Kim Cương)",
         value: "3",
       },
       {
-        label: "Gói rút 880 Kim Cương (15% nhận được thêm 880 Kim Cương)",
+        label: "Gói rút 880 Kim Cương (50% nhận được thêm 880 Kim Cương)",
         value: "4",
       },
       {
-        label: "Gói rút 2200 Kim Cương (10% nhận được thêm 2200 Kim Cương)",
+        label: "Gói rút 2200 Kim Cương (50% nhận được thêm 2200 Kim Cương)",
         value: "5",
       },
     ],

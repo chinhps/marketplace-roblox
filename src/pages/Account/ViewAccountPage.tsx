@@ -1,7 +1,7 @@
 import { accountApi } from "@/apis/games/accountApi";
 import CarouselsImage from "@/components/global/CarouselsImage/CarouselsImage";
 import ModelConfirm from "@/components/global/Model/ModalConfirm";
-import Account from "@/components/global/Service/Account";
+// import Account from "@/components/global/Service/Account";
 import Skeleton from "@/components/global/Skeleton/Skeleton";
 import { ATM_DISCOUNT, customToast } from "@/utils/const";
 import { numberFormat } from "@/utils/price";
@@ -204,41 +204,41 @@ export default function ViewAccountPage() {
         </GridItem>
       </SimpleGrid>
       {/* RECOMMENDS ACCOUNTS */}
-      <RecomendAccount />
+      {/* <RecomendAccount /> */}
     </>
   );
 }
 
-function RecomendAccount() {
-  const recommendsQuery = useQuery({
-    queryKey: ["recommends-accounts"],
-    queryFn: () => accountApi.recommends(),
-    cacheTime: 5 * 1000,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+// function RecomendAccount() {
+//   const recommendsQuery = useQuery({
+//     queryKey: ["recommends-accounts"],
+//     queryFn: () => accountApi.recommends(),
+//     cacheTime: 5 * 1000,
+//     retry: false,
+//     refetchOnWindowFocus: false,
+//   });
 
-  return (
-    <>
-      <Box mt="2rem">
-        <Heading color="white.100" as="h2" fontSize="20px" mb={5}>
-          TÀI KHOẢN ĐỀ XUẤT
-        </Heading>
-        <SimpleGrid
-          columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
-          gap={5}
-          px={{ base: 2, lg: 0 }}
-          mt={{ base: "2rem", lg: 0 }}
-        >
-          {recommendsQuery.isLoading
-            ? new Array(5)
-                .fill(0)
-                .map((_, index) => <Account.loading key={index} />)
-            : recommendsQuery.data?.data.data.map((account) => (
-                <Account key={account.id} data={account} thumbService="" />
-              ))}
-        </SimpleGrid>
-      </Box>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <Box mt="2rem">
+//         <Heading color="white.100" as="h2" fontSize="20px" mb={5}>
+//           TÀI KHOẢN ĐỀ XUẤT
+//         </Heading>
+//         <SimpleGrid
+//           columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
+//           gap={5}
+//           px={{ base: 2, lg: 0 }}
+//           mt={{ base: "2rem", lg: 0 }}
+//         >
+//           {recommendsQuery.isLoading
+//             ? new Array(5)
+//                 .fill(0)
+//                 .map((_, index) => <Account.loading key={index} />)
+//             : recommendsQuery.data?.data.data.map((account) => (
+//                 <Account key={account.id} data={account} thumbService="" />
+//               ))}
+//         </SimpleGrid>
+//       </Box>
+//     </>
+//   );
+// }

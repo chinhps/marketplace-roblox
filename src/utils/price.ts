@@ -115,3 +115,7 @@ export const handleCopy = async (text: string) => {
     });
   }
 };
+
+export function roundDownToThousand(number: number) {
+  return Math.floor(number / 1000) * 1000;
+}

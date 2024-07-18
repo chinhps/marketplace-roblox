@@ -34,9 +34,10 @@ export interface GameActionProps {
     textButton?: string;
     handleClickSubmitCustom?: () => void;
     handleTry?: (numberLoop: number) => void;
+    saleForNumloop: { [key: string]: number; }
 }
 
-export interface GameSelectNumloop extends Pick<GameActionProps, "register" | "service_price"> {
+export interface GameSelectNumloop extends Pick<GameActionProps, "register" | "service_price" | "saleForNumloop"> {
     hidden: boolean | null;
 }
 

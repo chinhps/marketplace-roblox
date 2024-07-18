@@ -52,6 +52,9 @@ export interface IServiceDetailResponse {
     id: string;
     text: string;
   }>;
+  sale_for_numloop: {
+    [key: string]: number
+  }
 }
 
 export interface IServiceHandle {

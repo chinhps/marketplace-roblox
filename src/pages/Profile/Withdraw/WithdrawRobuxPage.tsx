@@ -75,23 +75,19 @@ const dataForm: Array<IFormInput> = [
         value: "1",
       },
       {
-        label: "500 Robux",
+        label: "500 Robux (50% nhận được thêm 500 Robux)",
         value: "2",
       },
       {
-        label: "1,000 Robux",
+        label: "1,000 Robux (50% nhận được thêm 1000 Robux)",
         value: "3",
       },
       {
-        label: "2,000 Robux",
+        label: "2,000 Robux (50% nhận được thêm 2000 Robux)",
         value: "4",
       },
       {
-        label: "3,000 Robux",
-        value: "5",
-      },
-      {
-        label: "5,000 Robux",
+        label: "5,000 Robux (50% nhận được thêm 5000 Robux)",
         value: "6",
       },
     ],
