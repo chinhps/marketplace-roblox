@@ -213,17 +213,20 @@ function GamePlay({
           />
         </Box>
       </HStack>
-      <GameAction
-        {...{
-          handleSubmit,
-          onSubmit,
-          register,
-          isSubmitting: mutation.isLoading,
-          service_price: dataService?.price ?? 0,
-          watch,
-          handleTry,
-        }}
-      />
+      {dataService && (
+        <GameAction
+          {...{
+            handleSubmit,
+            onSubmit,
+            register,
+            saleForNumloop: dataService.sale_for_numloop,
+            isSubmitting: mutation.isLoading,
+            service_price: dataService.price ?? 0,
+            watch,
+            handleTry,
+          }}
+        />
+      )}
     </>
   );
 }

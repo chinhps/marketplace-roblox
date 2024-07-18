@@ -217,21 +217,24 @@ function GamePlay({
         ))}
       </SimpleGrid>
       {/* ACTION */}
-      <GameAction
-        {...{
-          textButton: "ÚP THẺ NGAY",
-          hiddenNumloop: true,
-          cardsRef,
-          handleSubmit,
-          isSubmitting: mutation.isLoading,
-          onSubmit,
-          register,
-          watch,
-          handleTry: () => handleClickRealFake("FAKE"),
-          handleClickSubmitCustom: () => handleClickRealFake("REAL"),
-          service_price: dataService?.price ?? 0,
-        }}
-      />
+      {dataService && (
+        <GameAction
+          {...{
+            textButton: "ÚP THẺ NGAY",
+            hiddenNumloop: true,
+            cardsRef,
+            handleSubmit,
+            isSubmitting: mutation.isLoading,
+            onSubmit,
+            register,
+            watch,
+            saleForNumloop: dataService.sale_for_numloop,
+            handleTry: () => handleClickRealFake("FAKE"),
+            handleClickSubmitCustom: () => handleClickRealFake("REAL"),
+            service_price: dataService.price ?? 0,
+          }}
+        />
+      )}
     </>
   );
 }
