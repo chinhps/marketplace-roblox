@@ -16,25 +16,19 @@ export default function HomePage() {
   return (
     <Flex flexDirection="column" gap="1rem">
       <SimpleGrid columns={{ base: 1, lg: 24 }} gap="1rem">
-        <GridItem colSpan={{ base: 1, lg: 14 }}>
-          <CardCollection title="Thống kê dịch vụ tháng">
+        <GridItem colSpan={{ base: 1, lg: 17 }}>
+          <CardCollection title="Thống kê dịch vụ">
             <Statistical />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={{ base: 1, lg: 6 }}>
+        <GridItem colSpan={{ base: 1, lg: 7 }}>
           <CardCollection title="Doanh thu hôm nay">
             <Revenue />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={{ base: 1, lg: 4 }}>
-          <CardCollection title="Đang truy cập">
-            <ItemTextMain>...</ItemTextMain>
-            <Text fontWeight="500">Đang truy cập</Text>
-          </CardCollection>
-        </GridItem>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, lg: 12 }} gap="1rem">
-        <GridItem colSpan={{ base: 1, lg: 6 }}>
+        <GridItem colSpan={{ base: 1, lg: 12 }}>
           <CardCollection title="Biểu đồ doanh thu">
             <Chart
               name="Vnđ"
@@ -45,7 +39,7 @@ export default function HomePage() {
             />
           </CardCollection>
         </GridItem>
-        <GridItem colSpan={{ base: 1, lg: 6 }}>
+        {/* <GridItem colSpan={{ base: 1, lg: 6 }}>
           <CardCollection title="Biểu đồ người dùng mới">
             <Chart
               name="Người"
@@ -55,7 +49,7 @@ export default function HomePage() {
                 .map((_, index) => (index === 6 ? "CN" : `Thứ ${index + 2}`))}
             />
           </CardCollection>
-        </GridItem>
+        </GridItem> */}
       </SimpleGrid>
     </Flex>
   );
@@ -81,7 +75,7 @@ function Statistical() {
   });
   return (
     <>
-      <SimpleGrid columns={5}>
+      <SimpleGrid columns={6}>
         {statisticalQuery.data?.data.data.map((statis, index) => (
           <StatisticalItem
             key={index}
