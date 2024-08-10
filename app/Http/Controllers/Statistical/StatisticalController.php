@@ -19,8 +19,7 @@ class StatisticalController extends Controller
 
     public function __construct(
         public ShopInterface $shopRepository
-    ) {
-    }
+    ) {}
 
     public function byDomain($domain, Request $request)
     {
@@ -137,17 +136,24 @@ class StatisticalController extends Controller
             $allDates[] = $currentDate->toDateString();
             $currentDate->addDay();
         }
-        $rechargeSum = DB::table('recharge_histories')
+        $dataChart = DB::table('recharge_histories')
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(price) as sum_price'))
             ->where('status', "SUCCESS");
 
 
         $user = Auth::user();
-        if (!Gate::allows('admin', $user)) {
-            $rechargeSum = $rechargeSum->where('shop_id', $user->user_id);
+
+        if (Gate::allows('ctv', $user)) {
+            $dataChart = DB::table('purchase_histories')
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(price) as sum_price'))
+                ->where('refund', "NO");
         }
 
-        $rechargeSum = $rechargeSum->whereBetween('created_at', [$weekStart, $weekEnd])
+        if (Gate::allows('koc', $user)) {
+            $dataChart = $dataChart->where('shop_id', $user->user_id);
+        }
+
+        $dataChart = $dataChart->whereBetween('created_at', [$weekStart, $weekEnd])
             ->groupBy('date')
             ->get()
             ->pluck('sum_price', 'date')
@@ -155,7 +161,7 @@ class StatisticalController extends Controller
 
         $result = [];
         foreach ($allDates as $date) {
-            $result[] = isset($rechargeSum[$date]) ? $rechargeSum[$date] : 0;
+            $result[] = isset($dataChart[$date]) ? $dataChart[$date] : 0;
         }
         return $result;
     }
@@ -174,7 +180,7 @@ class StatisticalController extends Controller
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'));
 
         $user = Auth::user();
-        if (!Gate::allows('admin', $user)) {
+        if (Gate::allows('koc', $user)) {
             $userCounts = $userCounts->where('shop_id', $user->user_id);
         }
         $userCounts = $userCounts->whereBetween('created_at', [$weekStart, $weekEnd])
@@ -243,39 +249,38 @@ class StatisticalController extends Controller
         if (Gate::allows('ctv', $user)) {
 
             $purchase = DB::table('purchase_histories')
-                ->where('admin_id', $user->id);
+                ->where('admin_id', $user->id)->where('refund', "NO");
 
-            $dataResponse = [[
-                "label" => "Acc đã bán (Hôm nay)",
-                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('d'))->count()
-            ], [
-                "label" => "Giá trị acc (Hôm nay)",
-                "value" => $purchase->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->sum('price')
-            ], [
-                "label" => "Acc đã bán (Tháng)",
-                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count()
-            ], [
-                "label" => "Giá trị acc (Tháng)",
-                "value" => $purchase->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('price')
-            ], [
-                "label" => "Acc đã bán (Tổng)",
-                "value" => $purchase->count()
-            ], [
-                "label" => "Giá trị acc (Tổng)",
-                "value" => $purchase->sum('price')
-            ]];
+            $dataResponse = [
+                [
+                    "label" => "Acc đã bán (Hôm nay)",
+                    "value" => (clone $purchase)->whereYear('created_at', date('Y'))->whereMonth('created_at', date('d'))->count()
+                ],
+                [
+                    "label" => "Acc đã bán (Tháng)",
+                    "value" => (clone $purchase)->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count()
+                ],
+                [
+                    "label" => "Acc đã bán (Tổng)",
+                    "value" => (clone $purchase)->count()
+                ],
+                [
+                    "label" => "Giá trị acc (Tổng)",
+                    "value" => (clone $purchase)->sum('price')
+                ]
+            ];
 
             $accounts = DB::table('account_list')
                 ->where('status', 'NOTSELL')
                 ->where('admin_id', $user->id);
-            
+
             $dataResponse[] = [
                 "label" => "Số acc đang treo",
-                "value" => $accounts->count()
+                "value" => (clone $accounts)->count()
             ];
             $dataResponse[] = [
                 "label" => "Giá trị acc đang treo",
-                "value" => $accounts->sum('price')
+                "value" => (clone $accounts)->sum('price')
             ];
         }
         return BaseResponse::data($dataResponse);
@@ -293,6 +298,17 @@ class StatisticalController extends Controller
             ->whereYear('created_at', date('Y'));
 
         $user = Auth::user();
+
+        if (Gate::allows('ctv', $user)) {
+            $purchase = DB::table('purchase_histories')
+                ->where('admin_id', $user->id);
+
+            return BaseResponse::data([
+                "month" => (clone $purchase)->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('price'),
+                "day" => (clone $purchase)->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->sum('price')
+            ]);
+        }
+
         if (!Gate::allows('admin', $user)) {
             $month = $month->where('shop_id', $user->user_id);
             $day = $day->where('shop_id', $user->user_id);

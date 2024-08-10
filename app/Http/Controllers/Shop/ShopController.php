@@ -9,6 +9,8 @@ use App\Http\Resources\Shop\ShopAllResource;
 use App\Http\Resources\Shop\ShopListResource;
 use App\Repository\Shop\ShopInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ShopController extends Controller
 {
@@ -20,6 +22,11 @@ class ShopController extends Controller
 
     public function all()
     {
+        $user = Auth::user();
+        if (Gate::allows('ctv', $user)) {
+            return ShopAllResource::collection([]);
+        }
+
         return ShopAllResource::collection($this->shopRepository->all());
     }
 
