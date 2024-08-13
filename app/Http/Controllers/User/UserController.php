@@ -17,8 +17,7 @@ class UserController extends Controller
 
     public function __construct(
         private UserInterface $userRepository
-    ) {
-    }
+    ) {}
 
     public function navbar()
     {
@@ -53,6 +52,19 @@ class UserController extends Controller
                         [
                             'name' => 'Mua tài khoản',
                             'link' => '/history/purchases',
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Rút tiền',
+                    'children' => [
+                        [
+                            'name' => 'Rút tiền',
+                            'link' => '/withdraws',
+                        ],
+                        [
+                            'name' => 'Tạo lệnh rút',
+                            'link' => '/withdraws/create-transaction',
                         ],
                     ],
                 ]
@@ -191,6 +203,15 @@ class UserController extends Controller
                     [
                         'name' => 'Quản lý',
                         'link' => '/top-recharge',
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Rút tiền',
+                'children' => [
+                    [
+                        'name' => 'Rút tiền',
+                        'link' => '/withdraws',
                     ],
                 ],
             ]

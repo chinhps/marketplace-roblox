@@ -2,6 +2,7 @@
 
 namespace App\Repository\Histories\PurchaseHistory;
 
+use App\Models\Admin;
 use App\Models\PurchaseHistory;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,15 @@ class PurchaseHistoryRepository implements PurchaseHistoryInterface
 {
     public function __construct(
         private Model $model = new PurchaseHistory()
-    ) {
+    ) {}
+
+    public function allAmountPartner(Admin $admin)
+    {
+        $amount = $this->model->where([
+            ['admin_id', $admin->id],
+            ['refund', 'NO']
+        ])->sum('price');
+        return $amount;
     }
 
     public function list(float $limit = 15, array $filter = [])

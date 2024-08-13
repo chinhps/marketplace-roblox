@@ -27,6 +27,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Webhook\PushDiamondController;
 use App\Http\Controllers\Webhook\WebhookDiamondController;
 use App\Http\Controllers\Webhook\WebhookRechargeController;
+use App\Http\Controllers\Withdraw\WithdrawPartnerController;
 use App\Http\Controllers\WithdrawLimit\WithdrawLimitController;
 use App\Http\Controllers\WithdrawLimit\WithdrawTypeController;
 use Illuminate\Support\Facades\Route;
@@ -179,6 +180,11 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
             Route::post('/upsert', [AccountController::class, 'upsertAccount']);
             Route::post('/create-random', [AccountController::class, 'upsertRandom']);
             Route::post('/create-box', [AccountController::class, 'upsertBox']);
+        });
+        Route::prefix('withdrawals-partner')->group(function () {
+            Route::get('/', [WithdrawPartnerController::class, 'list']);
+            Route::post('/create-transaction', [WithdrawPartnerController::class, 'create'])->middleware(['role:ctv']);
+            Route::post('/status-update', [WithdrawPartnerController::class, 'statusUpdate'])->middleware(['role:admin']);
         });
     });
     Route::middleware(['role:admin,support,koc,ctv'])->group(function () {
