@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import {
   FiBarChart2,
+  FiDollarSign,
   FiHome,
   FiLayers,
   FiPhone,
@@ -94,6 +95,7 @@ const icons: { [key: string]: React.ReactElement } = {
   "Người dùng": <FiUsers />,
   "Top nạp thẻ": <FiBarChart2 />,
   "Trợ giúp": <FiPhone />,
+  "Rút tiền": <FiDollarSign />,
 };
 
 export function SildeBar() {

@@ -33,6 +33,8 @@ import CUWithdrawLimitPage from "@/pages/WithdrawLimit/CUWithdrawLimitPage";
 import WithdrawLimitPage from "@/pages/WithdrawLimit/WithdrawLimitPage";
 import CUBoxPage from "@/pages/Service/Box/CUBoxPage";
 import UpdateGiftPage from "@/pages/Service/Gift/UpdateGiftPage";
+import CreateTransactionPage from "@/pages/Withdraw/CreateTransactionPage";
+import WithdrawalsPartnerPage from "@/pages/Withdraw/WithdrawalsPartnerPage";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +44,20 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+    ],
+  },
+  {
+    path: "withdraws",
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: "",
+        element: <WithdrawalsPartnerPage />,
+      },
+      {
+        path: "create-transaction",
+        element: <CreateTransactionPage />,
       },
     ],
   },
