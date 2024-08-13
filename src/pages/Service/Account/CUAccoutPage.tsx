@@ -15,7 +15,7 @@ import { SubmitHandler } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
-import { objectToFormData } from "@/utils/function";
+import { compareForm, objectToFormData } from "@/utils/function";
 import { accountApi } from "@/apis/account";
 
 const initialFormState: Array<IFormInput> = [
@@ -65,6 +65,7 @@ export default function CUAccoutPage() {
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
+  const [formValue, setFormValue] = useState({});
   const [formData, setFormData] = useState<IFormInput[]>(() =>
     structuredClone(initialFormState)
   );
@@ -75,7 +76,7 @@ export default function CUAccoutPage() {
       toast({
         description: data.msg,
       });
-      navigate("../")
+      navigate("../");
     },
   });
   const serviceGameListQuery = useQuery({
@@ -93,26 +94,27 @@ export default function CUAccoutPage() {
     cacheTime: 12000,
     refetchOnWindowFocus: false,
     onSuccess: ({ data }) => {
-      handleChangeServiceGame(data.data.service_id);
-      // const searchDataFormByQuery = serviceGameListQuery.data?.data.data.find(
-      //   (value) => value.id === data.data.service_id
-      // );
-      // const publicForm = compareForm(
-      //   data.data.detail_public,
-      //   searchDataFormByQuery?.public_form
-      // );
-      // const privateForm = compareForm(
-      //   data.data.detail_private,
-      //   searchDataFormByQuery?.private_form
-      // );
+      const searchDataFormByQuery = serviceGameListQuery.data?.data.data.find(
+        (value) => value.id === data.data.service_id
+      );
+      const publicForm = compareForm(
+        data.data.detail_public,
+        searchDataFormByQuery?.public_form
+      );
+      const privateForm = compareForm(
+        data.data.detail_private,
+        searchDataFormByQuery?.private_form
+      );
+      handleChangeServiceGame(data.data.service_id, publicForm, privateForm);
+      setFormValue({
+        price: data.data.price,
+        note: data.data.note,
+        active: data.data.active === "YES",
+        thumb: [data.data.thumb],
+        images: [...data.data.images],
+      });
 
-      // setFormData((prev) => [
-      //   ...prev,
-      //   ...privateForm,
-      //   ...publicForm,
-      //   ...initialFormImagesState,
-      // ]);
-      // console.log("resultArray", publicForm, privateForm);
+      console.log("resultArray", publicForm, privateForm);
     },
   });
   /****----------------
@@ -122,9 +124,24 @@ export default function CUAccoutPage() {
   /****----------------
    *      Handle
   ----------------****/
-  const handleChangeServiceGame = (id: number) => {
+  const handleChangeServiceGame = (
+    id: number,
+    publicForm?: IFormInput[],
+    privateForm?: IFormInput[]
+  ) => {
     setFormData(initialFormState);
     setIdServiceGame(id);
+
+    if (publicForm && privateForm) {
+      setFormData((prev) => [
+        ...prev,
+        ...(publicForm ?? []),
+        ...(privateForm ?? []),
+        ...initialFormImagesState,
+      ]);
+      return;
+    }
+
     const searchDataFormByQuery = serviceGameListQuery.data?.data.data.find(
       (value) => value.id === id
     );
@@ -167,9 +184,9 @@ export default function CUAccoutPage() {
           <FormLabel>Chọn loại tài khoản</FormLabel>
           <Select
             variant="auth"
-            placeholder="Loại tài khoản"
             onChange={(e) => handleChangeServiceGame(Number(e.target.value))}
-            value={accountQuery.data?.data.data.service_id}
+            value={accountQuery.data?.data.data.service_id ?? ""}
+            placeholder="Loại tài khoản"
           >
             {serviceGameListQuery.data?.data.data.map((item) => (
               <option key={item.id} value={item.id}>
@@ -180,6 +197,7 @@ export default function CUAccoutPage() {
         </FormControl>
         <FormBase
           dataForm={formData}
+          dataDefault={formValue}
           textBtn={id ? "Cập nhật" : "Thêm mới"}
           onSubmit={onSubmit}
           CustomComponent={CustomStyle}

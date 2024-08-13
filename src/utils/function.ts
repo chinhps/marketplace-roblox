@@ -137,11 +137,11 @@ export function objectToFormData(
 export function compareForm(
   values: IDetail2P[],
   froms: IFormInput[] | undefined
-) {
+): IFormInput[] {
   const map1 = new Map(values.map((item) => [item.key, item.value]));
   const resultArray = froms?.map((item) => ({
     ...item,
-    default: map1.get(item.name),
+    default: (map1.get(item.name))?.toString(),
   }));
   return resultArray ?? [];
 }
