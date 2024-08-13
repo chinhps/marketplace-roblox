@@ -20,8 +20,7 @@ class AccountController extends Controller
     public function __construct(
         private AccountInterface $accountRepository,
         private ServiceInterface $serviceRepository
-    ) {
-    }
+    ) {}
 
     public function list(Request $request)
     {
@@ -164,11 +163,14 @@ class AccountController extends Controller
         $publicForm = $this->getDataForm(json_decode($service->public_form, true), $validated['data']);
 
         # UPLOAD IMAGE THUMB
-        $imageThumb = uploadImageQueue($validated['data']['thumb'][0]);
+        $thumb = $validated['data']['thumb'][0];
+        $imageThumb = (is_string($thumb) || $thumb == null) ?
+            $thumb :
+            uploadImageQueue($thumb);
         # UPLOAD IMAGES DETAIL
         $imagesDetail = [];
         foreach ($validated['data']['images'] as $image) {
-            $imagesDetail[] = uploadImageQueue($image);
+            $imagesDetail[] = (is_string($image) || $image == null) ? $image : uploadImageQueue($image);
         }
 
         DB::beginTransaction();
@@ -187,10 +189,10 @@ class AccountController extends Controller
             ], admin: Auth::user(), service: $service);
 
             DB::commit();
-            return BaseResponse::msg("Đã thêm tài khoản mới thành công");
+            return BaseResponse::msg($validated['id'] ? "Sửa tài khoản thành công!" : "Đã thêm tài khoản mới thành công");
         } catch (\Exception $e) {
             DB::rollBack();
-            return BaseResponse::msg("Có lỗi đã xảy ra vui lòng kiểm tra lại!", 500);
+            return BaseResponse::msg($e->getMessage(), 500);
         }
     }
 

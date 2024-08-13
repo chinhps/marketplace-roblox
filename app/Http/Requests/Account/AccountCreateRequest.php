@@ -4,6 +4,7 @@ namespace App\Http\Requests\Account;
 
 use App\Http\Requests\BaseRequest;
 use App\Repository\Service\ServiceInterface;
+use App\Rules\UrlOrFileImage;
 
 class AccountCreateRequest extends BaseRequest
 {
@@ -34,13 +35,13 @@ class AccountCreateRequest extends BaseRequest
         $this->replace($data);
 
         $commonRules = [
-            // "id" => "nullable|exists:account_list,id",
+            "id" => "nullable|exists:account_list,id",
             "idServiceGame" => "exists:services,id",
             "data.price" => "required|numeric|min:0",
             "data.note" => "required",
             "data.active" => "boolean",
-            "data.thumb.*" => "required|file|image",
-            "data.images.*" => "required|file|image",
+            "data.thumb.*" => ["nullable", new UrlOrFileImage],
+            "data.images.*" => ["nullable", new UrlOrFileImage],
         ];
 
         $idServiceGame = $this->input("idServiceGame");
