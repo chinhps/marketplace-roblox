@@ -97,14 +97,24 @@ export default function FormBase({
                   name={form.name}
                 />
               ) : form.type === "SWITCH" ? (
-                <Switch
-                  fontSize="sm"
-                  fontWeight="500"
-                  size="lg"
-                  {...register(form.name, {
-                    value: form.default ?? false,
-                    ...(form.validate ?? null),
-                  })}
+                <Controller
+                  render={({ field: { onChange, value, name } }) => (
+                    <>
+                      <Switch
+                        fontSize="sm"
+                        fontWeight="500"
+                        size="lg"
+                        onChange={onChange}
+                        name={name}
+                        isChecked={value}
+                        value={value}
+                      />
+                    </>
+                  )}
+                  defaultValue={form.default}
+                  control={control}
+                  name={form.name}
+                  // rules={form.validate ?? null}
                 />
               ) : form.type === "DATE" ? (
                 <Input

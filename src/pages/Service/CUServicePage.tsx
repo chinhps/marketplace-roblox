@@ -29,7 +29,7 @@ import { Link, useParams } from "react-router-dom";
 import { FiPlus, FiSlack, FiTool, FiUser, FiUsers } from "react-icons/fi";
 import InputTag from "@/components/globals/Form/InputTag";
 import ModelBase from "@/components/globals/Model/ModelBase";
-import FileCustom from "@/components/globals/Form/FileCustom";
+import { FileCustomRHF } from "@/components/globals/Form/FileCustom";
 import InputNumberCustom from "@/components/globals/Form/InputNumberCustom";
 import InputExcept from "@/components/globals/Form/InputExcept";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -293,7 +293,7 @@ function GiftAdd({
     []
   );
 
-  const handleChangeFileImage = (data: File[]) => {
+  const handleChangeFileImage = (data: (string | File)[]) => {
     if (data.length > 0) {
       handleChangeCustom("image")(data[0]);
     }
@@ -312,7 +312,11 @@ function GiftAdd({
   return (
     <>
       <HStack spacing="1rem">
-        <FileCustom multiple={false} onChange={handleChangeFileImage} />
+        <FileCustomRHF
+          value={null}
+          multiple={false}
+          onChange={handleChangeFileImage}
+        />
         <VStack flexDirection="column" flex={1}>
           <FormControl isRequired mb="1rem">
             <HStack justifyContent="space-between">
@@ -554,7 +558,7 @@ function ModelAddOdds({
 
       <FormControl isRequired mb="1rem">
         <FormLabel>Thao tác nhanh với nhiều quà</FormLabel>
-        <FileCustom multiple={true} />
+        {/* <FileCustom multiple={true} /> */}
       </FormControl>
     </>
   );

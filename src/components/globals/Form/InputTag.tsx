@@ -9,42 +9,42 @@ import {
   TagLabel,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState, FC } from "react";
 
-export default function InputTag({
+interface InputTagProps {
+  limit?: number;
+  onChange?: (value: Array<string | number>) => void;
+  isDisable?: boolean;
+  values?: Array<string | number>;
+  name?: string;
+}
+
+const InputTag: FC<InputTagProps> = ({
   limit,
   onChange,
   isDisable,
   values,
   name,
-}: {
-  limit?: number | undefined;
-  onChange?: (value: Array<string | number>) => void;
-  isDisable?: boolean;
-  values?: Array<string | number>;
-  name?: string;
-}) {
-  const [inputValue, setInputValue] = useState("");
-  const [inputValues, setInputValues] = useState<Array<string | number>>([]);
+}) => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValues, setInputValues] = useState<Array<string | number>>(
+    values || []
+  );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-  };
-  const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value !== "") {
-      setInputValues((vl) => [...vl, value]);
-      e.target.value = "";
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    if (inputValue) {
+      setInputValues((prevValues) => [...prevValues, inputValue]);
+      setInputValue("");
     }
-  };
-  const handleDeleteTag = (index: number) => {
-    const newArray = [
-      ...inputValues.slice(0, index),
-      ...inputValues.slice(index + 1),
-    ];
-    setInputValues(newArray);
-    // setInputValues((vl) => vl.filter((elm) => elm !== value));
-  };
+  }, [inputValue]);
+
+  const handleDeleteTag = useCallback((index: number) => {
+    setInputValues((prevValues) => prevValues.filter((_, i) => i !== index));
+  }, []);
 
   const shopAllQuery = useQuery({
     queryKey: ["shop-all"],
@@ -53,25 +53,28 @@ export default function InputTag({
     cacheTime: 12000,
     refetchOnWindowFocus: false,
   });
-
+  
   useEffect(() => {
-    values && setInputValues(values);
+    if (values && values.toString() != inputValues.toString()) {
+      setInputValues(values);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
   useEffect(() => {
     if (onChange) {
       onChange(inputValues);
     }
-  }, [inputValues]);
+  }, [inputValues, onChange]);
 
   return (
     <>
       <HStack
         border="1px solid"
+        borderColor="gray.300"
         p={3}
         borderRadius="5px"
         minH="48px"
-        bg={isDisable ? "gray.200" : ""}
         flexWrap="wrap"
       >
         {inputValues.map((tag, index) => (
@@ -89,15 +92,16 @@ export default function InputTag({
         ))}
         {inputValues.length < (limit ?? 100) && (
           <Input
+            value={inputValue}
             border="none"
             onChange={handleInputChange}
-            _focus={{ boxShadow: "none" }}
-            minW="150px"
-            h="auto"
-            w={inputValue.length * 7 + "px"}
             onBlur={handleInputBlur}
             disabled={isDisable}
             list={name}
+            _focus={{ boxShadow: "none" }}
+            minW="200px"
+            h="auto"
+            flex="1"
           />
         )}
         {name === "domain" ? (
@@ -112,4 +116,6 @@ export default function InputTag({
       </HStack>
     </>
   );
-}
+};
+
+export default InputTag;
