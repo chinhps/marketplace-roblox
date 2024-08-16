@@ -88,6 +88,7 @@ class ServiceForAllCreateRequest extends BaseRequest
         }
 
         if (!is_null($this->input("dataOdds"))) {
+            // dd($this->input("dataOdds"));
             $rules = [
                 ...$rules,
                 'dataOdds.isRandomAdmin' => 'required|boolean',
@@ -99,7 +100,7 @@ class ServiceForAllCreateRequest extends BaseRequest
                 'dataOdds.oddsUser.*.id' => 'required|numeric',
                 // 'dataOdds.oddsUser.*.description' => 'required|string',
                 'dataOdds.listGift.*' => 'required|array', // Change to *.* to support nested arrays
-                'dataOdds.listGift.*.image' => 'required|file|image',
+                'dataOdds.listGift.*.image.*' => 'nullable|file|image',
                 'dataOdds.listGift.*.isRandom' => 'required|boolean',
                 'dataOdds.listGift.*.isVip' => 'required|boolean',
                 // 'dataOdds.listGift.*.message' => 'required|string',

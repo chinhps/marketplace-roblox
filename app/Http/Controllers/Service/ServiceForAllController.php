@@ -33,8 +33,7 @@ class ServiceForAllController extends Controller
         private ServiceGiftInterface $serviceGiftRepository,
         private GameCurrencyInterface $gameCurrencyRepository,
         private AccountInterface $accountRepository,
-    ) {
-    }
+    ) {}
 
     public function upsert(ServiceForAllCreateRequest $request)
     {
@@ -147,7 +146,10 @@ class ServiceForAllController extends Controller
                 foreach ($validated["dataOdds"]["listGift"] as $keyGift => $gift) {
 
                     # UPLOAD IMAGE
-                    $imageGift = uploadImageQueue($gift['image']);
+                    $imageGift = null;
+                    // if ($gift['image']) {
+                    //     $imageGift = uploadImageQueue($gift['image']);
+                    // }
                     $gameCurrency = $this->gameCurrencyRepository->getByKey($gift['typeGift']);
 
                     # CREATE ODDS GIFT ###########################################
