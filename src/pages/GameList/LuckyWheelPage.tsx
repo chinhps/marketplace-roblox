@@ -152,31 +152,36 @@ function GamePlay({
       <HStack justifyContent="center" mt={3}>
         <Box position="relative" zIndex={1} overflow="hidden">
           <Box position="relative" ref={wheelImg}>
-            {dataService?.gifts.map((gift, index) => (
-              <Box
-                key={index}
-                position="absolute"
-                inset={0}
-                top="5%"
-                bottom="50%"
-                transform={`rotate(${(360 / num_gift) * (index + 1)}deg)`}
-                transformOrigin="bottom"
-              >
-                <Img
-                  zIndex={3}
-                  mx="auto"
-                  // width={{
-                  //   base: handleGiftSize(window.innerWidth),
-                  //   md: handleGiftSize(550),
-                  // }}
-                  w={{ base: "70px", lg: "100px" }}
-                  h={{ base: "70px", lg: "100px" }}
-                  aspectRatio="1/1"
-                  alt={dataService?.service_image.name + " gift by chinh.dev"}
-                  src={gift}
-                />
-              </Box>
-            ))}
+            {dataService?.gifts.map(
+              (gift, index) =>
+                gift && (
+                  <Box
+                    key={index}
+                    position="absolute"
+                    inset={0}
+                    top="5%"
+                    bottom="50%"
+                    transform={`rotate(${(360 / num_gift) * (index + 1)}deg)`}
+                    transformOrigin="bottom"
+                  >
+                    <Img
+                      zIndex={3}
+                      mx="auto"
+                      // width={{
+                      //   base: handleGiftSize(window.innerWidth),
+                      //   md: handleGiftSize(550),
+                      // }}
+                      w={{ base: "70px", lg: "100px" }}
+                      h={{ base: "70px", lg: "100px" }}
+                      aspectRatio="1/1"
+                      alt={
+                        dataService?.service_image.name + " gift by chinh.dev"
+                      }
+                      src={gift}
+                    />
+                  </Box>
+                )
+            )}
             <Box
               zIndex={2}
               w="100%"

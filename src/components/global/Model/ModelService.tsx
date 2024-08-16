@@ -31,7 +31,12 @@ export default function ModelService({
 }) {
   return (
     <>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        size="2xl"
+      >
         <ModalOverlay />
         <ModalContent bg="main.item" color="white.100">
           <ModalHeader>Thông báo</ModalHeader>
@@ -57,7 +62,14 @@ export default function ModelService({
             <Grid templateColumns="repeat(3,1fr)" gap={5} alignItems="center">
               <GridItem colSpan={1} p="1rem">
                 {data?.data.gifts && data?.data.gifts.length > 0 ? (
-                  <Img src={data?.data.gifts[0].image} alt="gift" />
+                  <Img
+                    src={
+                      data?.data.gifts[0].image ??
+                      "https://i.imgur.com/8KFQ1hh.png"
+                    }
+                    w={60}
+                    alt="gift"
+                  />
                 ) : null}
               </GridItem>
               <GridItem colSpan={2}>
