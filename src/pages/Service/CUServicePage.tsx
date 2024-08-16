@@ -585,7 +585,13 @@ function AddNewOdds({
   return (
     <>
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
-        <ModelAddOdds onClose={onClose} onChange={onChange} />
+        <ModelAddOdds
+          onClose={onClose}
+          onChange={(e) => {
+            onChange(e);
+            console.log(e);
+          }}
+        />
       </ModelBase>
       <FormControl isRequired mb="1rem">
         <FormLabel>Tỷ lệ</FormLabel>
