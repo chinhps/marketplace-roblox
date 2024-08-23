@@ -185,7 +185,7 @@ export default function CUAccoutPage() {
           <Select
             variant="auth"
             onChange={(e) => handleChangeServiceGame(Number(e.target.value))}
-            value={accountQuery.data?.data.data.service_id ?? ""}
+            value={accountQuery.data?.data.data.service_id}
             placeholder="Loại tài khoản"
           >
             {serviceGameListQuery.data?.data.data.map((item) => (
