@@ -30,6 +30,7 @@ class AccountController extends Controller
         $id = $request->input('id');
         $serviceNote = $request->input('service_note');
         $adminName = $request->input('admin_name');
+        $privateInfo = $request->input('private_info');
 
         $filter = [];
 
@@ -47,6 +48,9 @@ class AccountController extends Controller
         }
         if ($status) {
             $filter['query'][] = ['status', $status == 1 ? "SOLD" : "NOTSELL"];
+        }
+        if ($privateInfo) {
+            $filter['query'][] = ['detail_private', 'like', "%$privateInfo%"];
         }
         if ($sortPrice) {
             $filter['sort'][] = ['price', $sortPrice == 1 ? 'asc' : 'desc'];
