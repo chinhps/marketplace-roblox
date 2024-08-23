@@ -141,6 +141,11 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
+      label: "Thông tin (Tài khoản,...)",
+      name: "private_info",
+      type: "INPUT",
+    },
+    {
       label: "Trạng thái",
       name: "status",
       type: "SELECT",

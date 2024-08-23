@@ -136,6 +136,11 @@ function FormSearch({ setFilter, filter, setPage }: IFormSearchProps) {
       type: "INPUT",
     },
     {
+      label: "Thông tin (Private)",
+      name: "private_info",
+      type: "INPUT",
+    },
+    {
       label: "ID Account",
       name: "id",
       type: "INPUT",
