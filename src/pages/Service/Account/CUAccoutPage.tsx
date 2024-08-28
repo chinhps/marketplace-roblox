@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi } from "@/apis/service";
 import { compareForm, objectToFormData } from "@/utils/function";
 import { accountApi } from "@/apis/account";
+import { IServiceMutation } from "@/types/service.type";
 
 const initialFormState: Array<IFormInput> = [
   {
@@ -71,7 +72,8 @@ export default function CUAccoutPage() {
   );
   const [idServiceGame, setIdServiceGame] = useState<number>();
   const serviceGameListMutation = useMutation({
-    mutationFn: (formDataObject: FormData) => accountApi.create(formDataObject),
+    mutationFn: (formDataObject: IServiceMutation) =>
+      accountApi.create(formDataObject),
     onSuccess: ({ data }) => {
       toast({
         description: data.msg,
@@ -154,10 +156,14 @@ export default function CUAccoutPage() {
   };
 
   const onSubmit: SubmitHandler<any> = (data) => {
-    console.log(data, formData);
     const formDataObject = new FormData();
-    objectToFormData(formDataObject, { id, idServiceGame, data });
-    idServiceGame && serviceGameListMutation.mutate(formDataObject);
+    const form = { id: id ?? null, idServiceGame, data };
+    objectToFormData(formDataObject, form);
+    idServiceGame &&
+      serviceGameListMutation.mutate({
+        formData: formDataObject,
+        data: JSON.stringify(form),
+      });
   };
   /****----------------
    *      END-Handle
@@ -201,6 +207,7 @@ export default function CUAccoutPage() {
           textBtn={id ? "Cập nhật" : "Thêm mới"}
           onSubmit={onSubmit}
           CustomComponent={CustomStyle}
+          isSubmitCustom={serviceGameListMutation.isLoading}
         />
       </CardCollection>
     </>

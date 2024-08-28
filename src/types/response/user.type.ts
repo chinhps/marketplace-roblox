@@ -31,4 +31,5 @@ interface AdminResponse {
   active: "on" | "off";
   created_at: string;
   user_id: number | null;
+  price: number | null
 }

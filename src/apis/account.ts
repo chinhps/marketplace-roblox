@@ -6,12 +6,14 @@ import {
   IResponseWithMessage,
 } from "@/types/response/base.type";
 import { IServiceGameRandomCreate } from "@/types/response/service.type";
+import { IServiceMutation } from "@/types/service.type";
 import axiosClient from "@/utils/axiosClient";
 
 const accountApi = {
-  create: (formDataObject: FormData) => {
+  create: ({ formData, data }: IServiceMutation) => {
     const url = "/accounts/upsert";
-    return axiosClient.post<IResponseWithMessage>(url, formDataObject, {
+    formData.append("dataDefault", data ?? "");
+    return axiosClient.post<IResponseWithMessage>(url, formData, {
       headers: {
         "content-type": "multipart/form-data",
       },

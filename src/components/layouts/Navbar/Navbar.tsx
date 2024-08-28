@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
+  HStack,
   IconButton,
   Image,
   Link,
@@ -14,12 +15,13 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useIsFetching, useMutation } from "@tanstack/react-query";
+import { useIsFetching, useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { SildeBar } from "../DefaultLayout";
 import { AuthApi } from "@/apis/auth";
+import { numberFormat, token } from "@/utils/function";
 
 export default function Navbar() {
   const isFetching = useIsFetching();
@@ -40,13 +42,7 @@ export default function Navbar() {
             <IconButton
               onClick={onToggle}
               display={{ base: "flex", lg: "none" }}
-              icon={
-                isOpen ? (
-                  <FiX w={3} h={3} color="white" />
-                ) : (
-                  <FiMenu w={5} h={5} color="white" />
-                )
-              }
+              icon={isOpen ? <FiX color="white" /> : <FiMenu color="white" />}
               variant={"ghost"}
               aria-label={"Toggle Navigation"}
               _hover={{
@@ -93,20 +89,40 @@ function DropdownNav() {
     },
   });
 
+  const dataUserQuery = useQuery({
+    queryKey: ["user"],
+    queryFn: () => AuthApi.infoUser(),
+    retry: false,
+    cacheTime: 12000,
+    enabled: !!token(), // Only fetch data user when have token ,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      navigate("/auth/login");
+    },
+  });
+
   return (
     <>
       <Flex alignItems="center" gap="1rem" position="relative">
         <Box rounded="50%" width="30px" height="30px" overflow="hidden">
           <Image src="https://i.imgur.com/Owoq65A.png" alt="avatar" />
         </Box>
-        <Text
-          cursor="pointer"
-          color="main.text"
-          fontWeight="500"
-          onClick={() => setIsDropdown((prev) => !prev)}
-        >
-          Hi, Admin
-        </Text>
+        <HStack spacing={2}>
+          <Text
+            cursor="pointer"
+            color="main.text"
+            fontWeight="500"
+            onClick={() => setIsDropdown((prev) => !prev)}
+          >
+            Hi, {dataUserQuery.data?.data.data.name}
+          </Text>
+          {dataUserQuery.data?.data.data.price && (
+            <Text color="main.text" fontWeight="500">
+              | Số dư: {numberFormat(dataUserQuery.data?.data.data.price)}
+            </Text>
+          )}
+        </HStack>
+
         {isDropdown && (
           <Box
             zIndex={5}
