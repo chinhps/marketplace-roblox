@@ -2,17 +2,7 @@
 
 # Danh sách các tên miền
 domains=(
-  "aburoblox.com"
-  "anhbaphairoblox.vn"
-  "gameroblox.vn"
-  "jaygrayroblox.com"
-  "loczutakiroblox.com"
-  "longhtroblox.com"
-  "rexroblox.com"
-  "shopbun.vn"
-  "shopjaki.vn"
-  "shoprika.vn"
-  "starjinxroblox.com"
+  ""
 )
 
 # Tạo các tệp .env cho từng tên miền
