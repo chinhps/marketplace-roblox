@@ -5,11 +5,19 @@ namespace App\Http\Controllers\User;
 use App\Helper\Crypto;
 use App\Http\Controllers\{BaseResponse, Controller};
 use App\Http\Requests\User\{UserLoginRequest};
+use App\Repository\Histories\PurchaseHistory\PurchaseHistoryInterface;
+use App\Repository\WithdrawPartner\WithdrawPartnerInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthController extends Controller
 {
+
+    public function __construct(
+        private WithdrawPartnerInterface $withdrawPartnerRepository,
+        private PurchaseHistoryInterface $purchaseHistoryRepository
+    ) {}
 
     public function logout(Request $request)
     {
@@ -28,12 +36,17 @@ class AuthController extends Controller
     public function getCurrentInfo(Request $request)
     {
         $user = $request->user();
+        if (Gate::allows('ctv', $user)) {
+            $allAmount = $this->purchaseHistoryRepository->allAmountPartner($user);
+            $currentAmount = $this->withdrawPartnerRepository->getCurrentAmount($user, $allAmount);
+        }
         return BaseResponse::data([
             "id" => $user->id,
             "name" => $user->name,
             "shop" => $user->shop->domain ?? "",
             "admin_type" => $user->admin_type,
             "created_at" => $user->created_at,
+            "price" => $currentAmount ?? null
         ]);
     }
 

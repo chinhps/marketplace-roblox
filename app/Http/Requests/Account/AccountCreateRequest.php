@@ -30,9 +30,8 @@ class AccountCreateRequest extends BaseRequest
     public function rules(): array
     {
         $data = $this->all();
-        $data['data']['active'] = filter_var($this->input("data.active"), FILTER_VALIDATE_BOOLEAN);
-        $data['data']['price'] = (int)$this->input("data.price");
-        $this->replace($data);
+        $modifiedData = $this->mergeArrays(json_decode($data['dataDefault'], true), $data);
+        $this->replace($modifiedData);
 
         $commonRules = [
             "id" => "nullable|exists:account_list,id",
@@ -60,6 +59,24 @@ class AccountCreateRequest extends BaseRequest
         }
 
         return array_merge($commonRules, $additionalRules);
+    }
+
+    public function mergeArrays($arrayA, $arrayB)
+    {
+        foreach ($arrayB as $key => $valueB) {
+            if (array_key_exists($key, $arrayA)) {
+                if (is_array($valueB) && is_array($arrayA[$key])) {
+                    $arrayA[$key] = $this->mergeArrays($arrayA[$key], $valueB);
+                } else {
+                    if (gettype($arrayA[$key]) !== "boolean" && gettype($arrayA[$key]) !== "integer" && gettype($arrayA[$key]) !== "NULL") {
+                        $arrayA[$key] = $valueB;
+                    }
+                }
+            } else {
+                $arrayA[$key] = $valueB;
+            }
+        }
+        return $arrayA;
     }
 
     function extractInputRules($inputArray)

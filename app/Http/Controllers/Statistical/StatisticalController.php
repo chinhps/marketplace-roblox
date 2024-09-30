@@ -146,6 +146,7 @@ class StatisticalController extends Controller
         if (Gate::allows('ctv', $user)) {
             $dataChart = DB::table('purchase_histories')
                 ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(price) as sum_price'))
+                ->where('admin_id', $user->id)
                 ->where('refund', "NO");
         }
 
@@ -254,7 +255,7 @@ class StatisticalController extends Controller
             $dataResponse = [
                 [
                     "label" => "Acc đã bán (Hôm nay)",
-                    "value" => (clone $purchase)->whereYear('created_at', date('Y'))->whereMonth('created_at', date('d'))->count()
+                    "value" => (clone $purchase)->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->count()
                 ],
                 [
                     "label" => "Acc đã bán (Tháng)",
