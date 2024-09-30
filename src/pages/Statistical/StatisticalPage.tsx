@@ -27,6 +27,12 @@ percelDiamonds.set(440, 100000);
 percelDiamonds.set(880, 200000);
 percelDiamonds.set(2200, 500000);
 
+percelDiamonds.set(113, 20000);
+percelDiamonds.set(283, 50000);
+percelDiamonds.set(566, 100000);
+percelDiamonds.set(1132, 200000);
+percelDiamonds.set(2830, 500000);
+
 export default function StatisticalPage() {
   const [_, setPage] = useState<number>(1);
   const [filter, setFilter] = useState<any>({});
