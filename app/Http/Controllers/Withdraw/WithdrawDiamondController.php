@@ -88,19 +88,19 @@ class HandleHelperDiamond
         $diamond  = 0;
         switch ($id) {
             case 1:
-                $diamond = 88;
+                $diamond = 113;
                 break;
             case 2:
-                $diamond = 220;
+                $diamond = 283;
                 break;
             case 3:
-                $diamond = 440;
+                $diamond = 566;
                 break;
             case 4:
-                $diamond = 880;
+                $diamond = 1132;
                 break;
             case 5:
-                $diamond = 2200;
+                $diamond = 2830;
                 break;
             default:
                 break;
