@@ -110,19 +110,19 @@ class PushDiamondController extends Controller
     private function convertDiamondToPrice(float $diamond)
     {
         switch ($diamond) {
-            case 88:
+            case 113:
                 $price = 20000;
                 break;
-            case 220:
+            case 283:
                 $price = 50000;
                 break;
-            case 440:
+            case 566:
                 $price = 100000;
                 break;
-            case 880:
+            case 1132:
                 $price = 200000;
                 break;
-            case 2200:
+            case 2830:
                 $price = 500000;
                 break;
             default:
