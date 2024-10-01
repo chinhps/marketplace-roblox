@@ -1,0 +1,8 @@
+<?php
+
+namespace App\Repository\{{baseName}};
+
+interface {{baseName}}Interface
+{
+    public function updateOrInsert(float|null $id, array $params);
+}

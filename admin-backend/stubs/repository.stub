@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Repository\{{baseName}};
+
+use Illuminate\Database\Eloquent\Model;
+
+class {{baseName}}Repository implements {{baseName}}Interface
+{
+    public function __construct(
+        private Model $model = ""
+    ) {
+    }
+
+    public function updateOrInsert(float|null $id, array $params)
+    {
+
+    }
+
+}

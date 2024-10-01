@@ -1,0 +1,53 @@
+{
+  "name": "frontend-react",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "concurrently \"tsc && vite build --mode phuoclocroblox --outDir domain/phuoclocroblox.vn/public_html\"",
+    "build:tuan": "concurrently \"vite build --mode phuoclocroblox --outDir domain/phuoclocroblox.vn/public_html\" \"vite build --mode shopk1gaming --outDir domain/shopk1gaming.com/public_html\" \"vite build --mode tramyroblox --outDir domain/tramyroblox.vn/public_html\"",
+    "build:all": "concurrently \"tsc && vite build --mode aburoblox --outDir domain/aburoblox.com/public_html\" \"tsc && vite build --mode anhbaphairoblox --outDir domain/anhbaphairoblox.com/public_html\" \"tsc && vite build --mode jaygrayroblox --outDir domain/jaygrayroblox.com/public_html\" \"tsc && vite build --mode loczutakiroblox --outDir domain/loczutakiroblox.com/public_html\" \"tsc && vite build --mode longhtroblox --outDir domain/longhtroblox.com/public_html\" \"tsc && vite build --mode shopjaki --outDir domain/jakiroblox.com/public_html\" \"tsc && vite build --mode starjinxroblox --outDir domain/starjinxroblox.com/public_html\"",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.7.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@tanstack/react-query": "^4.29.14",
+    "@tanstack/react-query-devtools": "^4.29.14",
+    "axios": "^1.4.0",
+    "concurrently": "^8.2.1",
+    "crypto-js": "^4.1.1",
+    "framer-motion": "^10.12.16",
+    "moment": "^2.29.4",
+    "query-string": "^8.1.0",
+    "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
+    "react-dom": "^18.2.0",
+    "react-helmet-async": "^1.3.0",
+    "react-hook-form": "^7.44.3",
+    "react-icons": "^4.9.0",
+    "react-paginate": "^8.2.0",
+    "react-responsive-carousel": "^3.2.23",
+    "react-router-dom": "^6.11.2",
+    "sass": "^1.62.1",
+    "styled-components": "^6.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
+    "@types/crypto-js": "^4.1.1",
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9"
+  }
+}

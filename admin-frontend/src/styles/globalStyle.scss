@@ -1,0 +1,76 @@
+:root {
+  --color-text-default: #ffffff;
+  --bg-item-main-color: #03033f;
+  --bg-item-main3-color: #01017ace;
+  --bg-item-main4-color: #0303b6;
+  --bg-item2-main-color: #03033f;
+  --bg-loading: #ffffffb3;
+}
+
+body {
+  background-color: #f6f6fb !important;
+}
+
+.break-word {
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.navigate {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  li {
+    border-radius: 5px;
+    background-color: #eeeeee;
+    color: #000000;
+  }
+
+  .disabled {
+    color: gray;
+  }
+  .page-paginate {
+    transition: 0.3s;
+    font-weight: bold;
+    &:hover {
+      color: #d21616;
+    }
+  }
+  a {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    padding: 1rem 1rem;
+    min-width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  .hd {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  .active {
+    background-color: var(--bg-item2-main-color) !important;
+    color: #ffffff;
+    &:hover {
+      color: initial;
+    }
+  }
+  .break {
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.ck-content {
+  height: 250px;
+}

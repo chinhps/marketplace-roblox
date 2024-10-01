@@ -1,0 +1,311 @@
+::-ms-reveal {
+  display: none;
+}
+
+:root {
+  --bg-nav-color: #ffffff;
+  --bg-main-color: #f5f5f5;
+  --bg-item-main-color: #ffffff;
+  --bg-item2-main-color: #dc2626;
+  --bg-item3-main-color: #ef4444;
+  --bg-item4-main-color: #af9494;
+  --bg-item4-main-color: #f6f3f3;
+  --color-text-price-top-recharge: #ffffff;
+  --bg-top-recharge-unactive: #e4e4e4;
+
+  // BUTTON
+  --color-btn-1: var(--bg-item2-main-color);
+  --color-btn-2: var(--bg-item3-main-color);
+
+  // TAG
+  --color-text-tag: #fff;
+
+  // SKELETON
+  --bg-skeleton: #ffffffcb;
+
+  //  ACCOUNT
+  --color-text-header-account: #ef4444;
+
+  //   FOOTER
+  --bg-footer: #1b1a1a;
+  --color-footer: #fff;
+}
+
+body {
+  background-color: var(--bg-main-color) !important;
+  // color: #fff !important;
+}
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.changeColor {
+  animation: changeColor 0.3s linear infinite;
+}
+
+.showText {
+  animation-duration: 2500ms;
+  animation-delay: 0ms;
+  animation-name: showText;
+  animation-iteration-count: 1;
+}
+
+.input-animation {
+  animation-duration: 500ms;
+  animation-delay: 50ms;
+  animation-name: input-animation;
+  animation-iteration-count: 1;
+}
+
+.frame-service {
+  position: absolute;
+  top: 0;
+  inset: 1px;
+  pointer-events: none;
+}
+
+.image-with-blur-border {
+  position: relative;
+  display: inline-block;
+  background-size: cover; /* Điều chỉnh kích thước ảnh nền */
+  background-position: center center; /* Điều chỉnh vị trí ảnh nền */
+  overflow: hidden;
+}
+
+.image-with-blur-border::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px; /* Điều chỉnh độ dày của viền dưới ở đây */
+  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.5); /* Điều chỉnh màu sắc và độ mờ ở đây */
+  pointer-events: none;
+}
+
+@keyframes input-animation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes changeColor {
+  0% {
+    background: var(--bg-item3-main-color);
+  }
+  50% {
+    background: var(--bg-item2-main-color);
+  }
+  100% {
+    background: var(--bg-item3-main-color);
+  }
+}
+
+@keyframes showText {
+  0% {
+    clip-path: polygon(0% 0%, 0% 0%, 0% 0%);
+  }
+  100% {
+    clip-path: polygon(0% 0%, 200% 0%, 0% 200%);
+  }
+}
+
+.skeleton {
+  background-color: var(--bg-item4-main-color);
+  width: 100%;
+  height: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--bg-skeleton),
+    transparent
+  );
+  animation: skeleton-loading 1.5s linear infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.transaction-new-item {
+  position: absolute;
+  animation: transaction-new-item-loading 0.7s normal;
+}
+
+@keyframes transaction-new-item-loading {
+  0% {
+    opacity: 0;
+    left: 100%;
+  }
+  100% {
+    opacity: 1;
+    left: 0%;
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  animation: rotating 0.3s linear infinite;
+}
+
+.lucky-card-light {
+  z-index: 1;
+  position: relative;
+  display: inline-block;
+  animation: light 1s linear infinite;
+}
+
+.lucky-card-light::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes light {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 220, 254, 0.655);
+  }
+  100% {
+    box-shadow: 0 0 0 100px rgba(255, 255, 255, 0);
+  }
+}
+
+.shake-card {
+  &:hover {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+  }
+  .flip {
+    animation: flip 1s;
+    animation-fill-mode: forwards;
+    &-back {
+      animation: flip-back 1s;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+.transtion {
+  transition: 0.5s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+  50% {
+    transform: translateX(0) rotate(0deg);
+  }
+  75% {
+    transform: translateX(5px) rotate(5deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateY(0);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+@keyframes flip-back {
+  0% {
+    transform: rotateY(180deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(0);
+  }
+}
+
+.navigate {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  .disabled {
+    color: gray;
+  }
+  .page-paginate {
+    transition: 0.3s;
+    font-weight: bold;
+    &:hover {
+      color: #d21616;
+    }
+  }
+  a {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #111;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+  .hd {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+  .active {
+    border-radius: 5px;
+    background-color: var(--bg-item2-main-color);
+    &:hover {
+      color: initial;
+    }
+  }
+  .break {
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
