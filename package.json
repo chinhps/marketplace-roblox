@@ -1,0 +1,49 @@
+{
+  "name": "admin-frontend",
+  "private": true,
+  "version": "1.1.2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:ho": "tsc && vite build --mode hoall --outDir domain/hoall",
+    "build:tuan": "concurrently \"tsc && vite build --mode k1gaming --outDir domain/k1gaming.kundev.vn/public_html\" \"tsc && vite build --mode tramy --outDir domain/tramy.kundev.vn/public_html\" \"tsc && vite build --mode tuanall --outDir domain/admin.kundev.vn/public_html\"",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.0",
+    "@ckeditor/ckeditor5-core": "^41.0.0",
+    "@ckeditor/ckeditor5-react": "^6.2.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@tanstack/react-query": "^4.32.1",
+    "axios": "^1.4.0",
+    "chart.js": "^4.3.3",
+    "framer-motion": "^10.15.0",
+    "moment": "^2.29.4",
+    "query-string": "^8.1.0",
+    "quill": "^1.3.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
+    "react-icons": "^4.10.1",
+    "react-paginate": "^8.2.0",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.14.2",
+    "sass": "^1.64.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}
