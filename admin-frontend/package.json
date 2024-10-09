@@ -6,8 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:ho": "tsc && vite build --mode hoall --outDir domain/hoall",
-    "build:tuan": "concurrently \"tsc && vite build --mode k1gaming --outDir domain/k1gaming.kundev.vn/public_html\" \"tsc && vite build --mode tramy --outDir domain/tramy.kundev.vn/public_html\" \"tsc && vite build --mode tuanall --outDir domain/admin.kundev.vn/public_html\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

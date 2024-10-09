@@ -1,0 +1,98 @@
+services:
+  mysql-marketplace:
+    image: mysql:8.0
+    container_name: mysql-marketplace-container
+    ports:
+      - 3308:3306
+    environment:
+      - MYSQL_DATABASE=marketplace
+      - MYSQL_ROOT_PASSWORD=Chinh@12345
+    volumes:
+      - mysql-marketplace-volume:/var/lib/mysql
+      - mysql-marketplace-volume-config:/etc/mysql
+    networks:
+      - marketplace_network
+
+  admin-backend:
+    container_name: admin-backend-nginx-container
+    env_file:
+      - .env.docker
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=mysql-marketplace
+      - DB_DATABASE=marketplace
+      - DB_USERNAME=root
+      - DB_PASSWORD=Chinh@12345
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql-marketplace
+    networks:
+      - marketplace_network
+  
+  nginx-admin-backend:
+    container_name: nginx-admin-backend-container
+    build:
+      context: ./admin-backend
+      dockerfile: nginx.Dockerfile
+    depends_on:
+      - admin-backend
+    ports:
+      - 8080:80
+    networks:
+      - marketplace_network
+
+
+  client-backend:
+    container_name: client-backend-nginx-container
+    env_file:
+      - .env.docker
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=mysql-marketplace
+      - DB_DATABASE=marketplace
+      - DB_USERNAME=root
+      - DB_PASSWORD=Chinh@12345
+    build:
+      context: ./client-backend
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql-marketplace
+    networks:
+      - marketplace_network
+  
+  nginx-client-backend:
+    container_name: nginx-client-backend-container
+    build:
+      context: ./client-backend
+      dockerfile: nginx.Dockerfile
+    depends_on:
+      - client-backend
+    ports:
+      - 9090:80
+    networks:
+      - marketplace_network
+
+  # admin-frontend-with-nginx:
+  #   container_name: admin-frontend-container
+  #   environment:
+  #     - VITE_APP_API=${VITE_APP_API_ADMIN}
+  #     - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
+  #   build:
+  #     context: ./admin-frontend
+  #     dockerfile: prod.Dockerfile
+  #   ports:
+  #     - 1020:80
+  #   networks:
+  #     - marketplace_network
+
+networks:
+  marketplace_network:
+    name: marketplace_network
+    driver: bridge
+volumes:
+  mysql-marketplace-volume:
+  mysql-marketplace-volume-config:

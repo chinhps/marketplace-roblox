@@ -4,7 +4,7 @@ import terser from "@rollup/plugin-terser";
 
 export default (mode) => {
   return defineConfig({
-    envDir: mode.mode === "development" ? "./" : "./ENV",
+    envDir: "./",
     cacheDir: ".vite-cache",
     build: {
       chunkSizeWarningLimit: 1000,

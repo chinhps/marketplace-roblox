@@ -2,9 +2,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 // import terser from '@rollup/plugin-terser';
 
-export default (mode) => {
+export default () => {
   return defineConfig({
-    envDir: mode.mode === "development" ? "./" : "./env",
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
@@ -14,11 +13,6 @@ export default (mode) => {
           },
         },
         plugins: [
-          // terser({
-          //   mangle: {
-          //     toplevel: true,
-          //   },
-          // }),
         ],
       },
     },
