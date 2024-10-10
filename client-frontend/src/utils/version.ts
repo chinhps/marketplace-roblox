@@ -3,5 +3,5 @@ export const getVersion = () => {
 };
 
 export const myDomain = () => {
-  return import.meta.env.VITE_APP_DOMAIN;
+  return window.location.hostname;
 };

@@ -2,10 +2,9 @@ import axios from "axios";
 import queryString from "query-string";
 import { token } from "./function";
 import { createStandaloneToast } from "@chakra-ui/react";
-// import CryptoJS from 'crypto-js';
 
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_APP_API + "/api123",
+  baseURL: import.meta.env.VITE_APP_API + "/api",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "content-type": "application/json",
@@ -26,7 +25,6 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   (res) => {
-   console.log("import.meta.env.VITE_APP_API", import.meta.env.VITE_APP_API)
     return res;
   },
   (err) => {
