@@ -140,6 +140,9 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/admin-frontend-marketplace:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+          build-args: |
+            VITE_APP_API=${{ secrets.VITE_APP_API_ADMIN }}
+            VITE_APP_LOGO_URL=${{ secrets.VITE_APP_LOGO_URL_ADMIN }}
 
 
       - name: Check for changes in client-frontend
@@ -165,4 +168,29 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/client-frontend-marketplace:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+          build-args: |
+            VITE_APP_API=${{ secrets.VITE_APP_API_CLIENT }}
+            VITE_APP_ENCRYPT_KEY=${{ secrets.CRYPTO_KEY }}
+            VITE_APP_HMAC_KEY=${{ secrets.CRYPTO_HMAC_KEY }}
 
+  prebuild-container:
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SCP docker-compose
+        run: |
+          scp -o StrictHostKeyChecking=no ./docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER }}:/home/chinhdev/websites/marketplace-demo.chinh.dev
+      
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER }} '/home/chinhdev/websites/marketplace-demo.chinh.dev/auto-deploy.sh' 

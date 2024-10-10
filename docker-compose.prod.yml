@@ -1,7 +1,7 @@
 services:
   mysql-marketplace:
     image: mysql:8.0
-    container_name: mysql-marketplace-container
+    container_name: marketplace-mysql-container
     ports:
       - 3308:3306
     environment:
@@ -14,7 +14,8 @@ services:
       - marketplace_network
 
   admin-backend:
-    container_name: admin-backend-nginx-container
+    image: chinhps/admin-backend-marketplace:latest
+    container_name: marketplace-admin-backend-container
     env_file:
       - .env.docker
     environment:
@@ -24,19 +25,14 @@ services:
       - DB_DATABASE=${MYSQL_DATABASE}
       - DB_USERNAME=root
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    build:
-      context: ./admin-backend
-      dockerfile: Dockerfile
     depends_on:
       - mysql-marketplace
     networks:
       - marketplace_network
   
   nginx-admin-backend:
-    container_name: nginx-admin-backend-container
-    build:
-      context: ./admin-backend
-      dockerfile: nginx.Dockerfile
+    image: chinhps/nginx-admin-backend-marketplace:latest
+    container_name: marketplace-nginx-admin-backend-container
     depends_on:
       - admin-backend
     ports:
@@ -46,7 +42,8 @@ services:
 
 
   client-backend:
-    container_name: client-backend-nginx-container
+    image: chinhps/client-backend-marketplace:latest
+    container_name: marketplace-client-backend-container
     env_file:
       - .env.docker
     environment:
@@ -58,19 +55,14 @@ services:
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - CRYPTO_KEY=${CRYPTO_KEY}
       - CRYPTO_HMAC_KEY=${CRYPTO_HMAC_KEY}
-    build:
-      context: ./client-backend
-      dockerfile: Dockerfile
     depends_on:
       - mysql-marketplace
     networks:
       - marketplace_network
   
   nginx-client-backend:
-    container_name: nginx-client-backend-container
-    build:
-      context: ./client-backend
-      dockerfile: nginx.Dockerfile
+    image: chinhps/nginx-client-backend-marketplace:latest
+    container_name: marketplace-nginx-client-backend-container
     depends_on:
       - client-backend
     ports:
@@ -79,32 +71,21 @@ services:
       - marketplace_network
 
   admin-frontend-with-nginx:
-    container_name: admin-frontend-container
+    image: chinhps/admin-frontend-marketplace:latest
+    container_name: marketplace-admin-frontend-container
     environment:
       - VITE_APP_API=${VITE_APP_API_ADMIN}
       - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
-    build:
-      context: ./admin-frontend
-      dockerfile: prod.Dockerfile
-      args:
-        - VITE_APP_API=${VITE_APP_API_ADMIN}
-        - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
     ports:
       - 1020:80
 
   client-frontend-with-nginx:
-    container_name: client-frontend-container
+    image: chinhps/client-frontend-marketplace:latest
+    container_name: marketplace-client-frontend-container
     environment:
       - VITE_APP_API=${VITE_APP_API_CLIENT}
       - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
       - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
-    build:
-      context: ./client-frontend
-      dockerfile: prod.Dockerfile
-      args:
-        - VITE_APP_API=${VITE_APP_API_CLIENT}
-        - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
-        - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
     ports:
       - 1030:80
 
