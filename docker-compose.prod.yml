@@ -2,6 +2,7 @@ services:
   mysql-marketplace:
     image: mysql:8.0
     container_name: marketplace-mysql-container
+    restart: always
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -14,6 +15,7 @@ services:
   admin-backend:
     image: chinhps/admin-backend-marketplace:latest
     container_name: marketplace-admin-backend-container
+    restart: always
     env_file:
       - .env.docker
     environment:
@@ -31,6 +33,7 @@ services:
   nginx-admin-backend:
     image: chinhps/nginx-admin-backend-marketplace:latest
     container_name: marketplace-nginx-admin-backend-container
+    restart: always
     depends_on:
       - admin-backend
     ports:
@@ -42,6 +45,7 @@ services:
   client-backend:
     image: chinhps/client-backend-marketplace:latest
     container_name: marketplace-client-backend-container
+    restart: always
     env_file:
       - .env.docker
     environment:
@@ -61,6 +65,7 @@ services:
   nginx-client-backend:
     image: chinhps/nginx-client-backend-marketplace:latest
     container_name: marketplace-nginx-client-backend-container
+    restart: always
     depends_on:
       - client-backend
     ports:
@@ -71,6 +76,7 @@ services:
   admin-frontend-with-nginx:
     image: chinhps/admin-frontend-marketplace:latest
     container_name: marketplace-admin-frontend-container
+    restart: always
     environment:
       - VITE_APP_API=${VITE_APP_API_ADMIN}
       - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
@@ -80,6 +86,7 @@ services:
   client-frontend-with-nginx:
     image: chinhps/client-frontend-marketplace:latest
     container_name: marketplace-client-frontend-container
+    restart: always
     environment:
       - VITE_APP_API=${VITE_APP_API_CLIENT}
       - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
