@@ -11,6 +11,7 @@ services:
     volumes:
       - mysql-marketplace-volume:/var/lib/mysql
       - mysql-marketplace-volume-config:/etc/mysql
+    command: --max-connections=500
     networks:
       - marketplace_network
 
