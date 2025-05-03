@@ -133,8 +133,8 @@ class AccountController extends Controller
 
         DB::beginTransaction();
         try {
+            $privateForm = json_decode($service->private_form, true);
             foreach ($listAccount as $accountItem) {
-                $privateForm = json_decode($service->private_form, true);
                 $this->accountRepository->updateOrInsert(null, [
                     "prioritize" => 1,
                     "detail_public" => json_encode([]),
@@ -203,8 +203,8 @@ class AccountController extends Controller
     private function convertDataRandom(array $array, string $accountItem)
     {
         $result = [];
+        $explodeAccount = explode("|", $accountItem);
         foreach ($array as $key => $value) {
-            $explodeAccount = explode("|", $accountItem);
             $result[$value['name']] =  $explodeAccount[$key];
         }
         return $result;

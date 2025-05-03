@@ -255,7 +255,7 @@ class StatisticalController extends Controller
             $dataResponse = [
                 [
                     "label" => "Acc đã bán (Hôm nay)",
-                    "value" => (clone $purchase)->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->count()
+                    "value" => (clone $purchase)->whereDate('created_at', now()->format('Y-m-d'))->count()
                 ],
                 [
                     "label" => "Acc đã bán (Tháng)",
@@ -306,7 +306,7 @@ class StatisticalController extends Controller
 
             return BaseResponse::data([
                 "month" => (clone $purchase)->whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('price'),
-                "day" => (clone $purchase)->whereYear('created_at', date('Y'))->whereDay('created_at', date('d'))->sum('price')
+                "day" => (clone $purchase)->whereDate('created_at', now()->format('Y-m-d'))->sum('price')
             ]);
         }
 

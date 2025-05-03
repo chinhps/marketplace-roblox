@@ -22,9 +22,18 @@ class UserRegisterRequest extends BaseRequest
     public function rules(): array
     {
         return array_merge($this->domainRules()['rules'], [
-            "username" => "bail|required|alpha_num|min:5|max:255|unique:users",
-            "password" => "bail|required|string|min:8|confirmed",
+            "username" => "required|alpha_num|min:5|max:255|unique:users",
+            "password" => "required|string|min:8|confirmed",
         ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->input('username') === $this->input('password')) {
+                $validator->errors()->add('password', 'Mật khẩu không được trùng với tên đăng nhập.');
+            }
+        });
     }
 
     public function messages(): array

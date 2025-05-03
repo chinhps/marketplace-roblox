@@ -1,9 +1,8 @@
 services:
   mysql-marketplace:
     image: mysql:8.0
-    container_name: mysql-marketplace-container
-    ports:
-      - 3308:3306
+    container_name: marketplace-mysql-container
+    restart: always
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -13,8 +12,47 @@ services:
     networks:
       - marketplace_network
 
-  admin-backend:
-    container_name: admin-backend-nginx-container
+  admin-backend-queue:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    container_name: marketplace-admin-backend-queue-container
+    restart: unless-stopped
+    command: >
+      sh -c "php artisan queue:work 
+      --queue=high,default 
+      --timeout=120 
+      --sleep=10 
+      --tries=3 
+      --max-jobs=1000 
+      --max-time=3600 
+      --memory=128"
+    env_file:
+      - .env.docker
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=mysql-marketplace
+      - DB_DATABASE=${MYSQL_DATABASE}
+      - DB_USERNAME=root
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - API_SERVER_IMAGE=${API_SERVER_IMAGE}
+      - API_SERVER_IMAGE_STORAGE=${API_SERVER_IMAGE_STORAGE}
+      - API_KEY_WITHDRAW_DIAMOND_USER=${API_KEY_WITHDRAW_DIAMOND_USER}
+      - API_KEY_WITHDRAW_DIAMOND_ADMIN=${API_KEY_WITHDRAW_DIAMOND_ADMIN}
+    volumes:
+      - shared-storage:/var/www/storage/app/uploads_temp
+    depends_on:
+      - mysql-marketplace
+      - nginx-admin-backend
+    networks:
+      - marketplace_network
+
+  nginx-admin-backend:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    container_name: marketplace-nginx-admin-backend-container
     env_file:
       - .env.docker
     environment:
@@ -24,29 +62,24 @@ services:
       - DB_DATABASE=${MYSQL_DATABASE}
       - DB_USERNAME=root
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    build:
-      context: ./admin-backend
-      dockerfile: Dockerfile
+      - API_SERVER_IMAGE=${API_SERVER_IMAGE}
+      - API_SERVER_IMAGE_STORAGE=${API_SERVER_IMAGE_STORAGE}
+      - API_KEY_WITHDRAW_DIAMOND_USER=${API_KEY_WITHDRAW_DIAMOND_USER}
+      - API_KEY_WITHDRAW_DIAMOND_ADMIN=${API_KEY_WITHDRAW_DIAMOND_ADMIN}
+    volumes:
+      - shared-storage:/var/www/storage/app/uploads_temp
     depends_on:
       - mysql-marketplace
-    networks:
-      - marketplace_network
-  
-  nginx-admin-backend:
-    container_name: nginx-admin-backend-container
-    build:
-      context: ./admin-backend
-      dockerfile: nginx.Dockerfile
-    depends_on:
-      - admin-backend
     ports:
       - 1040:80
     networks:
       - marketplace_network
 
-
-  client-backend:
-    container_name: client-backend-nginx-container
+  nginx-client-backend:
+    build:
+      context: ./client-backend
+      dockerfile: Dockerfile
+    container_name: marketplace-nginx-client-backend-container
     env_file:
       - .env.docker
     environment:
@@ -58,59 +91,48 @@ services:
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - CRYPTO_KEY=${CRYPTO_KEY}
       - CRYPTO_HMAC_KEY=${CRYPTO_HMAC_KEY}
-    build:
-      context: ./client-backend
-      dockerfile: Dockerfile
+      - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
+      - FACEBOOK_CLIENT_CALLBACK=${FACEBOOK_CLIENT_CALLBACK}
     depends_on:
       - mysql-marketplace
-    networks:
-      - marketplace_network
-  
-  nginx-client-backend:
-    container_name: nginx-client-backend-container
-    build:
-      context: ./client-backend
-      dockerfile: nginx.Dockerfile
-    depends_on:
-      - client-backend
     ports:
       - 1050:80
     networks:
       - marketplace_network
 
   admin-frontend-with-nginx:
-    container_name: admin-frontend-container
-    environment:
-      - VITE_APP_API=${VITE_APP_API_ADMIN}
-      - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
+    # image: chinhps/admin-frontend-marketplace:latest
+    container_name: marketplace-admin-frontend-container
     build:
       context: ./admin-frontend
-      dockerfile: prod.Dockerfile
+      dockerfile: dev.Dockerfile
       args:
         - VITE_APP_API=${VITE_APP_API_ADMIN}
         - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
+    restart: always
+    environment:
+      - VITE_APP_API=${VITE_APP_API_ADMIN}
+      - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
     ports:
-      - 1020:80
-    networks:
-      - marketplace_network
+      - 1020:1020
 
   client-frontend-with-nginx:
-    container_name: client-frontend-container
-    environment:
-      - VITE_APP_API=${VITE_APP_API_CLIENT}
-      - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
-      - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
+    # image: chinhps/client-frontend-marketplace:latest
+    container_name: marketplace-client-frontend-container
     build:
       context: ./client-frontend
-      dockerfile: prod.Dockerfile
+      dockerfile: dev.Dockerfile
       args:
         - VITE_APP_API=${VITE_APP_API_CLIENT}
         - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
         - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
+    restart: always
+    environment:
+      - VITE_APP_API=${VITE_APP_API_CLIENT}
+      - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
+      - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
     ports:
-      - 1030:80
-    networks:
-      - marketplace_network
+      - 1030:1030
 
 networks:
   marketplace_network:
@@ -119,3 +141,5 @@ networks:
 volumes:
   mysql-marketplace-volume:
   mysql-marketplace-volume-config:
+  shared-storage:
+    driver: local
