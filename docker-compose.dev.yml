@@ -11,6 +11,8 @@ services:
       - mysql-marketplace-volume-config:/etc/mysql
     networks:
       - marketplace_network
+    ports:
+      - 3309:3306
 
   admin-backend-queue:
     build:
