@@ -21,6 +21,12 @@ export default () => {
         "@": "/src",
       },
     },
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 100,
+      },
+    },
     plugins: [react()],
   });
 };

@@ -1,7 +1,7 @@
 services:
   mysql-marketplace:
     image: mysql:8.0
-    container_name: marketplace-mysql-container
+    container_name: mysql-container
     restart: always
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -18,7 +18,7 @@ services:
     build:
       context: ./admin-backend
       dockerfile: Dockerfile
-    container_name: marketplace-admin-backend-queue-container
+    container_name: admin-backend-queue-container
     restart: unless-stopped
     command: >
       sh -c "php artisan queue:work 
@@ -54,7 +54,7 @@ services:
     build:
       context: ./admin-backend
       dockerfile: Dockerfile
-    container_name: marketplace-nginx-admin-backend-container
+    container_name: admin-backend-container
     env_file:
       - .env.docker
     environment:
@@ -69,6 +69,7 @@ services:
       - API_KEY_WITHDRAW_DIAMOND_USER=${API_KEY_WITHDRAW_DIAMOND_USER}
       - API_KEY_WITHDRAW_DIAMOND_ADMIN=${API_KEY_WITHDRAW_DIAMOND_ADMIN}
     volumes:
+      - ./admin-backend/app:/var/www/app
       - shared-storage:/var/www/storage/app/uploads_temp
     depends_on:
       - mysql-marketplace
@@ -81,7 +82,7 @@ services:
     build:
       context: ./client-backend
       dockerfile: Dockerfile
-    container_name: marketplace-nginx-client-backend-container
+    container_name: client-backend-container
     env_file:
       - .env.docker
     environment:
@@ -95,6 +96,8 @@ services:
       - CRYPTO_HMAC_KEY=${CRYPTO_HMAC_KEY}
       - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
       - FACEBOOK_CLIENT_CALLBACK=${FACEBOOK_CLIENT_CALLBACK}
+    volumes:
+      - ./client-backend/app:/var/www/app
     depends_on:
       - mysql-marketplace
     ports:
@@ -104,7 +107,7 @@ services:
 
   admin-frontend-with-nginx:
     # image: chinhps/admin-frontend-marketplace:latest
-    container_name: marketplace-admin-frontend-container
+    container_name: admin-frontend-container
     build:
       context: ./admin-frontend
       dockerfile: dev.Dockerfile
@@ -115,12 +118,15 @@ services:
     environment:
       - VITE_APP_API=${VITE_APP_API_ADMIN}
       - VITE_APP_LOGO_URL=${VITE_APP_LOGO_URL_ADMIN}
+    volumes:
+      - ./admin-frontend:/app
+      - /app/node_modules
     ports:
       - 1020:1020
 
   client-frontend-with-nginx:
     # image: chinhps/client-frontend-marketplace:latest
-    container_name: marketplace-client-frontend-container
+    container_name: client-frontend-container
     build:
       context: ./client-frontend
       dockerfile: dev.Dockerfile
@@ -133,6 +139,9 @@ services:
       - VITE_APP_API=${VITE_APP_API_CLIENT}
       - VITE_APP_ENCRYPT_KEY=${CRYPTO_KEY}
       - VITE_APP_HMAC_KEY=${CRYPTO_HMAC_KEY}
+    volumes:
+      - ./client-frontend:/app
+      - /app/node_modules
     ports:
       - 1030:1030
 
