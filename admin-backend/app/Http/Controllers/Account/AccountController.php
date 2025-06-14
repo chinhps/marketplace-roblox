@@ -200,12 +200,15 @@ class AccountController extends Controller
         }
     }
 
-    private function convertDataRandom(array $array, string $accountItem)
+    private function convertDataRandom(array $privateForm, string $accountItem)
     {
         $result = [];
         $explodeAccount = explode("|", $accountItem);
-        foreach ($array as $key => $value) {
-            $result[$value['name']] =  $explodeAccount[$key];
+        foreach ($privateForm as $key => $value) {
+            if (!isset($explodeAccount[$key])) {
+                continue;
+            }
+            $result[$value['name']] = $explodeAccount[$key];
         }
         return $result;
     }
@@ -214,6 +217,11 @@ class AccountController extends Controller
     {
         $result = [];
         foreach ($array as $item) {
+            // Skip info not required
+            if ((!isset($item['isRequired']) || $item['isRequired'] === false) && empty($values[$item['name']])) {
+                continue;
+            }
+
             $result[] = [
                 "key" => $item['name'],
                 "name" => $item['label'],

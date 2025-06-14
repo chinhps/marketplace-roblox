@@ -31,7 +31,7 @@ export default function InputExcept({
             Chuyển chế độ
           </Button>
         </HStack>
-        <InputTag name="domain" onChange={onChange} values={data} />
+        <InputTag parseInput={(s) => s.trim() || null} name="domain" onChange={onChange} values={data} />
       </FormControl>
     </>
   );

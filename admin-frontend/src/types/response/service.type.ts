@@ -48,6 +48,7 @@ export interface IServiceList {
 
 export interface IServiceEdit extends IServiceList {
   service_detail: IServiceDetailResponse;
+  is_form: boolean;
 }
 
 export interface IServiceDetailResponse {

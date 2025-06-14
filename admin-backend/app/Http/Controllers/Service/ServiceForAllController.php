@@ -112,9 +112,20 @@ class ServiceForAllController extends Controller
                 "information" => json_encode($information ?? ['hastag' => "percent50"]),
                 // "service_key" => Str::random(15),
             ];
+
             if (!isset($validated['idService'])) {
                 $dataService["service_key"] = Str::random(15);
             }
+
+            // Create or update form public & private
+            if (
+                $validated['typeService'] === "ACCOUNT" ||
+                $validated['typeService'] === "RANDOM"
+            ) {
+                $dataService["private_form"] = $validated['dataForm']['private_form'] ?? null;
+                $dataService["public_form"] = $validated['dataForm']['public_form'] ?? null;
+            }
+
             # CREATE SERVICE ###############################
             $service = $this->serviceRepository->updateOrInsert(
                 $validated['idService'] ?? null,

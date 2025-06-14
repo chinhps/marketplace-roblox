@@ -9,42 +9,48 @@ import {
   TagLabel,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { ChangeEvent, useCallback, useEffect, useState, FC } from "react";
+import { useCallback, useState } from "react";
 
-interface InputTagProps {
+interface InputTagProps<T = any> {
   limit?: number;
-  onChange?: (value: Array<string | number>) => void;
+  onChange?: (value: Array<T>) => void;
   isDisable?: boolean;
-  values?: Array<string | number>;
+  values?: Array<T>;
   name?: string;
+  getDisplayValue?: (item: T) => string | React.ReactNode;
+  parseInput?: (input: string) => T | null;
 }
 
-const InputTag: FC<InputTagProps> = ({
+const InputTag = <T,>({
   limit,
   onChange,
   isDisable,
   values,
   name,
-}) => {
+  getDisplayValue = (item) => item?.toString?.() || "",
+  parseInput,
+}: InputTagProps<T>) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [inputValues, setInputValues] = useState<Array<string | number>>(
-    values || []
-  );
+  const [localValues, setLocalValues] = useState<Array<T>>(values || []);
+  const isControlled = values !== undefined;
+  const inputValues = isControlled ? values! : localValues;
 
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }, []);
-
-  const handleInputBlur = useCallback(() => {
-    if (inputValue) {
-      setInputValues((prevValues) => [...prevValues, inputValue]);
-      setInputValue("");
+  const deleteTag = useCallback((index: number) => {
+    const newTags = inputValues.filter((_, i) => i !== index);
+    if (!isControlled) {
+      setLocalValues(newTags);
     }
-  }, [inputValue]);
+    onChange && onChange(newTags);
+  }, [inputValues, isControlled, onChange]);
 
-  const handleDeleteTag = useCallback((index: number) => {
-    setInputValues((prevValues) => prevValues.filter((_, i) => i !== index));
-  }, []);
+  const addTag = useCallback((tag: T) => {
+    const newTags = [...inputValues, tag];
+    if (!isControlled) {
+      setLocalValues(newTags);
+    }
+    onChange && onChange(newTags);
+    setInputValue("");
+  }, [inputValues, isControlled, onChange]);
 
   const shopAllQuery = useQuery({
     queryKey: ["shop-all"],
@@ -52,20 +58,8 @@ const InputTag: FC<InputTagProps> = ({
     retry: false,
     cacheTime: 12000,
     refetchOnWindowFocus: false,
+    enabled: name === "domain"
   });
-  
-  useEffect(() => {
-    if (values && values.toString() != inputValues.toString()) {
-      setInputValues(values);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values]);
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(inputValues);
-    }
-  }, [inputValues, onChange]);
 
   return (
     <>
@@ -86,16 +80,29 @@ const InputTag: FC<InputTagProps> = ({
             colorScheme="purple"
             color="white"
           >
-            <TagLabel>{tag}</TagLabel>
-            <TagCloseButton onClick={() => handleDeleteTag(index)} />
+            <TagLabel>{getDisplayValue && getDisplayValue(tag)}</TagLabel>
+            <TagCloseButton onClick={() => deleteTag(index)} />
           </Tag>
         ))}
-        {inputValues.length < (limit ?? 100) && (
+        {parseInput && inputValues.length < (limit ?? 100) && (
           <Input
             value={inputValue}
             border="none"
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
+            onChange={(e) => setInputValue(e.target.value)}
+            onBlur={() => {
+              const parsed = parseInput(inputValue);
+              if (parsed !== null) {
+                addTag(parsed);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const parsed = parseInput(inputValue);
+                if (parsed !== null) {
+                  addTag(parsed);
+                }
+              }
+            }}
             disabled={isDisable}
             list={name}
             _focus={{ boxShadow: "none" }}

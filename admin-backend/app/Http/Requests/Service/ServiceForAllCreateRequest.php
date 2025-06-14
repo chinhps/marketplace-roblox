@@ -50,6 +50,18 @@ class ServiceForAllCreateRequest extends BaseRequest
             'idGroup' => 'required|exists:service_groups,id',
         ];
 
+        // Create or update form public & private
+        if (
+            $this->input("typeService") === "ACCOUNT" ||
+            $this->input("typeService") === "RANDOM"
+        ) {
+            $rules = [
+                ...$rules,
+                'dataForm.private_form' => 'array',
+                'dataForm.public_form' => 'array',
+            ];
+        }
+
         if (
             $this->input("typeService") !== "ACCOUNT" ||
             $this->input("typeService") !== "CATEGORY"  ||

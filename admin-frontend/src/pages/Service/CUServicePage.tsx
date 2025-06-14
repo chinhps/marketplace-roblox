@@ -2,7 +2,9 @@ import CardCollection from "@/components/globals/CardCollection";
 import FormBase from "@/components/globals/FormBase";
 import { IFormInput } from "@/types/form.type";
 import {
+  Box,
   Button,
+  Checkbox,
   Divider,
   FormControl,
   FormLabel,
@@ -13,20 +15,29 @@ import {
   Select,
   Switch,
   Text,
+  Textarea,
   VStack,
   useDisclosure,
   useToast,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Collapse,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { SubmitHandler } from "react-hook-form";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   IGiftAdd,
   IOddsAdd,
+  IOddsItem,
   IServiceMutation,
   IServiceType,
 } from "@/types/service.type";
 import { Link, useParams } from "react-router-dom";
-import { FiPlus, FiSlack, FiTool, FiUser, FiUsers } from "react-icons/fi";
+import { FiPlus, FiSlack, FiTool, FiUser, FiUsers, FiX } from "react-icons/fi";
 import InputTag from "@/components/globals/Form/InputTag";
 import ModelBase from "@/components/globals/Model/ModelBase";
 import { FileCustomRHF } from "@/components/globals/Form/FileCustom";
@@ -46,6 +57,7 @@ const initialFormStateGifts: IGiftAdd = {
   typeGift: "NOT",
   value: 0,
 };
+
 const initialFormStateOdds: IOddsAdd = {
   isRandomAdmin: false,
   isRandomUser: false,
@@ -53,6 +65,11 @@ const initialFormStateOdds: IOddsAdd = {
   oddsUser: [],
   listGift: [],
 };
+
+type IFormField = {
+  public_form?: IFormInput[],
+  private_form?: IFormInput[]
+}
 
 export default function CUServicePage() {
   /****----------------
@@ -71,6 +88,8 @@ export default function CUServicePage() {
   const [except, setExcept] = useState<boolean>(true);
   const [idTypeOdds, setIdTypeOdds] = useState<number>(0);
   const [idGroup, setIdGroup] = useState<number>();
+  const [formFields, setFormFields] = useState<IFormField>({ public_form: [], private_form: [] });
+  const [isFormSectionOpen, setIsFormSectionOpen] = useState<boolean>(false);
 
   const serviceMutation = useMutation({
     mutationFn: ({ formData, data }: IServiceMutation) =>
@@ -90,7 +109,7 @@ export default function CUServicePage() {
     refetchOnWindowFocus: false,
   });
 
-  useQuery({
+  const serviceDetail = useQuery({
     queryKey: ["service-detail", id],
     queryFn: () => serviceApi.get(Number(id), Number(idDetail)),
     cacheTime: 5 * 1000,
@@ -107,7 +126,15 @@ export default function CUServicePage() {
       if (data.data.service_detail.service_odds_id !== 0) {
         setIdTypeOdds(data.data.service_detail.service_odds_id);
       }
+
+      setFormFields(({
+        ...(data.data.private_form && { private_form: data.data.private_form }),
+        ...(data.data.public_form && { public_form: data.data.public_form }),
+      }));
+
       setFormValue({
+        private_form: data.data.private_form,
+        public_form: data.data.public_form,
         name_service_image: data.data.service_detail.service_image?.name,
         note_service: data.data.note,
         price_service: data.data.price,
@@ -158,7 +185,11 @@ export default function CUServicePage() {
       idService: id ?? null,
       idServiceDetail: idDetail ?? null,
       idGroup: idGroup,
-      dataForm: data,
+      dataForm: {
+        ...data,
+        private_form: formFields.private_form,
+        public_form: formFields.public_form
+      },
       dataOdds: dataOdds ?? null,
       typeService: typeService,
       dataExcept: dataDomainExcept,
@@ -171,6 +202,35 @@ export default function CUServicePage() {
       data: JSON.stringify(form),
     });
   };
+
+  const addField = (type: 'private_form' | 'public_form') => {
+    const newField: IFormInput = { label: '', name: '', type: 'INPUT' };
+    setFormFields(prev => ({
+      ...prev,
+      [type]: [...(prev[type] ?? []), newField],
+    }));
+  };
+
+  const removeField = (type: 'private_form' | 'public_form', index: number) => {
+    setFormFields(prev => ({
+      ...prev,
+      [type]: (prev[type] ?? []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleFieldChange = (
+    type: 'private_form' | 'public_form',
+    index: number,
+    updatedField: IFormInput
+  ) => {
+    setFormFields(prev => ({
+      ...prev,
+      [type]: (prev[type] ?? []).map((field, i) =>
+        i === index ? updatedField : field
+      ),
+    }));
+  };
+
   /****----------------
    *      END-Handle
   ----------------****/
@@ -224,6 +284,66 @@ export default function CUServicePage() {
             <option value="RANDOM">Random tài khoản (Dạng tài khoản)</option>
           </Select>
         </FormControl>
+        {serviceDetail.data?.data.data.is_form && (
+          <FormControl mb="1rem">
+            <FormLabel>Form hiển thị</FormLabel>
+            <Button size="sm" mb={2} onClick={() => setIsFormSectionOpen(prev => !prev)}>
+              {isFormSectionOpen ? 'Ẩn thiết lập Form' : 'Hiển thị thiết lập Form'}
+            </Button>
+            <Collapse in={isFormSectionOpen} animateOpacity>
+              <Tabs>
+                <TabList>
+                  <Tab>Private Form</Tab>
+                  <Tab>Public Form</Tab>
+                  <Tab>JSON</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <SimpleGrid columns={3} mt={2}>
+                      {formFields.private_form?.map((field, index) => (
+                        <FieldConfigurator
+                          key={index}
+                          field={field}
+                          onChange={(updated) => handleFieldChange('private_form', index, updated)}
+                          onRemove={() => removeField('private_form', index)}
+                        />
+                      ))}
+                    </SimpleGrid>
+                    <Button onClick={() => addField('private_form')}>Thêm trường Private</Button>
+                  </TabPanel>
+                  <TabPanel>
+                    <SimpleGrid columns={3} mt={2}>
+                      {formFields.public_form?.map((field, index) => (
+                        <FieldConfigurator
+                          key={index}
+                          field={field}
+                          onChange={(updated) => handleFieldChange('public_form', index, updated)}
+                          onRemove={() => removeField('public_form', index)}
+                        />
+                      ))}
+                    </SimpleGrid>
+                    <Button onClick={() => addField('public_form')}>Thêm trường Public</Button>
+                  </TabPanel>
+                  <TabPanel>
+                    <VStack mt={2}>
+                      <Textarea
+                        placeholder="JSON FormFields"
+                        rows={8}
+                        value={JSON.stringify(formFields, null, 2)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            setFormFields(parsed);
+                          } catch { /* ignore invalid JSON */ }
+                        }}
+                      />
+                    </VStack>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Collapse>
+          </FormControl>
+        )}
         <InputExcept
           except={except}
           setExcept={setExcept}
@@ -233,12 +353,12 @@ export default function CUServicePage() {
         {(typeService === IServiceType.LUCKY_BOX ||
           typeService === IServiceType.LUCKY_CARD ||
           typeService === IServiceType.WHEEL) && (
-          <AddNewOdds
-            onChange={(data) => setDataOdds(data)}
-            idTypeOdds={idTypeOdds}
-            setIdTypeOdds={setIdTypeOdds}
-          />
-        )}
+            <AddNewOdds
+              onChange={(data) => setDataOdds(data)}
+              idTypeOdds={idTypeOdds}
+              setIdTypeOdds={setIdTypeOdds}
+            />
+          )}
         {typeService !== "" && (
           <FormBase
             isSubmitCustom={serviceMutation.isLoading}
@@ -284,7 +404,7 @@ function GiftAdd({
 
   const handleChangeCustom = useCallback(
     (name: keyof IGiftAdd) =>
-      (value: string | boolean | Array<string | number> | File | number) => {
+      (value: string | boolean | Array<string | number | object> | File | number) => {
         setFormState((prev) => ({
           ...prev,
           [name]: value,
@@ -379,7 +499,7 @@ function GiftAdd({
                 )
               </FormLabel>
               {isRandom ? (
-                <InputTag limit={2} onChange={handleChangeCustom("value")} />
+                <InputTag parseInput={(s) => s.trim() || null} limit={2} onChange={handleChangeCustom("value")} />
               ) : (
                 <Input onChange={handleChange("value")} variant="auth" />
               )}
@@ -404,79 +524,143 @@ function GiftAdd({
 function ModelAddOdds({
   onClose,
   onChange,
+  initialData
 }: {
   onClose: () => void;
   onChange: (data: IOddsAdd) => void;
+  initialData?: IOddsAdd;
 }) {
-  const [listGift, setListGift] = useState<Array<IGiftAdd>>([]);
-  const [giftType, setGiftType] = useState<string>("");
+  const [listGift, setListGift] = useState<Array<IGiftAdd>>(initialData?.listGift || []);
+  const [giftType, setGiftType] = useState<string>(initialData?.listGift?.[0]?.typeGift || "");
   const [formState, setFormState] = useState<IOddsAdd>(() => {
-    const temp = structuredClone(initialFormStateOdds);
-    return temp;
+    return initialData || structuredClone(initialFormStateOdds);
   });
+
+  useEffect(() => {
+    if (initialData) {
+      // Ensure formState is properly updated with initialData
+      setFormState(initialData);
+      
+      // Update the gift list
+      if (initialData.listGift?.length) {
+        setListGift([...initialData.listGift]);
+        
+        // Set gift type from the first gift if available
+        if (initialData.listGift[0]?.typeGift) {
+          setGiftType(initialData.listGift[0].typeGift);
+        }
+      }
+    }
+  }, [initialData]);
 
   const handleChangeNumberGifts = (countGift: number) => {
     let countGiftNew = Number(countGift);
+    // Keep existing gifts when increasing count
     if (listGift.length < countGiftNew) {
-      setListGift((prev) => [
+      const newGifts = new Array(countGiftNew - listGift.length)
+        .fill(null)
+        .map(() => ({
+          ...structuredClone(initialFormStateGifts),
+          typeGift: giftType as IGiftAdd['typeGift']
+        }));
+      
+      const updatedGifts = [...listGift, ...newGifts];
+      setListGift(updatedGifts);
+      
+      // Update formState.listGift to match
+      setFormState(prev => ({
         ...prev,
-        ...new Array(countGiftNew - listGift.length).fill(
-          initialFormStateGifts
-        ),
-      ]);
+        listGift: updatedGifts
+      }));
       return;
     }
-    setListGift(
-      listGift.slice(0, listGift.length - (listGift.length - countGiftNew))
-    );
+    
+    // When reducing count, keep as many existing gifts as possible
+    const updatedGifts = listGift.slice(0, countGiftNew);
+    setListGift(updatedGifts);
+    
+    // Update formState.listGift to match
+    setFormState(prev => ({
+      ...prev,
+      listGift: updatedGifts
+    }));
   };
 
   const handleChange =
     (name: keyof IOddsAdd) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const target = event.target as HTMLInputElement; // Type assertion
-      const value = target.type === "checkbox" ? target.checked : target.value;
-      setFormState((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    };
+      (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const target = event.target as HTMLInputElement; // Type assertion
+        const value = target.type === "checkbox" ? target.checked : target.value;
+        setFormState((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      };
 
   const handleAddGift = (data: IGiftAdd, id: number) => {
-    formState.listGift[id] = data;
-    setFormState(formState);
+    const updatedListGift = [...formState.listGift];
+    updatedListGift[id] = {
+      ...data,
+      typeGift: giftType as IGiftAdd['typeGift']
+    };
+    
+    setFormState(prev => ({
+      ...prev,
+      listGift: updatedListGift
+    }));
   };
 
   const handleSubmit = () => {
-    onChange(formState);
+    // Ensure all gifts have the correct type before submitting
+    const finalFormState = {
+      ...formState,
+      listGift: formState.listGift.map(gift => ({
+        ...gift,
+        typeGift: giftType as IGiftAdd['typeGift']
+      }))
+    };
+    onChange(finalFormState);
     onClose();
   };
 
   const handleClickAddScript = (id: number, type: "ADMIN" | "USER") => {
+    const newItem: IOddsItem = {
+      id,
+      description: formState.listGift[id]?.message || formState.listGift[id]?.value?.toString() || "",
+    };
     // ADMIN
     if (type === "ADMIN") {
-      formState.oddsAdmin.push({
-        id: id,
-        description: formState.listGift[id].message,
-      });
-      setFormState((prev) => ({
-        ...prev,
-        oddsAdmin: [...prev.oddsAdmin],
-      }));
+      handleChangeOddsAdmin(newItem);
       return;
     }
 
     // USER
-    formState.oddsUser.push({
-      id: id,
-      description: formState.listGift[id].message,
-    });
-    setFormState((prev) => ({
-      ...prev,
-      oddsUser: [...prev.oddsUser],
-    }));
-    return;
+    handleChangeOddsUser(newItem);
   };
+
+  const handleChangeOddsAdmin = (newItem?: IOddsItem, defaultValue?: IOddsItem[]) => {
+    setFormState((prev) => {
+      const base = defaultValue ?? prev.oddsAdmin;
+      const updated = newItem ? [...base, newItem] : base;
+
+      return {
+        ...prev,
+        oddsAdmin: updated,
+      };
+    });
+  }
+
+  const handleChangeOddsUser = (newItem?: IOddsItem, defaultValue?: Array<IOddsItem>) => {
+    setFormState((prev) => {
+      const base = defaultValue ?? prev.oddsUser;
+      const updated = newItem ? [...base, newItem] : base;
+
+      return {
+        ...prev,
+        oddsUser: updated,
+      };
+    });
+  }
 
   return (
     <>
@@ -493,7 +677,9 @@ function ModelAddOdds({
         </HStack>
         <InputTag
           isDisable={formState.isRandomAdmin}
-          values={formState.oddsAdmin.map((vl) => vl.description)}
+          values={formState.oddsAdmin}
+          getDisplayValue={e => e.description}
+          onChange={(gifts) => handleChangeOddsAdmin(undefined, gifts)}
         />
       </FormControl>
 
@@ -510,7 +696,9 @@ function ModelAddOdds({
         </HStack>
         <InputTag
           isDisable={formState.isRandomUser}
-          values={formState.oddsUser.map((vl) => vl.description)}
+          values={formState.oddsUser}
+          getDisplayValue={e => e.description}
+          onChange={(gifts) => handleChangeOddsUser(undefined, gifts)}
         />
       </FormControl>
 
@@ -519,7 +707,7 @@ function ModelAddOdds({
           <FormLabel>Số lượng quà</FormLabel>
           <InputNumberCustom
             handleChange={handleChangeNumberGifts}
-            defaultValue={0}
+            defaultValue={listGift.length}
             value={listGift.length}
             min={1}
             max={100}
@@ -528,7 +716,23 @@ function ModelAddOdds({
         <FormControl mb="1rem">
           <FormLabel>Loại quà</FormLabel>
           <Select
-            onChange={(e) => setGiftType(e.target.value)}
+            value={giftType}
+            onChange={(e) => {
+              const newType = e.target.value;
+              setGiftType(newType);
+              
+              // Update all gifts with the new type
+              const updatedGifts = listGift.map(gift => ({
+                ...gift,
+                typeGift: newType as IGiftAdd['typeGift']
+              }));
+              
+              setListGift(updatedGifts);
+              setFormState(prev => ({
+                ...prev,
+                listGift: updatedGifts
+              }));
+            }}
             variant="auth"
             placeholder="-- Chọn loại quà --"
           >
@@ -574,6 +778,12 @@ function AddNewOdds({
   setIdTypeOdds: (data: number) => void;
 }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [oddsData, setOddsData] = useState<IOddsAdd | undefined>();
+
+  const handleOddsChange = (data: IOddsAdd) => {
+    setOddsData(data);
+    onChange(data);
+  };
 
   const oddsAll = useQuery({
     queryKey: ["odds-all"],
@@ -587,10 +797,8 @@ function AddNewOdds({
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
         <ModelAddOdds
           onClose={onClose}
-          onChange={(e) => {
-            onChange(e);
-            console.log(e);
-          }}
+          onChange={handleOddsChange}
+          initialData={oddsData}
         />
       </ModelBase>
       <FormControl isRequired mb="1rem">
@@ -645,3 +853,93 @@ function CustomStyle({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+type FieldConfiguratorProps = {
+  field: IFormInput;
+  onChange: (updatedField: IFormInput) => void;
+  onRemove: () => void;
+}
+
+const FieldConfigurator: React.FC<FieldConfiguratorProps> = ({ field, onChange, onRemove }) => {
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange({ ...field, type: e.target.value as IFormInput['type'] });
+  };
+
+  const handleInputChange = (property: keyof IFormInput, value: any) => {
+    onChange({ ...field, [property]: value });
+  };
+
+  return (
+    <Box position="relative" p={4} mb={4}>
+      <IconButton aria-label="Remove field" top={0} right={0} zIndex={10} position="absolute" variant="ghost" icon={<FiX />} onClick={onRemove} />
+      <FormControl>
+        <FormLabel>Type</FormLabel>
+        <Select value={field.type} onChange={handleTypeChange}>
+          <option value="SELECT">SELECT</option>
+          <option value="INPUT">INPUT</option>
+          <option value="TEXTAREA">TEXTAREA</option>
+          <option value="NUMBER">NUMBER</option>
+          <option value="FILE">FILE</option>
+          <option value="SWITCH">SWITCH</option>
+          <option value="HTML">HTML</option>
+          <option value="DATE">DATE</option>
+        </Select>
+      </FormControl>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input value={field.name} onChange={(e) => handleInputChange('name', e.target.value)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Label</FormLabel>
+        <Input value={field.label} onChange={(e) => handleInputChange('label', e.target.value)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Placeholder</FormLabel>
+        <Input value={field.placeholder ?? ''} onChange={(e) => handleInputChange('placeholder', e.target.value || undefined)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Grid Area Name</FormLabel>
+        <Input value={field.gridAreaName ?? ''} onChange={(e) => handleInputChange('gridAreaName', e.target.value || undefined)} />
+      </FormControl>
+      <FormControl>
+        <Checkbox isChecked={field.isRequired ?? false} onChange={(e) => handleInputChange('isRequired', e.target.checked)}>
+          Is Required
+        </Checkbox>
+      </FormControl>
+      {field.type === 'SELECT' && (
+        <Box mt={4}>
+          <Text>Options</Text>
+          {(field.selects || []).map((option, index) => (
+            <HStack key={index} mb={2}>
+              <Input
+                placeholder="Label"
+                value={option.label}
+                onChange={(e) => {
+                  const newSelects = [...(field.selects || [])];
+                  newSelects[index].label = e.target.value;
+                  handleInputChange('selects', newSelects);
+                }}
+              />
+              <Input
+                placeholder="Value"
+                value={option.value}
+                onChange={(e) => {
+                  const newSelects = [...(field.selects || [])];
+                  newSelects[index].value = e.target.value;
+                  handleInputChange('selects', newSelects);
+                }}
+              />
+              <IconButton aria-label="Remove options" icon={<FiX />} onClick={() => {
+                const newSelects = field.selects?.filter((_, i) => i !== index) || [];
+                handleInputChange('selects', newSelects);
+              }} />
+            </HStack>
+          ))}
+          <Button onClick={() => {
+            handleInputChange('selects', [...(field.selects || []), { label: '', value: '' }]);
+          }}>Add Option</Button>
+        </Box>
+      )}
+    </Box>
+  );
+};

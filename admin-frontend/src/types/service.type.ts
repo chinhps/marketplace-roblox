@@ -22,15 +22,14 @@ export interface IGiftAdd {
 export interface IOddsAdd {
   isRandomAdmin: boolean;
   isRandomUser: boolean;
-  oddsAdmin: Array<{
-    id: number;
-    description: string;
-  }>;
-  oddsUser: Array<{
-    id: number;
-    description: string;
-  }>;
+  oddsAdmin: Array<IOddsItem>;
+  oddsUser: Array<IOddsItem>;
   listGift: Array<IGiftAdd>;
+}
+
+export interface IOddsItem {
+  id: number;
+  description: string;
 }
 
 export interface IFormCreateService {

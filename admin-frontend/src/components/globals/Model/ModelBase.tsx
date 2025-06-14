@@ -14,12 +14,14 @@ interface IModelBase extends ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  footerButtons?: { text: string; onClick: () => void; props?: object }[];
 }
 
 export default function ModelBase({
   isOpen,
   onClose,
   children,
+  footerButtons,
   ...props
 }: IModelBase) {
   return (
@@ -37,7 +39,20 @@ export default function ModelBase({
           <ModalBody>{children}</ModalBody>
 
           <ModalFooter gap={2}>
-            <Button bg="main.item" color="white" onClick={onClose}>
+            {footerButtons &&
+              footerButtons.map((button, index) => (
+                <Button
+                  key={index}
+                  color="white"
+                  bg="main.item"
+                  onClick={button.onClick}
+                  {...button.props}
+                >
+                  {button.text}
+                </Button>
+              ))
+            }
+            <Button onClick={onClose}>
               Đóng
             </Button>
           </ModalFooter>
