@@ -16,10 +16,11 @@ import {
   Td,
   Text,
   Tr,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { FiCheck, FiDownload, FiSearch } from "react-icons/fi";
+import { FiCheck, FiDownload, FiRefreshCcw, FiSearch } from "react-icons/fi";
 import { useState } from "react";
 import { UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { withdrawHistoryApi } from "@/apis/history";
@@ -39,12 +40,15 @@ import {
   withdrawTypeToText,
 } from "@/utils/function";
 import moment from "moment";
+import ModelConfirm from "@/components/globals/Model/ModelConfirm";
 
 export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
   /****----------------
    *      HOOK
   ----------------****/
+  const { isOpen: isOpenUpdateCost, onOpen: onOpenUpdateCost, onClose: onCloseUpdateCost } = useDisclosure();
   const [page, setPage] = useState<number>(1);
+  const toast = useToast();
   const [filter, setFilter] = useState(() => {
     return idUser ? { user_id: idUser } : {};
   });
@@ -54,6 +58,16 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
     cacheTime: 5 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
+  });
+  const updateCostMutate = useMutation({
+    mutationFn: (data: { from_date: string, to_date: string }) => withdrawHistoryApi.updateCost(data),
+    onSuccess: (data) => {
+      toast({
+        status: "success",
+        description: data.data.msg,
+      });
+      onCloseUpdateCost();
+    },
   });
   const downloadRobuxMutate = useMutation({
     mutationFn: () => withdrawHistoryApi.downloadRobux(),
@@ -72,15 +86,20 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
         fontSize="25px"
         button={
           <Menu isLazy placement="bottom-end">
-            <MenuButton variant="auth" as={Button} rightIcon={<FiDownload />}>
-              Xuất dữ liệu
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => downloadRobuxMutate.mutate()}>
-                Rút/Mua Robux
-              </MenuItem>
-              <MenuItem>Gamepass</MenuItem>
-            </MenuList>
+            <HStack>
+              <MenuButton variant="auth" as={Button} rightIcon={<FiRefreshCcw />} onClick={onOpenUpdateCost}>
+                Cập nhật COST
+              </MenuButton>
+              <MenuButton variant="auth" as={Button} rightIcon={<FiDownload />}>
+                Xuất dữ liệu
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => downloadRobuxMutate.mutate()}>
+                  Rút/Mua Robux
+                </MenuItem>
+                <MenuItem>Gamepass</MenuItem>
+              </MenuList>
+            </HStack>
           </Menu>
         }
       >
@@ -100,6 +119,36 @@ export default function WithdrawHistoryPage({ idUser }: { idUser?: number }) {
           action={setPage}
         />
       </CardCollection>
+      <ModelConfirm
+        title="Cập nhật Cost theo khung thời gian"
+        isOpen={isOpenUpdateCost}
+        onClose={onCloseUpdateCost}
+        size="2xl"
+      >
+        <>
+          <Text>Tự động cập nhật cost theo cost mới nhất của dịch vụ</Text>
+          <Text>Nếu không chọn ngày thì sẽ cập nhật tất cả</Text>
+          <Text>Nếu chọn ngày bắt đầu không chọn ngày kết thúc thì sẽ cập nhật từ ngày bắt đầu đến ngày hiện tại và ngược lại</Text>
+          <FormBase
+            dataForm={[
+              {
+                label: "Từ ngày",
+                name: "from_date",
+                type: "DATE",
+              },
+              {
+                label: "Đến ngày",
+                name: "to_date",
+                type: "DATE",
+              },
+            ]}
+            onSubmit={(data) => updateCostMutate.mutate(data)}
+            textBtn="Cập nhật"
+            CustomComponent={CustomStyleFilter}
+            hiddenLable={true}
+          />
+        </>
+      </ModelConfirm>
     </>
   );
 }
@@ -164,7 +213,7 @@ function TableListWithdrawHistory({
               </Badge>
               {showCost(vl.withdraw_type) && (
                 <Badge colorScheme="blue">
-                  Cost: {numberFormat(vl.cost, false)}
+                  Cost: {numberFormat(vl.cost, false)} {vl.cost_type === 1 ? "Robux" : vl.cost_type === 2 ? "ATM" : "Không xác định"}
                 </Badge>
               )}
             </HStack>

@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormLabel,
   Grid,
@@ -13,7 +12,6 @@ import {
   IconButton,
   Input,
   Select,
-  Switch,
   Text,
   Textarea,
   VStack,
@@ -28,43 +26,23 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { SubmitHandler } from "react-hook-form";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IGiftAdd,
   IOddsAdd,
-  IOddsItem,
   IServiceMutation,
   IServiceType,
 } from "@/types/service.type";
 import { Link, useParams } from "react-router-dom";
-import { FiPlus, FiSlack, FiTool, FiUser, FiUsers, FiX } from "react-icons/fi";
-import InputTag from "@/components/globals/Form/InputTag";
+import { FiPlus, FiTool, FiX } from "react-icons/fi";
 import ModelBase from "@/components/globals/Model/ModelBase";
-import { FileCustomRHF } from "@/components/globals/Form/FileCustom";
-import InputNumberCustom from "@/components/globals/Form/InputNumberCustom";
 import InputExcept from "@/components/globals/Form/InputExcept";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { serviceApi, serviceGroupApi, serviceOddsApi } from "@/apis/service";
 import { objectToFormData } from "@/utils/function";
 import { handleImageByService, initialFormState } from "@/utils/service";
-
-const initialFormStateGifts: IGiftAdd = {
-  image: {} as File,
-  isRandom: false,
-  isVip: true,
-  message: "",
-  percent: 0,
-  typeGift: "NOT",
-  value: 0,
-};
-
-const initialFormStateOdds: IOddsAdd = {
-  isRandomAdmin: false,
-  isRandomUser: false,
-  oddsAdmin: [],
-  oddsUser: [],
-  listGift: [],
-};
+import { ServiceOdds } from "@/types/response/service.type";
+import ModelAddOdds from "@/components/globals/Model/ServiceOdds";
 
 type IFormField = {
   public_form?: IFormInput[],
@@ -354,6 +332,7 @@ export default function CUServicePage() {
           typeService === IServiceType.LUCKY_CARD ||
           typeService === IServiceType.WHEEL) && (
             <AddNewOdds
+              dataOdds={serviceDetail.data?.data.data.service_detail.service_odds}
               onChange={(data) => setDataOdds(data)}
               idTypeOdds={idTypeOdds}
               setIdTypeOdds={setIdTypeOdds}
@@ -374,405 +353,13 @@ export default function CUServicePage() {
   );
 }
 
-function GiftAdd({
-  onChange,
-  onClickScript,
-  id,
-  giftType,
-}: {
-  onChange: (data: IGiftAdd, id: number) => void;
-  onClickScript: (id: number, type: "ADMIN" | "USER") => void;
-  id: number;
-  giftType: string;
-}) {
-  const [isRandom, setIsRandom] = useState<boolean>(false);
-  const [formState, setFormState] = useState<IGiftAdd>(initialFormStateGifts);
-
-  const handleChange = useCallback(
-    (name: keyof IGiftAdd) =>
-      (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const target = event.target as HTMLInputElement; // Type assertion
-        const value =
-          target.type === "checkbox" ? target.checked : target.value;
-        setFormState((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      },
-    []
-  );
-
-  const handleChangeCustom = useCallback(
-    (name: keyof IGiftAdd) =>
-      (value: string | boolean | Array<string | number | object> | File | number) => {
-        setFormState((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      },
-    []
-  );
-
-  const handleChangeFileImage = (data: (string | File)[]) => {
-    if (data.length > 0) {
-      handleChangeCustom("image")(data[0]);
-    }
-  };
-
-  useEffect(() => {
-    onChange(formState, id);
-    handleChangeCustom("message")(
-      typeof formState.value !== "object" ? formState.value : ""
-    );
-  }, [formState]);
-  useEffect(() => {
-    handleChangeCustom("typeGift")(giftType);
-  }, [giftType]);
-
-  return (
-    <>
-      <HStack spacing="1rem">
-        <FileCustomRHF
-          value={null}
-          multiple={false}
-          onChange={handleChangeFileImage}
-        />
-        <VStack flexDirection="column" flex={1}>
-          <FormControl isRequired mb="1rem">
-            <HStack justifyContent="space-between">
-              <FormLabel>Loại quà</FormLabel>
-              <HStack mb={2}>
-                <Text fontWeight="bold">
-                  VIP(Chỉ admin mới có thể quay trúng quà VIP)
-                </Text>
-                <Switch
-                  onChange={handleChange("isVip")}
-                  defaultChecked={true}
-                />
-              </HStack>
-            </HStack>
-            <HStack>
-              <Select
-                onChange={handleChange("typeGift")}
-                variant="auth"
-                placeholder="-- Chọn loại quà --"
-                defaultValue={giftType}
-              >
-                <option value="NOT">Không có</option>
-                <option value="DIAMOND">Kim cương</option>
-                <option value="ROBUX">Robux</option>
-                <option value="QUANHUY">Quân huy</option>
-              </Select>
-              <IconButton
-                colorScheme={isRandom ? "purple" : "blackAlpha"}
-                size="lg"
-                aria-label="random"
-                icon={<FiSlack />}
-                onClick={() => {
-                  setIsRandom((vl) => !vl);
-                  handleChangeCustom("isRandom")(!isRandom);
-                }}
-              />
-              <IconButton
-                onClick={() => onClickScript(id, "ADMIN")}
-                colorScheme="blue"
-                size="lg"
-                aria-label="random"
-                icon={<FiUser />}
-              />
-              <IconButton
-                onClick={() => onClickScript(id, "USER")}
-                colorScheme="red"
-                size="lg"
-                aria-label="random"
-                icon={<FiUsers />}
-              />
-            </HStack>
-          </FormControl>
-          <HStack w="100%" spacing="1rem">
-            <FormControl isRequired mb="1rem">
-              <FormLabel>
-                Giá trị (
-                {isRandom
-                  ? "Ngẫu nhiên cần 2 giá trị"
-                  : "Cố định cần 1 giá trị"}
-                )
-              </FormLabel>
-              {isRandom ? (
-                <InputTag parseInput={(s) => s.trim() || null} limit={2} onChange={handleChangeCustom("value")} />
-              ) : (
-                <Input onChange={handleChange("value")} variant="auth" />
-              )}
-            </FormControl>
-            <FormControl isRequired mb="1rem">
-              <FormLabel>Tỷ lệ (%)</FormLabel>
-              <InputNumberCustom
-                handleChange={handleChangeCustom("percent")}
-                min={0}
-                max={100}
-                precision={2}
-                step={0.5}
-              />
-            </FormControl>
-          </HStack>
-        </VStack>
-      </HStack>
-    </>
-  );
-}
-
-function ModelAddOdds({
-  onClose,
-  onChange,
-  initialData
-}: {
-  onClose: () => void;
-  onChange: (data: IOddsAdd) => void;
-  initialData?: IOddsAdd;
-}) {
-  const [listGift, setListGift] = useState<Array<IGiftAdd>>(initialData?.listGift || []);
-  const [giftType, setGiftType] = useState<string>(initialData?.listGift?.[0]?.typeGift || "");
-  const [formState, setFormState] = useState<IOddsAdd>(() => {
-    return initialData || structuredClone(initialFormStateOdds);
-  });
-
-  useEffect(() => {
-    if (initialData) {
-      // Ensure formState is properly updated with initialData
-      setFormState(initialData);
-      
-      // Update the gift list
-      if (initialData.listGift?.length) {
-        setListGift([...initialData.listGift]);
-        
-        // Set gift type from the first gift if available
-        if (initialData.listGift[0]?.typeGift) {
-          setGiftType(initialData.listGift[0].typeGift);
-        }
-      }
-    }
-  }, [initialData]);
-
-  const handleChangeNumberGifts = (countGift: number) => {
-    let countGiftNew = Number(countGift);
-    // Keep existing gifts when increasing count
-    if (listGift.length < countGiftNew) {
-      const newGifts = new Array(countGiftNew - listGift.length)
-        .fill(null)
-        .map(() => ({
-          ...structuredClone(initialFormStateGifts),
-          typeGift: giftType as IGiftAdd['typeGift']
-        }));
-      
-      const updatedGifts = [...listGift, ...newGifts];
-      setListGift(updatedGifts);
-      
-      // Update formState.listGift to match
-      setFormState(prev => ({
-        ...prev,
-        listGift: updatedGifts
-      }));
-      return;
-    }
-    
-    // When reducing count, keep as many existing gifts as possible
-    const updatedGifts = listGift.slice(0, countGiftNew);
-    setListGift(updatedGifts);
-    
-    // Update formState.listGift to match
-    setFormState(prev => ({
-      ...prev,
-      listGift: updatedGifts
-    }));
-  };
-
-  const handleChange =
-    (name: keyof IOddsAdd) =>
-      (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const target = event.target as HTMLInputElement; // Type assertion
-        const value = target.type === "checkbox" ? target.checked : target.value;
-        setFormState((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      };
-
-  const handleAddGift = (data: IGiftAdd, id: number) => {
-    const updatedListGift = [...formState.listGift];
-    updatedListGift[id] = {
-      ...data,
-      typeGift: giftType as IGiftAdd['typeGift']
-    };
-    
-    setFormState(prev => ({
-      ...prev,
-      listGift: updatedListGift
-    }));
-  };
-
-  const handleSubmit = () => {
-    // Ensure all gifts have the correct type before submitting
-    const finalFormState = {
-      ...formState,
-      listGift: formState.listGift.map(gift => ({
-        ...gift,
-        typeGift: giftType as IGiftAdd['typeGift']
-      }))
-    };
-    onChange(finalFormState);
-    onClose();
-  };
-
-  const handleClickAddScript = (id: number, type: "ADMIN" | "USER") => {
-    const newItem: IOddsItem = {
-      id,
-      description: formState.listGift[id]?.message || formState.listGift[id]?.value?.toString() || "",
-    };
-    // ADMIN
-    if (type === "ADMIN") {
-      handleChangeOddsAdmin(newItem);
-      return;
-    }
-
-    // USER
-    handleChangeOddsUser(newItem);
-  };
-
-  const handleChangeOddsAdmin = (newItem?: IOddsItem, defaultValue?: IOddsItem[]) => {
-    setFormState((prev) => {
-      const base = defaultValue ?? prev.oddsAdmin;
-      const updated = newItem ? [...base, newItem] : base;
-
-      return {
-        ...prev,
-        oddsAdmin: updated,
-      };
-    });
-  }
-
-  const handleChangeOddsUser = (newItem?: IOddsItem, defaultValue?: Array<IOddsItem>) => {
-    setFormState((prev) => {
-      const base = defaultValue ?? prev.oddsUser;
-      const updated = newItem ? [...base, newItem] : base;
-
-      return {
-        ...prev,
-        oddsUser: updated,
-      };
-    });
-  }
-
-  return (
-    <>
-      <FormControl isRequired mb="1rem">
-        <HStack justifyContent="space-between">
-          <FormLabel>
-            Tỷ lệ Admin: (ADMIN khi Random quà sẽ Random tất cả quà không cần tỷ
-            lệ)
-          </FormLabel>
-          <HStack mb={2}>
-            <Text fontWeight="bold">Random</Text>
-            <Switch onChange={handleChange("isRandomAdmin")} />
-          </HStack>
-        </HStack>
-        <InputTag
-          isDisable={formState.isRandomAdmin}
-          values={formState.oddsAdmin}
-          getDisplayValue={e => e.description}
-          onChange={(gifts) => handleChangeOddsAdmin(undefined, gifts)}
-        />
-      </FormControl>
-
-      <FormControl isRequired mb="1rem">
-        <HStack justifyContent="space-between">
-          <FormLabel>
-            Tỷ lệ Người dùng: (Người dùng khi Random sẽ dựa theo tỷ lệ % của
-            từng quà)
-          </FormLabel>
-          <HStack mb={2}>
-            <Text fontWeight="bold">Random</Text>
-            <Switch onChange={handleChange("isRandomUser")} />
-          </HStack>
-        </HStack>
-        <InputTag
-          isDisable={formState.isRandomUser}
-          values={formState.oddsUser}
-          getDisplayValue={e => e.description}
-          onChange={(gifts) => handleChangeOddsUser(undefined, gifts)}
-        />
-      </FormControl>
-
-      <HStack>
-        <FormControl isRequired mb="1rem">
-          <FormLabel>Số lượng quà</FormLabel>
-          <InputNumberCustom
-            handleChange={handleChangeNumberGifts}
-            defaultValue={listGift.length}
-            value={listGift.length}
-            min={1}
-            max={100}
-          />
-        </FormControl>
-        <FormControl mb="1rem">
-          <FormLabel>Loại quà</FormLabel>
-          <Select
-            value={giftType}
-            onChange={(e) => {
-              const newType = e.target.value;
-              setGiftType(newType);
-              
-              // Update all gifts with the new type
-              const updatedGifts = listGift.map(gift => ({
-                ...gift,
-                typeGift: newType as IGiftAdd['typeGift']
-              }));
-              
-              setListGift(updatedGifts);
-              setFormState(prev => ({
-                ...prev,
-                listGift: updatedGifts
-              }));
-            }}
-            variant="auth"
-            placeholder="-- Chọn loại quà --"
-          >
-            <option value="NOT">Không có</option>
-            <option value="DIAMOND">Kim cương</option>
-            <option value="ROBUX">Robux</option>
-            <option value="QUANHUY">Quân huy</option>
-          </Select>
-        </FormControl>
-        <Button w="100%" variant="auth" size="lg" onClick={handleSubmit} mt={4}>
-          Hoàn thành
-        </Button>
-      </HStack>
-      <Divider my="2rem" />
-      {listGift.map((_, index) => (
-        <FormControl key={index} isRequired mb="2rem">
-          <FormLabel>Quà {index + 1}</FormLabel>
-          <GiftAdd
-            id={index}
-            giftType={giftType}
-            onChange={handleAddGift}
-            onClickScript={handleClickAddScript}
-          />
-        </FormControl>
-      ))}
-      <Divider my="2rem" />
-
-      <FormControl isRequired mb="1rem">
-        <FormLabel>Thao tác nhanh với nhiều quà</FormLabel>
-        {/* <FileCustom multiple={true} /> */}
-      </FormControl>
-    </>
-  );
-}
-
 function AddNewOdds({
+  dataOdds,
   onChange,
   idTypeOdds,
   setIdTypeOdds,
 }: {
+  dataOdds?: ServiceOdds | null;
   onChange: (data: IOddsAdd) => void;
   idTypeOdds: number;
   setIdTypeOdds: (data: number) => void;
@@ -792,6 +379,43 @@ function AddNewOdds({
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (idTypeOdds === 0) {
+      setOddsData(undefined);
+      return;
+    }
+
+    if (dataOdds) {
+      const giftTypeMapping: { [key: number]: IGiftAdd["typeGift"] } = {
+        1: "ROBUX",
+        2: "DIAMOND",
+        3: "QUANHUY",
+      };
+      const transformedData: IOddsAdd = {
+        isRandomAdmin: dataOdds.odds_admin_type === "RANDOM",
+        isRandomUser: dataOdds.odds_user_type === "RANDOM",
+        oddsAdmin: JSON.parse(dataOdds.odds_admin || "[]"),
+        oddsUser: JSON.parse(dataOdds.odds_user || "[]"),
+        listGift: dataOdds.service_gifts.map((gift: any) => ({
+          image: gift.image,
+          isRandom: gift.gift_type === "RANDOM",
+          isVip: gift.vip === "YES",
+          message: gift.text_custom || "",
+          percent: gift.percent_random,
+          typeGift:
+            giftTypeMapping[gift.game_currency_id] || "NOT",
+          value:
+            gift.gift_type === "RANDOM"
+              ? [gift.value1, gift.value2]
+              : gift.value1,
+        })),
+      };
+      console.log('transformedData',transformedData)
+      setOddsData(transformedData);
+    }
+  }, [idTypeOdds, oddsAll.data]);
+  console.log('oddsData',oddsData)
   return (
     <>
       <ModelBase isOpen={isOpen} onClose={onClose} size="6xl">
@@ -816,14 +440,12 @@ function AddNewOdds({
               </option>
             ))}
           </Select>
-          {idTypeOdds === 0 && (
-            <IconButton
-              onClick={onOpen}
-              size="lg"
-              aria-label="Add new"
-              icon={idTypeOdds ? <FiTool /> : <FiPlus />}
-            />
-          )}
+          <IconButton
+            onClick={onOpen}
+            size="lg"
+            aria-label={idTypeOdds ? "Edit" : "Add new"}
+            icon={idTypeOdds ? <FiTool /> : <FiPlus />}
+          />
         </HStack>
       </FormControl>
     </>

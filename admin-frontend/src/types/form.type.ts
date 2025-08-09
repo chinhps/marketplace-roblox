@@ -9,6 +9,7 @@ export interface IFormBase {
   onSubmit: SubmitHandler<any>;
   dataDefault?: object;
   icon?: React.ReactElement;
+  isConfirm?: boolean;
 }
 
 export interface IFormInput {

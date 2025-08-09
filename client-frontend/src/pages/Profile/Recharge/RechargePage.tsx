@@ -67,6 +67,9 @@ export default function RechargePage() {
             NẠP 100K CARD = {(100 * data_recharge.percent) / 100}K TIỀN TRÊN
             SHOP
           </Text>
+          <Text as="b" lineHeight={2} color="yellow.500">
+            KHUYẾN MÃI THÊM 10% KHI NẠP THẺ MỆNH GIÁ TRÊN 100K
+          </Text>
           <Text lineHeight={2}>
             AE VUI LÒNG CHỌN ĐÚNG MỆNH GIÁ THẺ. CHỌN SAI SẼ MẤT THẺ NHÉ.{" "}
           </Text>

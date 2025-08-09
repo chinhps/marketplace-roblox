@@ -70,6 +70,8 @@ services:
       - API_KEY_WITHDRAW_DIAMOND_ADMIN=${API_KEY_WITHDRAW_DIAMOND_ADMIN}
     volumes:
       - ./admin-backend/app:/var/www/app
+      - ./admin-backend/database:/var/www/database
+      - ./admin-backend/routes:/var/www/routes
       - shared-storage:/var/www/storage/app/uploads_temp
     depends_on:
       - mysql-marketplace
@@ -98,6 +100,8 @@ services:
       - FACEBOOK_CLIENT_CALLBACK=${FACEBOOK_CLIENT_CALLBACK}
     volumes:
       - ./client-backend/app:/var/www/app
+      - ./client-backend/database:/var/www/database
+      - ./client-backend/routes:/var/www/routes
     depends_on:
       - mysql-marketplace
     ports:

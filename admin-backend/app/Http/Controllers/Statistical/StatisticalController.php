@@ -81,20 +81,28 @@ class StatisticalController extends Controller
         $withdrawHistoriesGamePass = WithdrawHistory::where('shop_id', $shop->id)
             ->whereIn('withdraw_type', ['GAMEPASS'])
             ->where('status', 'SUCCESS')
-            ->selectRaw('withdraw_type, SUM(cost) as total')
+            ->selectRaw('
+                withdraw_type, 
+                cost_type,
+                SUM(cost) AS total
+            ')
             // Thêm where theo tháng tại đây
             ->whereBetween('updated_at', [$started_at, $ended_at])
-            ->groupBy('withdraw_type')
+            ->groupBy('withdraw_type', 'cost_type')
             ->get();
 
         # 'UNITS & GEMS'
         $withdrawHistoriesUnits = WithdrawHistory::where('shop_id', $shop->id)
             ->whereIn('withdraw_type', ['UNIT', 'GEMS'])
             ->where('status', 'SUCCESS')
-            ->selectRaw('withdraw_type, SUM(cost) as total')
+            ->selectRaw('
+                withdraw_type, 
+                cost_type,
+                SUM(cost) AS total
+            ')
             // Thêm where theo tháng tại đây
             ->whereBetween('updated_at', [$started_at, $ended_at])
-            ->groupBy('withdraw_type')
+            ->groupBy('withdraw_type', 'cost_type')
             ->get();
 
         # 'ROBUX', 'BUY_ROBUX'
@@ -311,8 +319,8 @@ class StatisticalController extends Controller
         }
 
         if (!Gate::allows('admin', $user)) {
-            $month = $month->where('shop_id', $user->user_id);
-            $day = $day->where('shop_id', $user->user_id);
+            $month = $month->where('shop_id', $user->shop_id);
+            $day = $day->where('shop_id', $user->shop_id);
         }
         return BaseResponse::data([
             "month" => $month->sum('price'),

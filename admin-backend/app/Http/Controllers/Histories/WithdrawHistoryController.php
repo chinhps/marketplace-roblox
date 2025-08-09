@@ -5,19 +5,24 @@ namespace App\Http\Controllers\Histories;
 use App\Exports\WithdrawExport;
 use App\Http\Controllers\BaseResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Histories\WithdrawUpdateCostRequest;
 use App\Http\Requests\Histories\WithdrawUpdateRequest;
 use App\Http\Resources\Histories\WithdrawHistoryListResource;
 use App\Repository\Histories\WithdrawHistory\WithdrawHistoryInterface;
+use App\Repository\Service\ServiceGift\ServiceGiftInterface;
 use App\Repository\Transaction\TransactionInterface;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class WithdrawHistoryController extends Controller
 {
     public function __construct(
         private WithdrawHistoryInterface $withdrawHistoryRepository,
-        private TransactionInterface $transactionRepository
+        private TransactionInterface $transactionRepository,
+        private ServiceGiftInterface $serviceGiftRepository
     ) {
     }
 
@@ -124,9 +129,67 @@ class WithdrawHistoryController extends Controller
         }
     }
 
+    public function updateCost(WithdrawUpdateCostRequest $request)
+    {
+        $validated = $request->validated();
+
+        $fromDate = $validated['from_date'];
+        $toDate = $validated['to_date'];
+
+        $filter = [];
+        if ($fromDate) {
+            $filter['query'][] = ['created_at', '>=', $fromDate];
+        }
+        if ($toDate) {
+            $filter['query'][] = ['created_at', '<=', $toDate];
+        }
+
+        $filter['query'][] = ['status', 'PENDING'];
+        $filter['withdraw_type_filter'] = ["GAMEPASS", "UNIT", "GEMS"];
+
+        $withdraws = $this->withdrawHistoryRepository->all($filter);
+        $countUpdated = 0;
+        try {
+            DB::beginTransaction();
+            foreach ($withdraws as $withdraw) {
+                $parcelValue = collect(json_decode($withdraw->detail))->firstWhere('key', 'parcel')->value ?? null;
+                $currentCost = $this->serviceGiftRepository->getByConditions([
+                    'query' => [
+                        ['text_custom', $parcelValue]
+                    ]
+                ]);
+                if (!$parcelValue || !$currentCost) {
+                    throw new \Exception("Không tìm thấy gói {$parcelValue} hoặc giá gói {$currentCost->cost} với ID Withdraw: {$withdraw->id}");
+                }
+                if ($withdraw->cost != $currentCost->cost) {
+                    $this->updateWithdrawCost($withdraw->id, $currentCost->cost);
+                    $countUpdated++;
+                }
+            }
+            DB::commit();
+            Log::info("Cập nhật cost thành công", [
+                'withdraws' => $withdraws->count(),
+                'fromDate' => $fromDate,
+                'toDate' => $toDate,
+                'user' => Auth::user()
+            ]);
+            return BaseResponse::msg("Cập nhật thành công có {$countUpdated} đơn cập nhật trong tổng {$withdraws->count()} đơn");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return BaseResponse::msg("Có lỗi xảy ra vui lòng liên hệ admin! Rollback lại các đơn đã cập nhật! Error: " . $e->getMessage(), 500);
+        }
+    }
+
     private function updateWithdrawStatus($id, $status)
     {
         $this->withdrawHistoryRepository->update($id, ["status" => $status]);
+    }
+
+    private function updateWithdrawCost($id, $cost)
+    {
+        $this->withdrawHistoryRepository->update($id, ["cost" => $cost]);
     }
 
     private function refundForWithdrawType($withdrawCurrent)

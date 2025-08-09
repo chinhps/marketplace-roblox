@@ -79,4 +79,8 @@ export const withdrawHistoryApi = {
     const url = "/histories/withdraw/export-robux";
     return axiosClient.post(url, [], { responseType: "blob" });
   },
+  updateCost: (data: { from_date: string, to_date: string }) => {
+    const url = "/histories/withdraw/update-cost";
+    return axiosClient.post(url, data);
+  },
 };

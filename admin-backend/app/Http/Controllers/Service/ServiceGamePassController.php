@@ -97,16 +97,17 @@ class ServiceGamePassController extends Controller
 
             foreach ($parcels as $parcel) {
                 $infoParcel = explode("|", $parcel);
-                if (isset($infoParcel[3])) {
-                    $parcelIds[] = (int)$infoParcel[3]; # add parcel id post
+                if (isset($infoParcel[4])) {
+                    $parcelIds[] = (int)$infoParcel[4]; # add parcel id post
                 }
                 # CREATE GIFT SERVICE ###########################
-                $this->serviceGiftRepository->updateOrInsert($infoParcel[3] ?? null, [
+                $this->serviceGiftRepository->updateOrInsert($infoParcel[4] ?? null, [
                     "gift_type" => "FIXED",
                     "vip" => "NO",
                     "value1" => $infoParcel[1],
                     "value2" => 0,
                     "cost" => $infoParcel[2],
+                    "cost_type" => $infoParcel[3] == 'null' ? null : (int)$infoParcel[3],
                     "percent_random" => null,
                     "text_custom" => $infoParcel[0]
                 ], serviceOdds: $serviceOdds, gameCurrency: $gameCurrency);

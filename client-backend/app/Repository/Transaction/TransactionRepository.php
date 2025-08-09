@@ -16,21 +16,21 @@ class TransactionRepository implements TransactionInterface
      **********/
     public function getPrice(User $user)
     {
-        $value = TransactionPrice::where('user_id', $user->id)->sum('price');
+        $value = TransactionPrice::where('user_id', $user->id)->lockForUpdate()->sum('price');
         $user->price_temporary = $value;
         $user->save();
         return $value;
     }
     public function getDiamond(User $user)
     {
-        $value = TransactionDiamond::where('user_id', $user->id)->sum('diamond');
+        $value = TransactionDiamond::where('user_id', $user->id)->lockForUpdate()->sum('diamond');
         $user->diamond_temporary = $value;
         $user->save();
         return $value;
     }
     public function getRobux(User $user)
     {
-        $value = TransactionRobux::where('user_id', $user->id)->sum('robux');
+        $value = TransactionRobux::where('user_id', $user->id)->lockForUpdate()->sum('robux');
         $user->robux_temporary = $value;
         $user->save();
         return $value;

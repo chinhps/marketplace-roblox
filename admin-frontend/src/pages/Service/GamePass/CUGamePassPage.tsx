@@ -88,7 +88,7 @@ const initialFormState: IFormInput[] = [
     name: "parcels",
     type: "TEXTAREA",
     isRequired: true,
-    placeholder: "Tên gói | Giá gói | Cost Robux",
+    placeholder: "Tên gói | Giá gói | Cost Robux/ATM | 1: Robux - 2: ATM",
   },
   {
     label: "Hướng dẫn rút",
@@ -163,7 +163,7 @@ export default function CUGamePassPage() {
         parcels: data.data.service_detail.service_odds?.service_gifts
           .map(
             (gift) =>
-              `${gift.text_custom}|${gift.value1}|${gift.cost}|${gift.id}\n`
+              `${gift.text_custom}|${gift.value1}|${gift.cost}|${gift.cost_type}|${gift.id}\n`
           )
           .join(""),
         image: [data.data.service_detail.service_image?.thumb],

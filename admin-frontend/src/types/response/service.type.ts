@@ -107,6 +107,7 @@ interface Gift {
   value2: number | null;
   vip: "YES" | "NO";
   cost: number;
+  cost_type: number | null;
   percent_random: number;
   text_custom: string | null;
 }

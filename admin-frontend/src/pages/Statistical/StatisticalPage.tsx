@@ -60,6 +60,7 @@ export default function StatisticalPage() {
     <>
       <CardCollection title="Thống kê doanh thu" fontSize="25px">
         <Text>Thống kê doanh thu</Text>
+        <Text color="red">Các trường hợp "Không xác định" là các trường hợp không được tính vào tổng</Text>
         <FormSearch setFilter={setFilter} setPage={setPage} filter={filter} />
 
         <Flex mt="1rem" gap="1rem">
@@ -92,9 +93,9 @@ export default function StatisticalPage() {
                     account.game_list.game_key == "ACCOUNT"
                       ? account.accounts_sum_price * rateShare
                       : account.accounts_count *
-                          JSON.parse(filter.jsonPriceAccount ?? "[]")[
-                            account.service_key
-                          ]
+                      JSON.parse(filter.jsonPriceAccount ?? "[]")[
+                      account.service_key
+                      ]
                   )}
                 </Text>
                 (Số lượng: {account.accounts_count}) | Key:{" "}
@@ -110,9 +111,9 @@ export default function StatisticalPage() {
                     (currentValue.game_list.game_key == "ACCOUNT"
                       ? currentValue.accounts_sum_price * rateShare
                       : currentValue.accounts_count *
-                        JSON.parse(filter.jsonPriceAccount ?? "[]")[
-                          currentValue.service_key
-                        ]),
+                      JSON.parse(filter.jsonPriceAccount ?? "[]")[
+                      currentValue.service_key
+                      ]),
                   0
                 ) ?? 0
               )}
@@ -147,10 +148,13 @@ export default function StatisticalPage() {
               (withdraw, index) => (
                 <Text key={index}>
                   {withdraw.withdraw_type}:{" "}
-                  {numberFormat(withdraw.total, false)} Robux |
-                  <Text as="b" mx={5}>
-                    {numberFormat(withdraw.total * filter.rateRobux)}
-                  </Text>
+                  {withdraw.cost_type == 1 ? <>
+                    {numberFormat(withdraw.total, false)} Robux |
+                    <Text as="b" mx={5}>
+                      {numberFormat(withdraw.total * filter.rateRobux)}
+                    </Text>
+                  </> : withdraw.cost_type == 2 ? numberFormat(withdraw.total)
+                    : numberFormat(withdraw.total, false) + " (Không xác định)"}
                 </Text>
               )
             )}
@@ -159,7 +163,7 @@ export default function StatisticalPage() {
               {numberFormat(
                 statisticalByShopQuery.data?.data.withdraws.gamepass.reduce(
                   (accumulator, currentValue) =>
-                    accumulator + currentValue.total * filter.rateRobux,
+                    accumulator + (currentValue.cost_type == 1 ? currentValue.total * filter.rateRobux : currentValue.cost_type == 2 ? currentValue.total : 0),
                   0
                 ) ?? 0
               )}
@@ -169,7 +173,14 @@ export default function StatisticalPage() {
             {statisticalByShopQuery.data?.data.withdraws.units.map(
               (withdraw, index) => (
                 <Text key={index}>
-                  {withdraw.withdraw_type}: {numberFormat(withdraw.total, true)}
+                  {withdraw.withdraw_type}:{" "}
+                  {withdraw.cost_type == 1 ? <>
+                    {numberFormat(withdraw.total, false)} Robux |
+                    <Text as="b" mx={5}>
+                      {numberFormat(withdraw.total * filter.rateRobux)}
+                    </Text>
+                  </> : withdraw.cost_type == 2 ? numberFormat(withdraw.total)
+                    : numberFormat(withdraw.total, false) + " (Không xác định)"}
                 </Text>
               )
             )}
@@ -178,7 +189,7 @@ export default function StatisticalPage() {
               {numberFormat(
                 statisticalByShopQuery.data?.data.withdraws.units.reduce(
                   (accumulator, currentValue) =>
-                    accumulator + currentValue.total,
+                    accumulator + (currentValue.cost_type == 1 ? currentValue.total * filter.rateRobux : currentValue.cost_type == 2 ? currentValue.total : 0),
                   0
                 ) ?? 0
               )}
@@ -194,15 +205,10 @@ export default function StatisticalPage() {
                       ((percelDiamonds.get(withdraw.parcel) *
                         filter.rateDiamond) /
                         100) *
-                        withdraw.total
+                      withdraw.total
                     )}
                   </Text>
-                  (
-                  {numberFormat(
-                    (percelDiamonds.get(withdraw.parcel) * filter.rateDiamond) /
-                      100
-                  )}
-                  )
+                  ({numberFormat((percelDiamonds.get(withdraw.parcel) * filter.rateDiamond) / 100)})
                 </Text>
               )
             )}
@@ -215,7 +221,7 @@ export default function StatisticalPage() {
                     ((percelDiamonds.get(currentValue.parcel) *
                       filter.rateDiamond) /
                       100) *
-                      currentValue.total,
+                    currentValue.total,
                   0
                 ) ?? 0
               )}
@@ -230,35 +236,35 @@ export default function StatisticalPage() {
                     (currentValue.game_list.game_key == "ACCOUNT"
                       ? currentValue.accounts_sum_price * rateShare
                       : currentValue.accounts_count *
-                        JSON.parse(filter.jsonPriceAccount ?? "[]")[
-                          currentValue.service_key
-                        ]),
+                      JSON.parse(filter.jsonPriceAccount ?? "[]")[
+                      currentValue.service_key
+                      ]),
                   0
                 ) ?? 0) +
-                  (statisticalByShopQuery.data?.data.withdraws.robux.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.total * filter.rateRobux,
-                    0
-                  ) ?? 0) +
-                  (statisticalByShopQuery.data?.data.withdraws.diamond.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator +
-                      ((percelDiamonds.get(currentValue.parcel) *
-                        filter.rateDiamond) /
-                        100) *
-                        currentValue.total,
-                    0
-                  ) ?? 0) +
-                  (statisticalByShopQuery.data?.data.withdraws.gamepass.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.total * filter.rateRobux,
-                    0
-                  ) ?? 0) +
-                  (statisticalByShopQuery.data?.data.withdraws.units.reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.total,
-                    0
-                  ) ?? 0)
+                (statisticalByShopQuery.data?.data.withdraws.robux.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + currentValue.total * filter.rateRobux,
+                  0
+                ) ?? 0) +
+                (statisticalByShopQuery.data?.data.withdraws.diamond.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator +
+                    ((percelDiamonds.get(currentValue.parcel) *
+                      filter.rateDiamond) /
+                      100) *
+                    currentValue.total,
+                  0
+                ) ?? 0) +
+                (statisticalByShopQuery.data?.data.withdraws.gamepass.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + (currentValue.cost_type == 1 ? currentValue.total * filter.rateRobux : currentValue.cost_type == 2 ? currentValue.total : 0),
+                  0
+                ) ?? 0) +
+                (statisticalByShopQuery.data?.data.withdraws.units.reduce(
+                  (accumulator, currentValue) =>
+                    accumulator + (currentValue.cost_type == 1 ? currentValue.total * filter.rateRobux : currentValue.cost_type == 2 ? currentValue.total : 0),
+                  0
+                ) ?? 0)
               )}
             </Heading>
           </Box>

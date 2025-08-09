@@ -122,8 +122,8 @@ class ServiceForAllController extends Controller
                 $validated['typeService'] === "ACCOUNT" ||
                 $validated['typeService'] === "RANDOM"
             ) {
-                $dataService["private_form"] = $validated['dataForm']['private_form'] ?? null;
-                $dataService["public_form"] = $validated['dataForm']['public_form'] ?? null;
+                $dataService["private_form"] = isset($validated['dataForm']['private_form']) ? json_encode($validated['dataForm']['private_form']) : null;
+                $dataService["public_form"] = isset($validated['dataForm']['public_form']) ? json_encode($validated['dataForm']['public_form']) : null;
             }
 
             # CREATE SERVICE ###############################
@@ -171,6 +171,7 @@ class ServiceForAllController extends Controller
                         "value1" => $gift['isRandom'] ? $gift['value'][0] : $gift['value'],
                         "value2" => $gift['isRandom'] ? $gift['value'][1] : null,
                         "cost" => 0,
+                        "cost_type" => null,
                         "percent_random" => $gift['percent']
                     ], serviceOdds: $serviceOdds, gameCurrency: $gameCurrency);
                     $scriptOdds[$keyGift] = $serviceGift;

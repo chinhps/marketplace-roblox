@@ -14,4 +14,5 @@ interface ServiceGiftInterface
      * @return \App\Models\ServiceGift
      */
     public function updateOrInsert(float|null $id, array $params, ?ServiceOdds $serviceOdds = null, ?GameCurrency $gameCurrency = null);
+    public function getByConditions(array $conditions = []);
 }

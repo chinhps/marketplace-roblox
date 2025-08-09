@@ -14,7 +14,7 @@ import {
   Switch,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IFormBase } from "@/types/form.type";
 import { FileCustomRHF } from "./Form/FileCustom";
 import InputNumberCustom from "./Form/InputNumberCustom";
@@ -22,6 +22,7 @@ import { handleCopy } from "@/utils/function";
 import CKEditorCustom from "./Form/QuillEditorCustom";
 import { useQuery } from "@tanstack/react-query";
 import shopApi from "@/apis/shop";
+import ModelConfirm from "./Model/ModelConfirm";
 
 export default function FormBase({
   dataForm,
@@ -32,6 +33,7 @@ export default function FormBase({
   dataDefault,
   icon,
   isSubmitCustom,
+  isConfirm = false,
 }: IFormBase) {
   const {
     control,
@@ -41,6 +43,19 @@ export default function FormBase({
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<any>(null);
+  const [isConfirming, setIsConfirming] = useState(false);
+
+  const onFormSubmit = (data: any) => {
+    if (isConfirm) {
+      setPendingData(data);
+      setIsModalOpen(true);
+      return;
+    }
+    onSubmit(data);
+  };
 
   useEffect(() => {
     dataDefault &&
@@ -73,7 +88,25 @@ export default function FormBase({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {isConfirm && (
+        <ModelConfirm
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          isLoading={isConfirming}
+          TextData={"Bạn có chắc muốn thực hiện không?"}
+          handleConfirm={async () => {
+            setIsConfirming(true);
+            try {
+              await onSubmit(pendingData);
+            } finally {
+              setIsConfirming(false);
+              setIsModalOpen(false);
+            }
+          }}
+          children={null}
+        />
+      )}
+      <form onSubmit={handleSubmit(onFormSubmit)}>
         <Test>
           {dataForm?.map((form, index) => (
             <FormControl

@@ -12,10 +12,12 @@ import {
 
 interface IModelBase extends ModalProps {
   isOpen: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
   onClose: () => void;
-  handleConfirm: () => void;
-  TextData: React.ReactElement | string;
+  handleConfirm?: () => void;
+  TextData?: React.ReactElement | string | null;
+  children: React.ReactElement | null;
+  title?: string;
 }
 
 export default function ModelConfirm({
@@ -24,6 +26,8 @@ export default function ModelConfirm({
   isLoading,
   TextData,
   handleConfirm,
+  children,
+  title,
   ...props
 }: IModelBase) {
   return (
@@ -36,14 +40,16 @@ export default function ModelConfirm({
       >
         <ModalOverlay />
         <ModalContent bg="white.100">
-          <ModalHeader>Thông báo</ModalHeader>
+          <ModalHeader>{title ?? "Thông báo"}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{TextData}</ModalBody>
+          <ModalBody>{TextData ?? children}</ModalBody>
 
           <ModalFooter gap={2}>
+            {handleConfirm && (
             <Button variant="auth" onClick={handleConfirm} isLoading={isLoading}>
-              Chấp nhận
-            </Button>
+                Chấp nhận
+              </Button>
+            )}
             <Button onClick={onClose}>Thoát</Button>
           </ModalFooter>
         </ModalContent>

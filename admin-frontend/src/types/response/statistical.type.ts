@@ -17,6 +17,7 @@ interface Withdraw {
   withdraw_type: string;
   parcel?: number;
   total: number;
+  cost_type?: number;
 }
 
 interface Withdraws {

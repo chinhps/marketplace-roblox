@@ -78,6 +78,7 @@ class GamePassController extends Controller
                 "value" => $parcel->value1,
                 "status" => $status,
                 "cost" => $parcel->cost,
+                "cost_type" => $parcel->cost_type,
                 "detail" => json_encode([
                     [
                         "key" => "parcel",

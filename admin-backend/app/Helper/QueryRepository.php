@@ -48,6 +48,11 @@ if (!function_exists('queryRepository')) {
                 $subquery->where('name', 'like', '%' . $filter['admin_filter'] . '%');
             });
         }
+        if (isset($filter['withdraw_type_filter'])) {
+            $model->whereHas('withdrawType', function ($subquery) use ($filter) {
+                $subquery->whereIn('type_key', $filter['withdraw_type_filter']);
+            });
+        }
         if (isset($filter['between'])) {
             $model->whereBetween(
                 $filter['between']['column'],

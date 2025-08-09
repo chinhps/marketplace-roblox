@@ -11,7 +11,8 @@ class WithdrawHistory extends Model
     use HasFactory;
     protected $table = "withdraw_histories";
     protected $fillable = [
-        "status"
+        "status",
+        "cost"
     ];
 
     public function shop(): BelongsTo

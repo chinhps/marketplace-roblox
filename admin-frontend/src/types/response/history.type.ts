@@ -74,6 +74,7 @@ export interface WithdrawHistoryResponse {
   withdraw_type: WithdrawType;
   value: number;
   cost: number;
+  cost_type: number | null;
   status: WithdrawStatus;
   detail: IDetail2P[];
   created_at: string;

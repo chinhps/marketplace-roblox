@@ -212,6 +212,7 @@ Route::middleware(['decryptToken:sanctum'])->group(function () {
                     Route::prefix('withdraw')->group(function () {
                         // Route::post('/update-all', [WithdrawHistoryController::class, 'updateStatusAll']);
                         Route::get('/', [WithdrawHistoryController::class, 'list']);
+                        Route::post('/update-cost', [WithdrawHistoryController::class, 'updateCost']);
                         Route::post('/export-robux', [WithdrawHistoryController::class, 'exportRobux']);
                         Route::put('/{id}', [WithdrawHistoryController::class, 'updateStatus']);
                     });

@@ -43,4 +43,11 @@ class ServiceGiftRepository implements ServiceGiftInterface
         $newGift->save();
         return $newGift;
     }
+
+    public function getByConditions(array $conditions = [])
+    {
+        $data = $this->model->query();
+        $data = queryRepository($data, $conditions);
+        return $data->firstOrFail();
+    }
 }

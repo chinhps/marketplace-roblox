@@ -17,13 +17,12 @@ class TopRechargeController extends Controller
 
     public function getTopRechargeList(TopRechargeRequest $request)
     {
-
-        $timeObj = (new \DateTime(date('Y-m-d')))->modify('-1 month');
-
         $validated = $request->validated();
+        
+        $timeObj = Carbon::now()->subMonthNoOverflow(); 
+        $timeNow = Carbon::now();
         $domain = $validated['domain'];
 
-        $timeNow = Carbon::now();
         switch ($validated['time']) {
             case "present":
                 $month = date("m");

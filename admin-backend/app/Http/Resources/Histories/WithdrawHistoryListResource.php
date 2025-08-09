@@ -22,6 +22,7 @@ class WithdrawHistoryListResource extends BaseResource
             "withdraw_type" => $this->withdraw_type,
             "value" => $this->value,
             "cost" => $this->cost,
+            "cost_type" => $this->cost_type,
             "status" => $this->status,
             "detail" => json_decode($this->detail, true),
             "created_at" => $this->created_at,
